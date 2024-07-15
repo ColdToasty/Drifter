@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceRider.Class;
@@ -14,7 +15,7 @@ namespace SpaceRider
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D playerTexture, projectileMissile, projectileLaser;
-
+        private Texture2D obstacleAsteroid;
 
         private Vector2 playerPosition;
 
@@ -22,10 +23,23 @@ namespace SpaceRider
 
         private ProjectileSpawner projectileSpawner;
 
+        private ObstacleSpawner obstacleSpawner;
+
         private List<Projectile> projectiles = new List<Projectile>();
         private List<Obstacle> obstacles= new List<Obstacle>();
+        private List<Item> items = new List<Item>();
 
         private static int BottomEndPosition, TopEndPosition;
+
+        private Timer shootTimer;
+        private bool canShoot;
+
+
+        private int previousTimeInSeconds;
+
+        private Random random;
+
+        public static int ScreenWidth { get; private set; }
 
         public Game1()
         {
@@ -34,11 +48,18 @@ namespace SpaceRider
             IsMouseVisible = true;
             playerPosition = new Vector2(_graphics.PreferredBackBufferWidth /2, _graphics.PreferredBackBufferHeight - _graphics.PreferredBackBufferHeight /4);
 
+
+            ScreenWidth = _graphics.PreferredBackBufferWidth;
             player = new Player("DefaultPlayer", playerPosition);
             projectileSpawner = new ProjectileSpawner();
+            obstacleSpawner = new ObstacleSpawner(_graphics.PreferredBackBufferWidth);
 
             BottomEndPosition = _graphics.PreferredBackBufferHeight;
             TopEndPosition = 0;
+            canShoot = true;
+            previousTimeInSeconds = 0;
+            shootTimer = new Timer();
+            random = new Random();
         }
 
 
@@ -55,7 +76,7 @@ namespace SpaceRider
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTexture = Content.Load<Texture2D>(player.PlayerTexture);
             projectileMissile = Content.Load<Texture2D>("Missile");
-
+            obstacleAsteroid = Content.Load<Texture2D>("Asteroid");
         }
 
         protected override void Update(GameTime gameTime)
@@ -63,6 +84,19 @@ namespace SpaceRider
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
+            }
+
+
+
+            if((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
+            {
+                int spawnObstacle = random.Next(11);
+                if(spawnObstacle <= 4)
+                {
+                    AddToList(obstacleSpawner.CreateObstacle(obstacleAsteroid));
+                }
+                Score.IncreaseScore(1);
+                previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
             }
 
 
@@ -80,16 +114,38 @@ namespace SpaceRider
                 player.Run(gameTime, false);
             }
 
+            
             if (kstate.IsKeyDown(Keys.Space))
             {
-                if (!player.ItemPickedUp)
+                if (shootTimer.Set)
                 {
-                    AddToList(projectileSpawner.CreateProjectile(projectileMissile, player.CurrentPosition));
+                    canShoot = Timer.CheckTimeReached(shootTimer, gameTime);
+                    if (canShoot)
+                    {
+                        ShootProjectile();
+                        shootTimer.ResetTimer();
+                    }
                 }
+                else
+                {
+                    shootTimer.SetStartTimeAndStopTime(gameTime, 500);
+                    ShootProjectile();
+                }
+
             }
+
 
             RunObjects(gameTime);
             base.Update(gameTime);
+        }
+
+        private void ShootProjectile()
+        {
+            if (!player.ItemPickedUp)
+            {
+                AddToList(projectileSpawner.CreateProjectile(projectileMissile, player.CurrentPosition));
+
+            }
         }
 
         private void AddToList<TGameObject>(TGameObject gameObject) where TGameObject : GameObject
@@ -99,7 +155,7 @@ namespace SpaceRider
                 projectiles.Add(gameObject as Projectile);
             }
 
-            if(gameObject is Obstacle)
+            else if(gameObject is Obstacle)
             {
                 obstacles.Add(gameObject as Obstacle);
             }
@@ -125,6 +181,10 @@ namespace SpaceRider
             for(int i = projectiles.Count - 1; i >= 0; i--)
             {
                 projectiles[i].Run(gameTime, false);
+            }
+            for(int i = obstacles.Count - 1; i >= 0;i--)
+            {
+                obstacles[i].Run(gameTime, false);
             }
         }
 
@@ -162,8 +222,20 @@ namespace SpaceRider
             }
 
 
-
-
+            foreach (Obstacle o in obstacles)
+            {
+                _spriteBatch.Draw(
+                o.Texture,
+                o.CurrentPosition,
+                null,
+                Color.White,
+                0f,
+                new Vector2(0, 0),
+                Vector2.One,
+                SpriteEffects.None,
+                0f
+            );
+            }
 
             _spriteBatch.End();
             base.Draw(gameTime);

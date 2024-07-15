@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpaceRider.Class
 {
-    internal class item
+    internal class Item
     {
     }
 }

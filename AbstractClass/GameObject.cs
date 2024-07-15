@@ -19,6 +19,7 @@ namespace SpaceRider.Interface
 
         public Vector2 CurrentPosition { get { return Position; } }
 
+        //IsMovingNegative only used for player
         public abstract void Run(GameTime gameTime, bool IsMovingNegative);
         
         public int TravelSpeed { get {  return travelSpeed; } }
