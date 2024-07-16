@@ -41,6 +41,8 @@ namespace SpaceRider
 
         public static int ScreenWidth { get; private set; }
 
+        private Texture2D ball;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -75,6 +77,7 @@ namespace SpaceRider
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             playerTexture = Content.Load<Texture2D>(player.PlayerTexture);
+            ball = Content.Load<Texture2D>("ball");
             projectileMissile = Content.Load<Texture2D>("Missile");
             obstacleAsteroid = Content.Load<Texture2D>("Asteroid");
         }
@@ -136,6 +139,7 @@ namespace SpaceRider
 
 
             RunObjects(gameTime);
+            CheckCollision();
             base.Update(gameTime);
         }
 
@@ -188,6 +192,16 @@ namespace SpaceRider
             }
         }
 
+        private void CheckCollision()
+        {
+            foreach(Obstacle o in obstacles)
+            {
+                if (o.collisionCircle.Intersects(player.collisionCircle))
+                {
+                    System.Diagnostics.Trace.WriteLine("Yes");
+                }
+            }
+        }
 
 
         protected override void Draw(GameTime gameTime)

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpaceRider.Class;
+using Drifter.Class;
+using Microsoft.Xna.Framework.Input;
 
 namespace SpaceRider.Class
 {
@@ -21,8 +24,7 @@ namespace SpaceRider.Class
 
         public Vector2 startPosition { get; init; }
 
-
-
+     
         public Obstacle(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
         {
             this.startPosition = startPosition;
@@ -30,11 +32,13 @@ namespace SpaceRider.Class
             this.ObjectTexture = texture;
             this.obstacleType = obstacleType;
             this.travelSpeed = 150;
+            this.collisionCircle = new CollisionCircle(new Vector2(8, 8), 8);
         }
 
         public override void Run(GameTime gameTime, bool IsMovingNegative)
         {
             this.Position.Y += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.UpdateCollisionCircle();
 
         }
         

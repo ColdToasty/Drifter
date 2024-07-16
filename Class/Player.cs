@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Input;
 using System.Net.Mime;
 using Microsoft.Xna.Framework.Content;
 using SpaceRider.Interface;
+using SpaceRider.Class;
+using Drifter.Class;
 
 
 
@@ -30,6 +32,8 @@ namespace SpaceRider.Class
             this.travelSpeed = 100;
             this.itemPickedUp = false;
             this.Position = startingPosition;
+
+            this.collisionCircle = new CollisionCircle(new Vector2(8, 8), 8);
         }
 
 
@@ -42,8 +46,9 @@ namespace SpaceRider.Class
             else
             {
                 this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             }
+            this.UpdateCollisionCircle();
+            System.Diagnostics.Trace.WriteLine($"{this.Position}  ---  {this.collisionCircle.Centre}");
         }
 
         public void SetPositionAtEdgeOfScreen(float edgePosition)
