@@ -7,6 +7,7 @@ using Drifter.Class.Factory;
 using Drifter.Interface;
 using System;
 using System.Collections.Generic;
+using static Drifter.Class.Obstacle;
 
 namespace Drifter
 {
@@ -42,7 +43,7 @@ namespace Drifter
         public static int ScreenWidth { get; private set; }
 
         private Texture2D ball;
-
+        private Obstacle ob;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -62,6 +63,8 @@ namespace Drifter
             previousTimeInSeconds = 0;
             shootTimer = new Timer();
             random = new Random();
+
+            ob = new Obstacle(obstacleAsteroid , new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight - _graphics.PreferredBackBufferHeight / 4 + 64));
         }
 
 
@@ -76,7 +79,7 @@ namespace Drifter
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            playerTexture = Content.Load<Texture2D>(player.PlayerTexture);
+            playerTexture = Content.Load<Texture2D>("DefaultPlayer");
             ball = Content.Load<Texture2D>("ball");
             projectileMissile = Content.Load<Texture2D>("Missile");
             obstacleAsteroid = Content.Load<Texture2D>("Asteroid");
@@ -88,8 +91,6 @@ namespace Drifter
             {
                 Exit();
             }
-
-
 
             if((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
             {
@@ -196,7 +197,7 @@ namespace Drifter
         {
             foreach(Obstacle o in obstacles)
             {
-                if (o.collisionCircle.Intersects(player.collisionCircle))
+                if (player.collisionCircle.Intersects(o.collisionCircle))
                 {
                     System.Diagnostics.Trace.WriteLine("Yes");
                 }
@@ -220,7 +221,31 @@ namespace Drifter
                 0f
             );
 
-            foreach(Projectile p in  projectiles)
+            _spriteBatch.Draw(
+                obstacleAsteroid,
+                ob.CurrentPosition,
+                null,
+                Color.White,
+                0f,
+                new Vector2(playerTexture.Width / 2, playerTexture.Height / 2),
+                Vector2.One,
+                SpriteEffects.None,
+                0f
+            );
+
+            _spriteBatch.Draw(
+            ball,
+            player.collisionCircle.Centre,
+            null,
+            Color.White,
+            0f,
+            new Vector2(playerTexture.Width / 2, playerTexture.Height / 2),
+            Vector2.One,
+            SpriteEffects.None,
+            0f
+        );
+
+            foreach (Projectile p in  projectiles)
             {
                 _spriteBatch.Draw(
                 p.Texture,
@@ -235,7 +260,7 @@ namespace Drifter
             );
             }
 
-
+            
             foreach (Obstacle o in obstacles)
             {
                 _spriteBatch.Draw(
@@ -249,6 +274,13 @@ namespace Drifter
                 SpriteEffects.None,
                 0f
             );
+
+                //draws their collisions shapes
+                _spriteBatch.Draw(
+                ball,
+                o.collisionCircle.Centre,
+                Color.White
+                );
             }
 
             _spriteBatch.End();

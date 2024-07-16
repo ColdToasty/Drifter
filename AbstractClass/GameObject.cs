@@ -23,9 +23,7 @@ namespace Drifter.Interface
 
         protected virtual void UpdateCollisionCircle()
         {
-            Vector2 collisionCircleCentre = this.Position + new Vector2(8, 8);
-            this.collisionCircle.Centre = collisionCircleCentre;
-
+            this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
         }
 
         public Vector2 CurrentPosition { get { return Position; } }

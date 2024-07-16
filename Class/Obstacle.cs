@@ -21,17 +21,15 @@ namespace Drifter.Class
 
         public Texture2D Texture { get { return ObjectTexture; } }
 
-        public Vector2 startPosition { get; init; }
 
      
         public Obstacle(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
         {
-            this.startPosition = startPosition;
             this.Position = startPosition;
             this.ObjectTexture = texture;
             this.obstacleType = obstacleType;
             this.travelSpeed = 150;
-            this.collisionCircle = new CollisionCircle(new Vector2(8, 8), 8);
+            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, 8), 8);
         }
 
         public override void Run(GameTime gameTime, bool IsMovingNegative)
