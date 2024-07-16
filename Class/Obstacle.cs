@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SpaceRider.Class;
 using Drifter.Class;
 using Microsoft.Xna.Framework.Input;
 

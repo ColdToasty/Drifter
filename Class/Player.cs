@@ -8,13 +8,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Net.Mime;
 using Microsoft.Xna.Framework.Content;
-<<<<<<< Updated upstream
-using SpaceRider.Interface;
-using SpaceRider.Class;
 using Drifter.Class;
-=======
 using Drifter.Interface;
->>>>>>> Stashed changes
 
 
 
