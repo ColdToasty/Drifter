@@ -1,3 +1,3 @@
 ﻿
-using var game = new SpaceRider.Game1();
+using var game = new Drifter.Game1();
 game.Run();

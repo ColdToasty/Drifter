@@ -2,13 +2,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SpaceRider.Class;
-using SpaceRider.Class.Factory;
-using SpaceRider.Interface;
+using Drifter.Class;
+using Drifter.Class.Factory;
+using Drifter.Interface;
 using System;
 using System.Collections.Generic;
 
-namespace SpaceRider
+namespace Drifter
 {
     public class Game1 : Game
     {

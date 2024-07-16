@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-namespace SpaceRider.Class.Factory
+namespace Drifter.Class.Factory
 {
     internal class ObstacleSpawner
     {

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace SpaceRider.Class
+namespace Drifter.Class
 {
     //Only conserned with keeping track of time in milliseconds
     internal class Timer

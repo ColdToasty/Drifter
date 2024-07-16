@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceRider.Class
+namespace Drifter.Class
 {
     internal static class Score
     {

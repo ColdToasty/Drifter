@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpaceRider.Interface;
+using Drifter.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using SpaceRider.Class;
 using Drifter.Class;
 using Microsoft.Xna.Framework.Input;
 
-namespace SpaceRider.Class
+namespace Drifter.Class
 {
     internal class Obstacle : GameObject
     {

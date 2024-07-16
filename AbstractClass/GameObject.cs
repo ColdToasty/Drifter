@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceRider.Interface
+namespace Drifter.Interface
 {
     internal abstract class GameObject
     {
