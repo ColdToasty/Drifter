@@ -1,4 +1,4 @@
-﻿using Drifter.Class;
+﻿using Drifter.Class.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,10 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Drifter.Interface
+namespace Drifter.Class.AbstractClass
 {
     internal abstract class GameObject
     {
+
 
         protected int travelSpeed { get; set; }
 
@@ -32,5 +33,16 @@ namespace Drifter.Interface
         public abstract void Run(GameTime gameTime, bool IsMovingNegative);
         
         public int TravelSpeed { get {  return travelSpeed; } }
+
+        public virtual void CollidedWithOtherGameObject() { }
+
+        public virtual bool DidExitScreen(float EndOfScreenPosition)
+        {
+            if (Position.Y > EndOfScreenPosition + 32 || Position.Y < 0 - 33)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

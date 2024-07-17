@@ -8,12 +8,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Net.Mime;
 using Microsoft.Xna.Framework.Content;
-using Drifter.Class;
-using Drifter.Interface;
+using Drifter.Class.Tools;
+using Drifter.Class.AbstractClass;
 
 
 
-namespace Drifter.Class
+namespace Drifter.Class.GameObjectClass
 {
     internal class Player : GameObject
     {
@@ -22,7 +22,7 @@ namespace Drifter.Class
         public bool ItemPickedUp { get { return itemPickedUp; } }
 
 
-        public Player(string playerTexture, Vector2 startingPosition) {
+        public Player(Vector2 startingPosition) {
             this.travelSpeed = 100;
             this.itemPickedUp = false;
             this.Position = startingPosition;
@@ -43,9 +43,8 @@ namespace Drifter.Class
             }
 
             this.UpdateCollisionCircle();
-            
-
         }
+
 
         public void SetPositionAtEdgeOfScreen(float edgePosition)
         {

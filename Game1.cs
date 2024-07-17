@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Drifter.Class;
 using Drifter.Class.Factory;
-using Drifter.Interface;
 using System;
 using System.Collections.Generic;
-using static Drifter.Class.Obstacle;
+using Drifter.Class.GameObjectClass;
+using Drifter.Class.Tools;
+using Drifter.Class.AbstractClass;
 
 namespace Drifter
 {
@@ -22,13 +22,14 @@ namespace Drifter
 
         private Player player;
 
-        private ProjectileSpawner projectileSpawner;
+        private GameObjectSpawner gameObjectSpawner;
 
-        private ObstacleSpawner obstacleSpawner;
 
         private List<Projectile> projectiles = new List<Projectile>();
         private List<Obstacle> obstacles= new List<Obstacle>();
         private List<Item> items = new List<Item>();
+
+        private List<GameObject> objectsToBeDeleted = new List<GameObject>();
 
         private static int BottomEndPosition, TopEndPosition;
 
@@ -50,12 +51,10 @@ namespace Drifter
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             playerPosition = new Vector2(_graphics.PreferredBackBufferWidth /2, _graphics.PreferredBackBufferHeight - _graphics.PreferredBackBufferHeight /4);
-
+            player = new Player(playerPosition);
 
             ScreenWidth = _graphics.PreferredBackBufferWidth;
-            player = new Player("DefaultPlayer", playerPosition);
-            projectileSpawner = new ProjectileSpawner();
-            obstacleSpawner = new ObstacleSpawner(_graphics.PreferredBackBufferWidth);
+            gameObjectSpawner = new GameObjectSpawner(_graphics.PreferredBackBufferWidth);
 
             BottomEndPosition = _graphics.PreferredBackBufferHeight;
             TopEndPosition = 0;
@@ -85,6 +84,8 @@ namespace Drifter
             obstacleAsteroid = Content.Load<Texture2D>("Asteroid");
         }
 
+        
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -97,13 +98,36 @@ namespace Drifter
                 int spawnObstacle = random.Next(11);
                 if(spawnObstacle <= 4)
                 {
-                    AddToList(obstacleSpawner.CreateObstacle(obstacleAsteroid));
+                    AddToList(gameObjectSpawner.CreateObstacle(obstacleAsteroid));
                 }
                 Score.IncreaseScore(1);
                 previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
             }
 
 
+            CheckPlayerInput(gameTime);
+
+            RunObjects(gameTime);
+            CheckCollision();
+            DeleteGameObjects();
+
+            //System.Diagnostics.Trace.WriteLine(obstacles.Count);
+            //System.Diagnostics.Trace.WriteLine(projectiles.Count);
+            
+            base.Update(gameTime);
+        }
+
+        private void ShootProjectile()
+        {
+            if (!player.ItemPickedUp)
+            {
+                AddToList(gameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition));
+            }
+        }
+
+
+        private void CheckPlayerInput(GameTime gameTime)
+        {
             var kstate = Keyboard.GetState();
 
             if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
@@ -118,7 +142,7 @@ namespace Drifter
                 player.Run(gameTime, false);
             }
 
-            
+
             if (kstate.IsKeyDown(Keys.Space))
             {
                 if (shootTimer.Set)
@@ -126,32 +150,42 @@ namespace Drifter
                     canShoot = Timer.CheckTimeReached(shootTimer, gameTime);
                     if (canShoot)
                     {
-                        ShootProjectile();
                         shootTimer.ResetTimer();
                     }
                 }
                 else
                 {
-                    shootTimer.SetStartTimeAndStopTime(gameTime, 500);
                     ShootProjectile();
+                    shootTimer.SetStartTimeAndStopTime(gameTime, 500);
+                    canShoot = false;
                 }
 
+
             }
-
-
-            RunObjects(gameTime);
-            CheckCollision();
-            base.Update(gameTime);
         }
 
-        private void ShootProjectile()
+
+
+        //Deletes gameObjects by removing them from their respective list
+        //Also resets the objectsToBeDeleted list at the end
+        private void DeleteGameObjects()
         {
-            if (!player.ItemPickedUp)
+            for(int i = 0; i < objectsToBeDeleted.Count; i++)
             {
-                AddToList(projectileSpawner.CreateProjectile(projectileMissile, player.CurrentPosition));
+                GameObject gameObject = objectsToBeDeleted[i];
 
+                if(gameObject is Obstacle)
+                {
+                    obstacles.Remove((Obstacle)gameObject);
+                }
+                else if(gameObject is Projectile)
+                {
+                    projectiles.Remove((Projectile)gameObject);
+                }
             }
+            objectsToBeDeleted.Clear();
         }
+
 
         private void AddToList<TGameObject>(TGameObject gameObject) where TGameObject : GameObject
         {
@@ -165,6 +199,7 @@ namespace Drifter
                 obstacles.Add(gameObject as Obstacle);
             }
         }
+
 
 
         private void CheckPlayerAtTheEdge()
@@ -181,15 +216,24 @@ namespace Drifter
         }
 
 
+
         private void RunObjects(GameTime gameTime)
         {
             for(int i = projectiles.Count - 1; i >= 0; i--)
             {
                 projectiles[i].Run(gameTime, false);
+                if (projectiles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
+                {
+                    objectsToBeDeleted.Add(projectiles[i]);
+                }
             }
             for(int i = obstacles.Count - 1; i >= 0;i--)
             {
                 obstacles[i].Run(gameTime, false);
+                if (obstacles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
+                {
+                    objectsToBeDeleted.Add(obstacles[i]);
+                }
             }
         }
 
@@ -199,11 +243,23 @@ namespace Drifter
             {
                 if (player.collisionCircle.Intersects(o.collisionCircle))
                 {
-                    System.Diagnostics.Trace.WriteLine("Yes");
+                    o.CollidedWithOtherGameObject();
+                    player.CollidedWithOtherGameObject();
+                    objectsToBeDeleted.Add(o);
+                }
+
+                foreach(Projectile p in projectiles)
+                {
+                    if (o.collisionCircle.Intersects(p.collisionCircle))
+                    {
+                        o.CollidedWithOtherGameObject();
+                        p.CollidedWithOtherGameObject();
+                        objectsToBeDeleted.Add(o);
+                        objectsToBeDeleted.Add(p);
+                    }
                 }
             }
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -257,7 +313,19 @@ namespace Drifter
                 Vector2.One,
                 SpriteEffects.None,
                 0f
-            );
+                    );
+
+                _spriteBatch.Draw(
+                ball,
+                p.collisionCircle.Centre,
+                null,
+                Color.White,
+                0f,
+                new Vector2(playerTexture.Width / 2, playerTexture.Height),
+                Vector2.One,
+                SpriteEffects.None,
+                0f
+                    );
             }
 
             

@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace Drifter.Class
+namespace Drifter.Class.Tools
+
 {
     //Only conserned with keeping track of time in milliseconds
     internal class Timer

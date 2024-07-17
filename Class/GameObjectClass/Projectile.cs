@@ -1,13 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Drifter.Interface;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Drifter.Class.Tools;
+using Drifter.Class.AbstractClass;
 
-namespace Drifter.Class
+
+namespace Drifter.Class.GameObjectClass
 {
     internal class Projectile : GameObject
     {
@@ -19,12 +22,11 @@ namespace Drifter.Class
 
         private ProjectileType projectileType;
 
-        public ProjectileType TypeOfProjectile { get { return projectileType;} }
+        public ProjectileType TypeOfProjectile { get { return projectileType; } }
 
         public Texture2D Texture { get { return ObjectTexture; } }
-       
-        
-        
+
+
         public Projectile(Texture2D texture, Vector2 startPosition, ProjectileType projectileType = ProjectileType.Missle)
         {
             this.travelSpeed = 200;
@@ -33,11 +35,19 @@ namespace Drifter.Class
 
             this.Position = startPosition;
             this.Position.X += texture.Width / 2;
+
+            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(4, -4), 16);
         }
 
         public override void Run(GameTime gameTime, bool isMovingNegative)
         {
             this.Position.Y -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.UpdateCollisionCircle();
+        }
+
+        protected override void UpdateCollisionCircle()
+        {
+            this.collisionCircle.Centre = this.Position;
         }
     }
 }

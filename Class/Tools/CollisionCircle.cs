@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace Drifter.Class
+namespace Drifter.Class.Tools
 {
     internal struct CollisionCircle
     {
@@ -22,7 +22,7 @@ namespace Drifter.Class
 
         //centre = (half width of object texture and half height of object texture) + position of object
         //radius = half of width of texture
-        public CollisionCircle(Vector2 centre, float radius)
+        public CollisionCircle(Vector2 centre, float radius = 16)
         {
             this.Centre = centre;
             this.Radius = radius;

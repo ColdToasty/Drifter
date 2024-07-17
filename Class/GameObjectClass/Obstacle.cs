@@ -1,15 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Drifter.Interface;
+using Drifter.Class.AbstractClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Drifter.Class;
+using Drifter.Class.Tools;
 using Microsoft.Xna.Framework.Input;
 
-namespace Drifter.Class
+namespace Drifter.Class.GameObjectClass
 {
     internal class Obstacle : GameObject
     {
@@ -21,15 +21,13 @@ namespace Drifter.Class
 
         public Texture2D Texture { get { return ObjectTexture; } }
 
-
-     
         public Obstacle(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
         {
             this.Position = startPosition;
             this.ObjectTexture = texture;
             this.obstacleType = obstacleType;
             this.travelSpeed = 150;
-            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, 8), 8);
+            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, 8), 16);
         }
 
         public override void Run(GameTime gameTime, bool IsMovingNegative)
@@ -38,8 +36,11 @@ namespace Drifter.Class
             this.UpdateCollisionCircle();
 
         }
-        
 
+        public override void CollidedWithOtherGameObject()
+        {
+ 
+        }
 
     }
 }
