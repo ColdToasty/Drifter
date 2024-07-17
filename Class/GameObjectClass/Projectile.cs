@@ -36,18 +36,19 @@ namespace Drifter.Class.GameObjectClass
             this.Position = startPosition;
             this.Position.X += texture.Width / 2;
 
-            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(4, -4), 16);
+            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(4, -4), 8);
         }
 
         public override void Run(GameTime gameTime, bool isMovingNegative)
         {
             this.Position.Y -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            this.UpdateCollisionCircle();
+            UpdateCollisionCircle();
         }
+
 
         protected override void UpdateCollisionCircle()
         {
-            this.collisionCircle.Centre = this.Position;
+            this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
         }
     }
 }

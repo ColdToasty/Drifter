@@ -22,6 +22,8 @@ namespace Drifter.Class.AbstractClass
 
         public CollisionCircle collisionCircle;
 
+
+
         protected virtual void UpdateCollisionCircle()
         {
             this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
@@ -30,9 +32,13 @@ namespace Drifter.Class.AbstractClass
         public Vector2 CurrentPosition { get { return Position; } }
 
         //IsMovingNegative only used for player
-        public abstract void Run(GameTime gameTime, bool IsMovingNegative);
+        public virtual void Run(GameTime gameTime, bool IsMovingNegative)
+        {
+            UpdateCollisionCircle();
+        }
         
         public int TravelSpeed { get {  return travelSpeed; } }
+
 
         public virtual void CollidedWithOtherGameObject() { }
 

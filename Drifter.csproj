@@ -27,6 +27,7 @@
     <Folder Include="Assets\Item\" />
     <Folder Include="Assets\Obstacle\" />
     <Folder Include="Assets\Player\" />
+    <Folder Include="Content\Font\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

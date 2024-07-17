@@ -31,9 +31,10 @@ namespace Drifter.Class.Factory
             return new Obstacle(texture, new Vector2(360, 0), obstacleType);
         }
 
-        public Item? SpawnItem()
+        public Item? CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
         {
-            return null;
+            int spawnXPosition = random.Next(32, spawnAxisRange - 32);
+            return new Item(texture, new Vector2(spawnXPosition, 0) , itemType);
         }
 
 

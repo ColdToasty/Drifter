@@ -33,10 +33,10 @@ namespace Drifter.Class.GameObjectClass
         }
         
 
-        public override void Run(GameTime gameTime, bool IsMovingNegative)
+        public override void Run(GameTime gameTime, bool isMovingNegative)
         {
             this.Position.Y += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            this.UpdateCollisionCircle();
+            base.Run(gameTime, isMovingNegative);
         }
 
 

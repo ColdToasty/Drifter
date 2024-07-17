@@ -42,7 +42,7 @@ namespace Drifter.Class.GameObjectClass
                 this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            this.UpdateCollisionCircle();
+            base.Run(gameTime, isMovingNegative);
         }
 
 
