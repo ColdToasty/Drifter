@@ -22,10 +22,14 @@ namespace Drifter.Class.Tools
 
         //centre = (half width of object texture and half height of object texture) + position of object
         //radius = half of width of texture
+
+        public bool isDisabled;
+
         public CollisionCircle(Vector2 centre, float radius = 16)
         {
             this.Centre = centre;
             this.Radius = radius;
+            isDisabled = false;
         }
 
         public bool Contains(Vector2 point)

@@ -18,7 +18,6 @@ namespace Drifter.Class.GameObjectClass
 
         protected ObstacleType obstacleType;
 
-        public Texture2D Texture { get { return ObjectTexture; } }
 
         //For worm
         //private int moveOnX = 50;
@@ -66,7 +65,7 @@ namespace Drifter.Class.GameObjectClass
 
         public override void CollidedWithOtherGameObject()
         {
- 
+            Score.IncreaseScore(100);
         }
 
     }

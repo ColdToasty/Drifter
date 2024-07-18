@@ -24,8 +24,6 @@ namespace Drifter.Class.GameObjectClass
 
         public ProjectileType TypeOfProjectile { get { return projectileType; } }
 
-        public Texture2D Texture { get { return ObjectTexture; } }
-
 
         public Projectile(Texture2D texture, Vector2 startPosition, ProjectileType projectileType = ProjectileType.Missle)
         {
@@ -36,7 +34,7 @@ namespace Drifter.Class.GameObjectClass
             this.Position = startPosition;
             this.Position.X += texture.Width / 2;
 
-            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(4, -4), 8);
+            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, -4), 8);
         }
 
         public override void Run(GameTime gameTime, bool isMovingNegative)

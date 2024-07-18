@@ -20,23 +20,36 @@ namespace Drifter.Class.Factory
             random = new Random();
         }
 
+
         public Projectile CreateProjectile(Texture2D projectileTexture, Vector2 startPosition,  Projectile.ProjectileType projectileType = Projectile.ProjectileType.Missle)
         {
             return new Projectile(projectileTexture, startPosition, projectileType);
         }
 
-        public Obstacle CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
+        public Obstacle? CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
-            int spawnXPosition = random.Next(32, spawnAxisRange - 32);
-            return new Obstacle(texture, new Vector2(360, 0), obstacleType);
+            int spawnObstacle = random.Next(11);
+            if (spawnObstacle <= 4)
+            {
+                int spawnXPosition = random.Next(32, spawnAxisRange - 32);
+                return new Obstacle(texture, new Vector2(spawnXPosition, 0), obstacleType);
+            }
+
+            return null;
         }
 
         public Item? CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
         {
-            int spawnXPosition = random.Next(32, spawnAxisRange - 32);
-            return new Item(texture, new Vector2(spawnXPosition, 0) , itemType);
-        }
+            int spawnObstacle = random.Next(5);
+            if (spawnObstacle <= 4)
+            {
+                int spawnXPosition = random.Next(32, spawnAxisRange - 32);
+                return new Item(texture, new Vector2(spawnXPosition, 0), itemType);
+            }
 
-
+            return null;
+        }   
+            
+            
     }
 }

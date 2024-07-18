@@ -15,13 +15,12 @@ namespace Drifter.Class.GameObjectClass
         
         public enum ItemType
         {
-            Coin, Protection, Invincibility, InfiniteMissiles, LaserBeam, InfiniteLasterBeam
+            Coin, Reflect, Invincibility, InfiniteMissiles, LaserBeam, InfiniteLaserBeam
         }
 
         private ItemType itemType;
 
-
-
+        public ItemType TypeOfItem { get { return itemType; } }
         public Item(Texture2D texture, Vector2 startPosition, ItemType itemType = ItemType.Coin)
         {
             this.ObjectTexture = texture;

@@ -18,6 +18,8 @@ namespace Drifter.Class.AbstractClass
 
         protected Texture2D ObjectTexture { get; init; }
 
+        public Texture2D Texture { get { return ObjectTexture; } }
+
         protected Vector2 Position;
 
         public CollisionCircle collisionCircle;
@@ -41,6 +43,8 @@ namespace Drifter.Class.AbstractClass
 
 
         public virtual void CollidedWithOtherGameObject() { }
+
+        public virtual void CollidedWithOtherGameObject(GameObject gameObject) { }
 
         public virtual bool DidExitScreen(float EndOfScreenPosition)
         {
