@@ -18,6 +18,7 @@ namespace Drifter.Class.GameObjectClass
 
         protected ObstacleType obstacleType;
 
+        protected int IncreaseScoreValue;
 
         //For worm
         //private int moveOnX = 50;
@@ -30,6 +31,7 @@ namespace Drifter.Class.GameObjectClass
             this.ObjectTexture = texture;
             this.obstacleType = obstacleType;
             this.travelSpeed = 100;
+            IncreaseScoreValue = 100;
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, 8), 16);
         }
 
@@ -65,7 +67,7 @@ namespace Drifter.Class.GameObjectClass
 
         public override void CollidedWithOtherGameObject()
         {
-            Score.IncreaseScore(100);
+            Score.IncreaseScore(IncreaseScoreValue);
         }
 
     }

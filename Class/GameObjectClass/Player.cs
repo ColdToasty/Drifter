@@ -25,14 +25,19 @@ namespace Drifter.Class.GameObjectClass
         private bool infiniteProjectile { get; set; }
         public bool InfiniteProjectile { get { return infiniteProjectile; } }
 
+        public bool isMovingLeft = false;
+        public bool isDrifting = false;
 
         public Player(Vector2 startingPosition) {
             this.travelSpeed = 100;
             this.infiniteProjectile = false;
             this.Position = startingPosition;
             projectileType = Projectile.ProjectileType.Missle;
-            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(16, 16), 14);
-        }
+            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(16, 16), 8);
+
+            this.isMovingLeft = false;
+            this.isDrifting = false;
+    }
 
 
         public override void Run(GameTime gameTime, bool isMovingNegative)
@@ -49,6 +54,21 @@ namespace Drifter.Class.GameObjectClass
             this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
         }
 
+        public void Drift(GameTime gameTime)
+        {
+            if (isDrifting)
+            {
+                if (isMovingLeft)
+                {
+                    this.Position.X -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
+                else
+                {
+                    this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
+                this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
+            }
+        }
 
         public void SetPositionAtEdgeOfScreen(float edgePosition)
         {

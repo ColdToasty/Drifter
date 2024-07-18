@@ -9,6 +9,7 @@ using Drifter.Class.GameObjectClass;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 
+
 namespace Drifter
 {
     public class Game1 : Game
@@ -144,14 +145,14 @@ namespace Drifter
 
         private void CheckPlayerAtTheEdge()
         {
-            if (player.CurrentPosition.X < playerTexture.Width / 2)
+            if (player.CurrentPosition.X < 0)
             {
-                player.SetPositionAtEdgeOfScreen(0 + playerTexture.Width / 2);
+                player.SetPositionAtEdgeOfScreen(0);
             }
 
-            else if (player.CurrentPosition.X > _graphics.PreferredBackBufferWidth - playerTexture.Width / 2)
+            else if (player.CurrentPosition.X + playerTexture.Width/2 > _graphics.PreferredBackBufferWidth - playerTexture.Width / 2)
             {
-                player.SetPositionAtEdgeOfScreen(_graphics.PreferredBackBufferWidth - playerTexture.Width / 2);
+                player.SetPositionAtEdgeOfScreen(_graphics.PreferredBackBufferWidth - playerTexture.Width);
             }
         }
 
@@ -266,6 +267,8 @@ namespace Drifter
             if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
             {
                 player.Run(gameTime, true);
+                player.isDrifting = true;
+                player.isMovingLeft = true; ;
             }
 
             CheckPlayerAtTheEdge();
@@ -273,6 +276,8 @@ namespace Drifter
             if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
             {
                 player.Run(gameTime, false);
+                player.isDrifting = true;
+                player.isMovingLeft = false;
             }
 
 
@@ -295,6 +300,10 @@ namespace Drifter
 
 
             }
+            if (player.isDrifting)
+            {
+                player.Run(gameTime, player.isMovingLeft);
+            }
         }
 
 
@@ -306,8 +315,6 @@ namespace Drifter
             _spriteBatch.Begin();
 
 
-
-
             _spriteBatch.Draw(
                 playerTexture,
                 player.CurrentPosition,
@@ -317,7 +324,7 @@ namespace Drifter
 
             _spriteBatch.Draw(
             ball,
-            player.CurrentPosition + new Vector2(8,8),
+            player.CurrentPosition + new Vector2(8,12),
             Color.White
             );
 
@@ -349,8 +356,15 @@ namespace Drifter
                 //draws their collisions shapes
                 _spriteBatch.Draw(
                 ball,
-                o.CurrentPosition + new Vector2(8, 8),
-                Color.White
+                o.CurrentPosition,
+                null,
+                Color.White,
+                0,
+                Vector2.Zero,
+                //only 2.0f because ball texture is 16bits 
+                2.0f,
+                0,
+                0
                 );
             }
 
@@ -369,6 +383,7 @@ namespace Drifter
                 i.CurrentPosition,
                 Color.White
                 );
+           
             }
 
             Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 4 - _graphics.PreferredBackBufferHeight / 8);
