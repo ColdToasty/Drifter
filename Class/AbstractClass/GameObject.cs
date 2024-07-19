@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Drifter.Class.AbstractClass
 {
-    internal abstract class GameObject
+    internal class GameObject
     {
 
 

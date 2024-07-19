@@ -6,11 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Net.Mime;
-using Microsoft.Xna.Framework.Content;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
-using Drifter.Class.GameObjectClass;
 
 
 
@@ -25,8 +22,7 @@ namespace Drifter.Class.GameObjectClass
         private bool infiniteProjectile { get; set; }
         public bool InfiniteProjectile { get { return infiniteProjectile; } }
 
-        public bool isMovingLeft = false;
-        public bool isDrifting = false;
+        public bool isMovingLeft, isDrifting;
 
         public Player(Vector2 startingPosition) {
             this.travelSpeed = 100;
@@ -37,6 +33,7 @@ namespace Drifter.Class.GameObjectClass
 
             this.isMovingLeft = false;
             this.isDrifting = false;
+
     }
 
 

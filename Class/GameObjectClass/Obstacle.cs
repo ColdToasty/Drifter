@@ -14,11 +14,15 @@ namespace Drifter.Class.GameObjectClass
 {
     internal class Obstacle : GameObject
     {
-        public enum ObstacleType { Asteroid, MovingAsteroid, SpaceWorm, UFO, Blackhole}
+        public enum ObstacleType { Asteroid, ShatteringAsteroid, SpaceWorm, UFO, Blackhole, SpacePipe}
 
         protected ObstacleType obstacleType;
 
         protected int IncreaseScoreValue;
+
+        protected int health;
+
+        public int Health { get { return health; } }
 
         //For worm
         //private int moveOnX = 50;
@@ -32,6 +36,7 @@ namespace Drifter.Class.GameObjectClass
             this.obstacleType = obstacleType;
             this.travelSpeed = 100;
             IncreaseScoreValue = 100;
+            this.health = 2;
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, 8), 16);
         }
 
@@ -65,9 +70,17 @@ namespace Drifter.Class.GameObjectClass
 
         }
 
+        public void HitByProjectile(Projectile.ProjectileType projectileType)
+        {
+            this.health--;
+            if(this.health <= 0)
+            {
+                Score.IncreaseScore(IncreaseScoreValue);
+            }
+        }
+
         public override void CollidedWithOtherGameObject()
         {
-            Score.IncreaseScore(IncreaseScoreValue);
         }
 
     }
