@@ -12,8 +12,6 @@ namespace Drifter.Class.AbstractClass
 {
     internal class GameObject
     {
-
-
         protected int travelSpeed { get; set; }
 
         protected Texture2D ObjectTexture { get; init; }
@@ -24,7 +22,7 @@ namespace Drifter.Class.AbstractClass
 
         public CollisionCircle collisionCircle;
 
-
+        public bool isMovingLeft = false;
 
         protected virtual void UpdateCollisionCircle()
         {
@@ -53,6 +51,26 @@ namespace Drifter.Class.AbstractClass
                 return true;
             }
             return false;
+        }
+
+        public virtual void CheckObjectAtEdge()
+        {
+
+            if (CurrentPosition.X < 0)
+            {
+                SetPositionAtEdgeOfScreen(0);
+            }
+
+            else if (CurrentPosition.X + Texture.Width / 2 > Game1.ScreenWidth - Texture.Width / 2)
+            {
+                SetPositionAtEdgeOfScreen(Game1.ScreenWidth - Texture.Width);
+            }
+        }
+
+
+        public void SetPositionAtEdgeOfScreen(float edgePosition)
+        {
+            this.Position.X = edgePosition;
         }
     }
 }

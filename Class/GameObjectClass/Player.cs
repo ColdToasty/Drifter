@@ -22,14 +22,17 @@ namespace Drifter.Class.GameObjectClass
         private bool infiniteProjectile { get; set; }
         public bool InfiniteProjectile { get { return infiniteProjectile; } }
 
-        public bool isMovingLeft, isDrifting;
+        public bool isDrifting;
 
-        public Player(Vector2 startingPosition) {
+
+        public Player(Texture2D texture, Vector2 startingPosition) {
             this.travelSpeed = 100;
             this.infiniteProjectile = false;
             this.Position = startingPosition;
             projectileType = Projectile.ProjectileType.Missle;
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(16, 16), 8);
+
+            this.ObjectTexture = texture;
 
             this.isMovingLeft = false;
             this.isDrifting = false;
@@ -67,10 +70,6 @@ namespace Drifter.Class.GameObjectClass
             }
         }
 
-        public void SetPositionAtEdgeOfScreen(float edgePosition)
-        {
-            this.Position.X = edgePosition;
-        }
 
         public override void CollidedWithOtherGameObject(GameObject gameObject)
         {

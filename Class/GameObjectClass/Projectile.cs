@@ -17,15 +17,16 @@ namespace Drifter.Class.GameObjectClass
 
         public enum ProjectileType
         {
-            Missle, Laser, LaserBeam
+            Missle, Laser, LaserBeam, EnemyProjectile
         }
 
         private ProjectileType projectileType;
 
         public ProjectileType TypeOfProjectile { get { return projectileType; } }
 
+        public bool IsMovingNegative = false;
 
-        public Projectile(Texture2D texture, Vector2 startPosition, ProjectileType projectileType = ProjectileType.Missle)
+        public Projectile(Texture2D texture, Vector2 startPosition,bool isMovingNegative, ProjectileType projectileType = ProjectileType.Missle)
         {
             this.travelSpeed = 200;
             this.projectileType = projectileType;
@@ -33,20 +34,38 @@ namespace Drifter.Class.GameObjectClass
 
             this.Position = startPosition;
             this.Position.X += texture.Width / 2;
-
+            this.IsMovingNegative = isMovingNegative;
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, -4), 8);
         }
 
+        //moving negative means going up
         public override void Run(GameTime gameTime, bool isMovingNegative)
         {
-            this.Position.Y -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (isMovingNegative)
+            {
+                this.Position.Y -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                
+            }
+            else
+            {
+                this.Position.Y += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
             UpdateCollisionCircle();
         }
 
 
         protected override void UpdateCollisionCircle()
         {
-            this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
+            if (IsMovingNegative)
+            {
+                this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
+            }
+            else
+            {
+                this.collisionCircle.Centre = this.Position - new Vector2(8, 8);
+            }
+
+
         }
     }
 }

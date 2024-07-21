@@ -32,7 +32,7 @@ namespace Drifter.Class.Tools
         }
 
         //Checks if timer time has reached or passed
-        public static bool CheckTimeReached(Timer timer, GameTime gameTime)
+        public static bool CheckTimeReached(GameTime gameTime, Timer timer)
         {
             
             if (gameTime.TotalGameTime.TotalMilliseconds >= timer.EndTime)

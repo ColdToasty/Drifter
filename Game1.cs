@@ -9,6 +9,7 @@ using Drifter.Class.GameObjectClass;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Commands;
+using Drifter.Class.GameObjectClass.ObstacleClass;
 
 
 namespace Drifter
@@ -18,17 +19,10 @@ namespace Drifter
         private static GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-
-        private static List<Projectile> projectiles = new List<Projectile>();
-        private static List<Obstacle> obstacles = new List<Obstacle>();
-        private static List<Item> items = new List<Item>();
-        private static List<GameObject> objectsToBeDeleted = new List<GameObject>();
-
         private static int BottomEndPosition, TopEndPosition;
 
         private Random random;
         private Player player;
-        private GameObjectSpawner gameObjectSpawner;
         private InputHandler inputHandler;
 
         private MoveLeftCommand moveLeftCommand;
@@ -56,9 +50,7 @@ namespace Drifter
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-
             playerPosition = new Vector2(_graphics.PreferredBackBufferWidth /2, _graphics.PreferredBackBufferHeight - _graphics.PreferredBackBufferHeight /4);
-            player = new Player(playerPosition);
 
             inputHandler = new InputHandler();
             moveLeftCommand = new MoveLeftCommand();
@@ -66,7 +58,7 @@ namespace Drifter
             stopDriftCommand = new StopDriftCommand();
 
             ScreenWidth = _graphics.PreferredBackBufferWidth;
-            gameObjectSpawner = new GameObjectSpawner(_graphics.PreferredBackBufferWidth);
+            GameObjectSpawner.SetSpawnAxisRange(ScreenWidth);
 
             BottomEndPosition = _graphics.PreferredBackBufferHeight;
             TopEndPosition = 0;
@@ -91,114 +83,71 @@ namespace Drifter
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("Font/MainFont");
-            playerTexture = Content.Load<Texture2D>("Player/DefaultPlayer");
             ball = Content.Load<Texture2D>("CollisionShape/ball");
             projectileMissile = Content.Load<Texture2D>("Projectile/Missile");
             obstacleAsteroid = Content.Load<Texture2D>("Obstacle/Asteroid/Asteroid");
             coin = Content.Load<Texture2D>("Item/Coin/Coin");
             textMiddlePoint = spriteFont.MeasureString(Score.ScoreValue.ToString("D10")) / 2;
+
+            playerTexture = Content.Load<Texture2D>("Player/DefaultPlayer");
+            player = new Player(playerTexture, playerPosition);
         }
 
 
-        //Deletes gameObjects by removing them from their respective list
-        //Also resets the objectsToBeDeleted list at the end
-        private static void DeleteGameObjects()
-        {
-            for (int i = 0; i < objectsToBeDeleted.Count; i++)
-            {
-                GameObject gameObject = objectsToBeDeleted[i];
 
-                if (gameObject is Obstacle)
-                {
-                    obstacles.Remove((Obstacle)gameObject);
-                }
-                else if (gameObject is Projectile)
-                {
-                    projectiles.Remove((Projectile)gameObject);
-                }
-                else if (gameObject is Item)
-                {
-                    items.Remove((Item)gameObject);
-                }
-            }
-            objectsToBeDeleted.Clear();
-        }
-
-        private void AddToList<TGameObject>(TGameObject gameObject) where TGameObject : GameObject
-        {
-            if (gameObject is Projectile)
-            {
-                projectiles.Add(gameObject as Projectile);
-            }
-
-            else if (gameObject is Obstacle)
-            {
-                obstacles.Add(gameObject as Obstacle);
-            }
-            else if(gameObject is Item)
-            {
-                items.Add(gameObject as Item);
-
-            }
-            else
-            {
-                //System.Diagnostics.Trace.WriteLine("Null");
-            }
-        }
-
-        private void CheckPlayerAtTheEdge()
-        {
-            if (player.CurrentPosition.X < 0)
-            {
-                player.SetPositionAtEdgeOfScreen(0);
-            }
-
-            else if (player.CurrentPosition.X + playerTexture.Width/2 > _graphics.PreferredBackBufferWidth - playerTexture.Width / 2)
-            {
-                player.SetPositionAtEdgeOfScreen(_graphics.PreferredBackBufferWidth - playerTexture.Width);
-            }
-        }
 
         private void RunObjects(GameTime gameTime)
         {
-            for (int i = projectiles.Count - 1; i >= 0; i--)
+            for (int i = GameObjectSpawner.projectiles.Count - 1; i >= 0; i--)
             {
-                projectiles[i].Run(gameTime, false);
-                if (projectiles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
+                GameObjectSpawner.projectiles[i].Run(gameTime, GameObjectSpawner.projectiles[i].IsMovingNegative);
+                if (GameObjectSpawner.projectiles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
                 {
-                    objectsToBeDeleted.Add(projectiles[i]);
-                }
-            }
-            for (int i = obstacles.Count - 1; i >= 0; i--)
-            {
-                obstacles[i].Run(gameTime, false);
-                if (obstacles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
-                {
-                    objectsToBeDeleted.Add(obstacles[i]);
+                    GameObjectSpawner.objectsToBeDeleted.Add(GameObjectSpawner.projectiles[i]);
                 }
             }
 
-            for (int i = items.Count - 1; i >= 0; i--)
+            for (int i = GameObjectSpawner.obstacles.Count - 1; i >= 0; i--)
             {
-                items[i].Run(gameTime, false);
-                if (items[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
+                
+                GameObjectSpawner.obstacles[i].Run(gameTime, GameObjectSpawner.obstacles[i].isMovingLeft);
+
+                if (GameObjectSpawner.obstacles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
                 {
-                    objectsToBeDeleted.Add(items[i]);
+                    GameObjectSpawner.objectsToBeDeleted.Add(GameObjectSpawner.obstacles[i]);
+                }
+            }
+
+            for (int i = GameObjectSpawner.items.Count - 1; i >= 0; i--)
+            {
+                GameObjectSpawner.items[i].Run(gameTime, false);
+                if (GameObjectSpawner.items[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
+                {
+                    GameObjectSpawner.objectsToBeDeleted.Add(GameObjectSpawner.items[i]);
+                }
+            }
+
+            for (int i = GameObjectSpawner.enemyProjectiles.Count - 1; i >= 0; i--)
+            {
+                GameObjectSpawner.enemyProjectiles[i].Run(gameTime, GameObjectSpawner.enemyProjectiles[i].IsMovingNegative);
+                if (GameObjectSpawner.enemyProjectiles[i].DidExitScreen(_graphics.PreferredBackBufferHeight))
+                {
+                    GameObjectSpawner.objectsToBeDeleted.Add(GameObjectSpawner.enemyProjectiles[i]);
                 }
             }
         }
 
         private void CheckCollision()
         {
-            foreach (Obstacle o in obstacles)
+            foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
                 if (player.collisionCircle.Intersects(o.collisionCircle))
                 {
                     o.CollidedWithOtherGameObject();
                     player.CollidedWithOtherGameObject();
-                    objectsToBeDeleted.Add(o);
+                    GameObjectSpawner.objectsToBeDeleted.Add(o);
                 }
-                foreach (Projectile p in projectiles)
+                foreach (Projectile p in GameObjectSpawner.projectiles)
                 {
                     if (o.collisionCircle.Intersects(p.collisionCircle))
                     {
@@ -207,20 +156,20 @@ namespace Drifter
                         o.HitByProjectile(p.TypeOfProjectile);
                         if(o.Health <= 0)
                         {
-                            objectsToBeDeleted.Add(o);
+                            GameObjectSpawner.objectsToBeDeleted.Add(o);
                         }
-                        objectsToBeDeleted.Add(p);
+                        GameObjectSpawner.objectsToBeDeleted.Add(p);
                     }
                 }
             }
 
-            foreach(Item i in items)
+            foreach(Item i in GameObjectSpawner.items)
             {
                 if (i.collisionCircle.Intersects(player.collisionCircle))
                 {
                     i.CollidedWithOtherGameObject();
                     player.CollidedWithOtherGameObject(i);
-                    objectsToBeDeleted.Add(i);
+                    GameObjectSpawner.objectsToBeDeleted.Add(i);
                 }
             }
         }
@@ -238,8 +187,8 @@ namespace Drifter
 
             if((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
             {
-                AddToList(gameObjectSpawner.CreateObstacle(obstacleAsteroid));
-                AddToList(gameObjectSpawner.CreateItem(coin));
+                GameObjectSpawner.CreateObstacle(obstacleAsteroid);
+                GameObjectSpawner.CreateItem(coin);
                 previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
             }
             Score.IncreaseScore(1);
@@ -248,7 +197,7 @@ namespace Drifter
 
             RunObjects(gameTime);
             CheckCollision();
-            DeleteGameObjects();
+            GameObjectSpawner.DeleteGameObjects();
 
             //System.Diagnostics.Trace.WriteLine(obstacles.Count);
             //System.Diagnostics.Trace.WriteLine(projectiles.Count);
@@ -258,9 +207,8 @@ namespace Drifter
 
         private void ShootProjectile()
         {
-                AddToList(gameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition));
+                GameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition, true);
         }
-
 
         private void CheckPlayerInput(GameTime gameTime)
         {
@@ -271,13 +219,15 @@ namespace Drifter
                 inputHandler.Command = moveLeftCommand;
             }
 
-            CheckPlayerAtTheEdge();
+            
 
             if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
             {
 
                 inputHandler.Command = moveRightCommand;
             }
+
+            player.CheckObjectAtEdge();
 
             if(kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
             {
@@ -288,7 +238,7 @@ namespace Drifter
             {
                 if (shootTimer.Set)
                 {
-                    canShoot = Timer.CheckTimeReached(shootTimer, gameTime);
+                    canShoot = Timer.CheckTimeReached(gameTime, shootTimer);
                     if (canShoot)
                     {
                         shootTimer.ResetTimer();
@@ -307,7 +257,6 @@ namespace Drifter
                 inputHandler.Command.Execute(gameTime, player);
             }
 
-
             inputHandler.Command = null;
 
             if (player.isDrifting)
@@ -315,8 +264,6 @@ namespace Drifter
                 player.Run(gameTime, player.isMovingLeft);
             }
         }
-
-
 
         //Draw sprites in game window
         protected override void Draw(GameTime gameTime)
@@ -338,7 +285,21 @@ namespace Drifter
 
 
             //Draw projectiles
-            foreach (Projectile p in  projectiles)
+            foreach (Projectile p in GameObjectSpawner.projectiles)
+            {
+                _spriteBatch.Draw(
+                p.Texture,
+                p.CurrentPosition,
+                Color.White
+                );
+
+                _spriteBatch.Draw(
+                ball,
+                p.CurrentPosition,
+                Color.White);
+            };
+
+            foreach (Projectile p in GameObjectSpawner.enemyProjectiles)
             {
                 _spriteBatch.Draw(
                 p.Texture,
@@ -353,7 +314,7 @@ namespace Drifter
             };
 
             //Draw obstacles
-            foreach (Obstacle o in obstacles)
+            foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
                 _spriteBatch.Draw(
                 o.Texture,
@@ -377,7 +338,7 @@ namespace Drifter
             }
 
             //Draw obstacles
-            foreach (Item i in items)
+            foreach (Item i in GameObjectSpawner.items)
             {
                 _spriteBatch.Draw(
                 i.Texture,

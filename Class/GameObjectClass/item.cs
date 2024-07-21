@@ -15,29 +15,26 @@ namespace Drifter.Class.GameObjectClass
         
         public enum ItemType
         {
-            Coin, Reflect, Invincibility, InfiniteMissiles, LaserBeam, InfiniteLaserBeam
+            Coin, Reflect, Invincibility, InfiniteMissiles, LaserBeam, InfiniteLaserBeam, SuperNova
         }
 
-        private ItemType itemType;
-
-        public ItemType TypeOfItem { get { return itemType; } }
+        public ItemType TypeOfItem { get; init; }
+        
         public Item(Texture2D texture, Vector2 startPosition, ItemType itemType = ItemType.Coin)
         {
             this.ObjectTexture = texture;
             this.Position = startPosition;
-            this.itemType = itemType;
+            this.TypeOfItem = itemType;
             this.travelSpeed = 100;
 
-            this.collisionCircle = new CollisionCircle(new Vector2(8, 8), 4);
+            this.collisionCircle = new CollisionCircle(new Vector2(8, 8), 16);
         }
         
-
         public override void Run(GameTime gameTime, bool isMovingNegative)
         {
             this.Position.Y += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             base.Run(gameTime, isMovingNegative);
         }
-
 
 
     }

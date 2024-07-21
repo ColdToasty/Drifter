@@ -20,7 +20,7 @@ namespace Drifter.Class.Commands
         {
             if (driftTimer.Set)
             {
-                if(Timer.CheckTimeReached(driftTimer, gameTime))
+                if(Timer.CheckTimeReached(gameTime, driftTimer))
                 {
                     StopDrift(gameObject as Player);
                     driftTimer.ResetTimer();

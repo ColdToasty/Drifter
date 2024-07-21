@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.GameObjectClass;
+using Drifter.Class.GameObjectClass.ObstacleClass;
 using Microsoft.Xna.Framework;
 
 
@@ -15,10 +16,20 @@ namespace Drifter.Class.Commands
 
         public override void Execute<T>(GameTime gameTime, T gameObject)
         {
-            Player player = (gameObject as Player);
-            player.Run(gameTime, true);
-            player.isDrifting = true;
-            player.isMovingLeft = true; ;
+            GameObject GameObject = gameObject as GameObject;
+            GameObject.Run(gameTime, true);
+            GameObject.isMovingLeft = true;
+
+            if (gameObject is Player)
+            {
+                Player player = (GameObject as Player);
+                player.isDrifting = true;
+            }
+            else if(gameObject is AlienSpaceship)
+            {
+                AlienSpaceship spaceship = GameObject as AlienSpaceship;
+            }
+
         }
     }
 }
