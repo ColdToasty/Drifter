@@ -28,7 +28,8 @@ namespace Drifter.Class.GameObjectClass
 
         public Projectile(Texture2D texture, Vector2 startPosition,bool isMovingNegative, ProjectileType projectileType = ProjectileType.Missle)
         {
-            this.travelSpeed = 200;
+            SetProjectileTravelSpeed(0);
+
             this.projectileType = projectileType;
             ObjectTexture = texture;
 
@@ -38,8 +39,20 @@ namespace Drifter.Class.GameObjectClass
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, -4), 8);
         }
 
+        public void SetProjectileTravelSpeed(int scoreValue)
+        {
+            if(projectileType == ProjectileType.EnemyProjectile)
+            {
+                this.travelSpeed = 150;
+            }
+            else
+            {
+                this.travelSpeed = 300;
+            }
+        }
+
         //moving negative means going up
-        public override void Run(GameTime gameTime, bool isMovingNegative)
+        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {
             if (isMovingNegative)
             {
@@ -64,7 +77,6 @@ namespace Drifter.Class.GameObjectClass
             {
                 this.collisionCircle.Centre = this.Position - new Vector2(8, 8);
             }
-
 
         }
     }

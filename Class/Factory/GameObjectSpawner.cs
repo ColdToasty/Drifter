@@ -22,30 +22,32 @@ namespace Drifter.Class.Factory
         public static List<Projectile> projectiles = new List<Projectile>();
         public static List<Obstacle> obstacles = new List<Obstacle>();
         public static List<Item> items = new List<Item>();
-        public static List<GameObject> objectsToBeDeleted = new List<GameObject>();
+        private static List<GameObject> objectsToBeDeleted = new List<GameObject>();
         public static List<Projectile> enemyProjectiles = new List<Projectile>();
 
         public static void AddToList<TGameObject>(TGameObject gameObject) where TGameObject : GameObject
         {
+
+
             if (gameObject is Projectile)
             {
                 if ((gameObject as Projectile).TypeOfProjectile != Projectile.ProjectileType.EnemyProjectile)
                 {
-                    GameObjectSpawner.projectiles.Add(gameObject as Projectile);
+                    projectiles.Add(gameObject as Projectile);
                 }
                 else
                 {
-                    GameObjectSpawner.enemyProjectiles.Add(gameObject as Projectile);
+                    enemyProjectiles.Add(gameObject as Projectile);
                 }
             }
 
             else if (gameObject is Obstacle)
             {
-                GameObjectSpawner.obstacles.Add(gameObject as Obstacle);
+                obstacles.Add(gameObject as Obstacle);
             }
             else if (gameObject is Item)
             {
-                GameObjectSpawner.items.Add(gameObject as Item);
+                items.Add(gameObject as Item);
 
             }
 
@@ -56,7 +58,14 @@ namespace Drifter.Class.Factory
         }
 
 
-        //Deletes gameObjects by removing them from their respective list
+
+        public static void AddToDeleteList(GameObject gameObject)
+        {
+            objectsToBeDeleted.Add(gameObject);
+        }
+
+
+        //Deletes gameObjects by removing them from their respective list and setting them to null
         //Also resets the objectsToBeDeleted list at the end
         public static void DeleteGameObjects()
         {
@@ -100,10 +109,22 @@ namespace Drifter.Class.Factory
         public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
             int spawnObstacle = random.Next(11);
-            if (spawnObstacle <= 4)
+            if (spawnObstacle <= 1)
+            {
+                int spawnXPosition = random.Next(2);
+                if(spawnXPosition == 0)
+                {
+                    AddToList(new AlienSpaceship(texture, new Vector2(spawnXPosition, 64), obstacleType));
+                }
+                else
+                {
+                    AddToList(new AlienSpaceship(texture, new Vector2(SpawnAxisRange-32, 64), obstacleType));
+                }
+            }
+            else
             {
                 int spawnXPosition = random.Next(32, SpawnAxisRange - 32);
-                AddToList(new AlienSpaceship(texture, new Vector2(spawnXPosition, 0), obstacleType));
+                AddToList(new Obstacle(texture, new Vector2(spawnXPosition, 0), obstacleType));
             }
         }
 

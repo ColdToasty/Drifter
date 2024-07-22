@@ -40,7 +40,7 @@ namespace Drifter.Class.GameObjectClass
     }
 
 
-        public override void Run(GameTime gameTime, bool isMovingNegative)
+        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {
             if (isMovingNegative)
             {

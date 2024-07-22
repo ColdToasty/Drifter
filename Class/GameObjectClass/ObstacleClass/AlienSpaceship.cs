@@ -24,7 +24,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         public AlienSpaceship(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.AlienSpaceship) : base(texture, startPosition, obstacleType)
         {
-            this.travelSpeed = 200;
+            this.travelSpeed = 100;
             this.commandTimer = new Timer();
             this.movementTimer = new Timer();
             this.shootTimer = new Timer();
@@ -32,7 +32,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         }
 
-        public override void Run(GameTime gameTime, bool isMovingNegative)
+        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {
       
             if (isMovingNegative)

@@ -17,7 +17,7 @@ namespace Drifter.Class.Commands
         public override void Execute<T>(GameTime gameTime, T gameObject)
         {
             GameObject GameObject = gameObject as GameObject;
-            GameObject.Run(gameTime, true);
+            GameObject.Run(gameTime, true, Game1.ScreenHeight);
             GameObject.isMovingLeft = true;
 
             if (gameObject is Player)

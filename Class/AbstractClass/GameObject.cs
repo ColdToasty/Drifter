@@ -1,4 +1,5 @@
-﻿using Drifter.Class.Tools;
+﻿using Drifter.Class.Factory;
+using Drifter.Class.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,9 +33,10 @@ namespace Drifter.Class.AbstractClass
         public Vector2 CurrentPosition { get { return Position; } }
 
         //IsMovingNegative only used for player
-        public virtual void Run(GameTime gameTime, bool IsMovingNegative)
+        public virtual void Run(GameTime gameTime, bool IsMovingNegative, float EndOfScreenPosition)
         {
             UpdateCollisionCircle();
+            DidExitScreen(EndOfScreenPosition);
         }
         
         public int TravelSpeed { get {  return travelSpeed; } }
@@ -44,14 +46,17 @@ namespace Drifter.Class.AbstractClass
 
         public virtual void CollidedWithOtherGameObject(GameObject gameObject) { }
 
-        public virtual bool DidExitScreen(float EndOfScreenPosition)
+
+
+        protected virtual void DidExitScreen(float EndOfScreenPosition)
         {
             if (Position.Y > EndOfScreenPosition + 32 || Position.Y < 0 - 33)
             {
-                return true;
+                GameObjectSpawner.AddToDeleteList(this);
             }
-            return false;
         }
+
+
 
         public virtual void CheckObjectAtEdge()
         {

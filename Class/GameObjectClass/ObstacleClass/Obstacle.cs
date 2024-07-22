@@ -14,7 +14,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 {
     internal class Obstacle : GameObject
     {
-        public enum ObstacleType { Asteroid, ShatteringAsteroid, SpaceWorm, AlienSpaceship, Blackhole, SpacePipe }
+        public enum ObstacleType { Asteroid, AngledAsteroid, ShatteringAsteroid, SpaceWorm, AlienSpaceship, KamakaziAlienSpaceship, Blackhole, SpacePipe }
 
         protected ObstacleType obstacleType;
 
@@ -43,9 +43,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.random = new Random();
         }
 
-        public override void Run(GameTime gameTime, bool isMovingNegative)
+        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {
             Position.Y += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            base.Run(gameTime, isMovingNegative, EndOfScreenPosition);
             collisionCircle.Centre = Position + new Vector2(16, 16);
         }
 
@@ -58,12 +59,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
         }
 
-
-
-
-        public override void CollidedWithOtherGameObject()
-        {
-        }
 
     }
 }
