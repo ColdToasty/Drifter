@@ -58,7 +58,7 @@ namespace Drifter.Class.AbstractClass
 
 
 
-        public virtual void CheckObjectAtEdge()
+        protected virtual void CheckObjectAtEdge()
         {
 
             if (CurrentPosition.X < 0)

@@ -11,7 +11,6 @@ namespace Drifter.Class.Tools
         private static int score = 0;
         public static int ScoreValue { get { return score; } }
 
-
         public static void IncreaseScore(int value)
         {
             score += value;
@@ -22,8 +21,6 @@ namespace Drifter.Class.Tools
         {
             score = 0;
         }
-
-
 
     }   
 }

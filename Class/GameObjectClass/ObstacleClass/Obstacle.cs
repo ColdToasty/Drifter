@@ -16,6 +16,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
     {
         public enum ObstacleType { Asteroid, AngledAsteroid, ShatteringAsteroid, SpaceWorm, AlienSpaceship, KamakaziAlienSpaceship, Blackhole, SpacePipe }
 
+        public readonly static int ObstacleTypeCount = Enum.GetValues(typeof(ObstacleType)).Length;
         protected ObstacleType obstacleType;
 
         protected int IncreaseScoreValue;

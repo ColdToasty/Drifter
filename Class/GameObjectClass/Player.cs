@@ -51,8 +51,10 @@ namespace Drifter.Class.GameObjectClass
                 this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
+            this.CheckObjectAtEdge();
             this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
         }
+
 
         public void Drift(GameTime gameTime)
         {
@@ -66,6 +68,7 @@ namespace Drifter.Class.GameObjectClass
                 {
                     this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
+                this.CheckObjectAtEdge();
                 this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
             }
         }

@@ -65,7 +65,8 @@ namespace Drifter
             previousTimeInSeconds = 0;
             shootTimer = new Timer();
             random = new Random();
-            
+
+            SpawnTypeSelector.Initialise();
 
         }
 
@@ -77,15 +78,15 @@ namespace Drifter
         }
 
         //Load main game content
-        //only used once
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteFont = Content.Load<SpriteFont>("Font/MainFont");
             ball = Content.Load<Texture2D>("CollisionShape/ball");
             projectileMissile = Content.Load<Texture2D>("Projectile/Missile");
             obstacleAsteroid = Content.Load<Texture2D>("Obstacle/Asteroid/Asteroid");
             coin = Content.Load<Texture2D>("Item/Coin/Coin");
+
+            spriteFont = Content.Load<SpriteFont>("Font/MainFont");
             textMiddlePoint = spriteFont.MeasureString(Score.ScoreValue.ToString("D10")) / 2;
 
             playerTexture = Content.Load<Texture2D>("Player/DefaultPlayer");
@@ -104,25 +105,23 @@ namespace Drifter
 
             for (int i = GameObjectSpawner.obstacles.Count - 1; i >= 0; i--)
             {
-                
                 GameObjectSpawner.obstacles[i].Run(gameTime, GameObjectSpawner.obstacles[i].isMovingLeft, ScreenHeight);
-
             }
 
             for (int i = GameObjectSpawner.items.Count - 1; i >= 0; i--)
             {
                 GameObjectSpawner.items[i].Run(gameTime, false, _graphics.PreferredBackBufferHeight);
-
             }
 
             for (int i = GameObjectSpawner.enemyProjectiles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.enemyProjectiles[i].Run(gameTime, true, ScreenHeight);
+                GameObjectSpawner.enemyProjectiles[i].Run(gameTime, false, ScreenHeight);
             }
         }
 
         private void CheckCollision()
         {
+            //checks player projectile collides with obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
                 if (player.collisionCircle.Intersects(o.collisionCircle))
@@ -210,7 +209,6 @@ namespace Drifter
                 inputHandler.Command = moveRightCommand;
             }
 
-            player.CheckObjectAtEdge();
 
             if(kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
             {

@@ -39,7 +39,6 @@ namespace Drifter.Class.Tools
             {
                 return true;
             }
-
             return false;
         }
 
@@ -50,17 +49,22 @@ namespace Drifter.Class.Tools
             set = false;
         }
 
-        //Set the startTime only
+        //Start the Timer
         public void SetStartTime(GameTime gameTime)
         {
             this.startTime = gameTime.TotalGameTime.TotalMilliseconds;
             set = true;
         }
 
+        //Stops the timer
+        public void StopTime(GameTime gameTime)
+        {
+            endTime = gameTime.TotalGameTime.TotalMilliseconds - startTime;
+        }
+
         //Sets both the startTime and endTime
         public void SetStartTimeAndStopTime(GameTime gameTime, int milliseconds)
         {
-
             SetStartTime(gameTime);
             this.endTime = this.startTime + milliseconds;;
         }

@@ -114,10 +114,12 @@ namespace Drifter.Class.Factory
                 int spawnXPosition = random.Next(2);
                 if(spawnXPosition == 0)
                 {
+                    //spawns left edge of screen
                     AddToList(new AlienSpaceship(texture, new Vector2(spawnXPosition, 64), obstacleType));
                 }
                 else
                 {
+                    //spawns right end of the screen
                     AddToList(new AlienSpaceship(texture, new Vector2(SpawnAxisRange-32, 64), obstacleType));
                 }
             }
