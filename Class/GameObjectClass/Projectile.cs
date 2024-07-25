@@ -73,13 +73,27 @@ namespace Drifter.Class.GameObjectClass
             }
         }
 
-        public override void CollidedWithOtherGameObject(GameObject gameObject)
+        public override void CollidedWithOtherGameObject(GameObject gameObject = null)
         {
-            if(this.projectileType == ProjectileType.EnemyProjectile)
+            if(gameObject is null)
             {
-                //increase score by 100
+                base.CollidedWithOtherGameObject();
+                return;
             }
-            GameObjectSpawner.AddToDeleteList(this);
+
+            if(gameObject is Player)
+            {
+
+            }
+            else if(gameObject is Projectile)
+            {
+                if (this.projectileType == ProjectileType.EnemyProjectile)
+                {
+                    //increase score by 100
+                }
+            }
+
+            base.CollidedWithOtherGameObject();
         }
 
 

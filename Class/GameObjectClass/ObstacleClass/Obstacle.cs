@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Drifter.Class.Tools;
 using Microsoft.Xna.Framework.Input;
 using System.Runtime.CompilerServices;
+using Drifter.Class.Factory;
 
 namespace Drifter.Class.GameObjectClass.ObstacleClass
 {
@@ -100,6 +101,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         }
 
 
+
         public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {
             Position.Y += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -107,12 +109,29 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             collisionCircle.Centre = Position + new Vector2(16, 16);
         }
 
-        public void HitByProjectile(Projectile.ProjectileType projectileType)
+
+        public override void CollidedWithOtherGameObject(GameObject gameObject = null)
+        {
+            if(gameObject is null)
+            {
+                base.CollidedWithOtherGameObject();
+                return;
+            }
+
+            if(gameObject is Projectile)
+            {
+                HitByProjectile(((Projectile)gameObject).TypeOfProjectile);
+            }
+
+        }
+
+        private void HitByProjectile(Projectile.ProjectileType projectileType)
         {
             health--;
             if (health <= 0)
             {
                 Score.IncreaseScore(IncreaseScoreValue);
+                DestroyMyself();
             }
         }
 

@@ -16,7 +16,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
     {
         //Will track how long a command was last
         private Timer movementTimer;
-
+        private Timer deathTimer;
         //Will place intervals on when projectile will spawn
         private Timer shootTimer;
         private Random random = new Random();
@@ -28,11 +28,15 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         private int stopPickRate = 4;
 
         private int movementPick;
+
+
+
         public AlienSpaceship(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.AlienSpaceship) : base(texture, startPosition, obstacleType)
         {
             this.travelSpeed = 100;
             this.movementTimer = new Timer();
             this.shootTimer = new Timer();
+            this.deathTimer = new Timer();
             this.moveToMake = Move.Move;
         }
 
@@ -42,6 +46,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         {
             CheckMovementTimer(gameTime, isMovingNegative);
             CheckShootTimer(gameTime);
+            if (deathTimer.Set)
+            {
+                if(Timer.CheckTimeReached(gameTime, deathTimer)){
+
+                }
+            }
         }
 
         private void CheckMovementTimer(GameTime gameTime, bool isMovingNegative)
@@ -93,7 +103,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             if (!shootTimer.Set)
             {
                 GameObjectSpawner.CreateEnemyProjectile(this.ObjectTexture, CurrentPosition, false);
-                shootTimer.SetStartTimeAndStopTime(gameTime, 6000);
+                shootTimer.SetStartTimeAndStopTime(gameTime, 4000);
             }
             else
             {

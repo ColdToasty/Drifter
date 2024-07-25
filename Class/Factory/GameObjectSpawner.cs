@@ -114,12 +114,12 @@ namespace Drifter.Class.Factory
                 if(spawnXPosition == 0)
                 {
                     //spawns left edge of screen
-                    AddToList(new AlienSpaceship(texture, new Vector2(spawnXPosition, 64), obstacleType));
+                    AddToList(new AlienSpaceship(texture, new Vector2(spawnXPosition, 64), Obstacle.ObstacleType.AlienSpaceship));
                 }
                 else
                 {
                     //spawns right end of the screen
-                    AddToList(new AlienSpaceship(texture, new Vector2(SpawnAxisRange-32, 64), obstacleType));
+                    AddToList(new AlienSpaceship(texture, new Vector2(SpawnAxisRange-32, 64), Obstacle.ObstacleType.AlienSpaceship));
                 }
             }
             else

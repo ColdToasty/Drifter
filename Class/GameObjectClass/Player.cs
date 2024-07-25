@@ -74,13 +74,21 @@ namespace Drifter.Class.GameObjectClass
         }
 
 
-        public override void CollidedWithOtherGameObject(GameObject gameObject)
+        public override void CollidedWithOtherGameObject(GameObject gameObject = null)
         {
-            if(gameObject is Item)
+            if (gameObject == null)
+            {
+                System.Diagnostics.Trace.WriteLine("Im dead");
+                base.CollidedWithOtherGameObject();
+                return;
+            }
+            
+            if (gameObject is Item)
             {
                 Item item = (Item)gameObject;
                 ConsumeItem(item);
             }
+            
         }
 
         private void ConsumeItem(Item item)

@@ -42,9 +42,9 @@ namespace Drifter.Class.AbstractClass
         public int TravelSpeed { get {  return travelSpeed; } }
 
 
-        public virtual void CollidedWithOtherGameObject() { }
-
-        public virtual void CollidedWithOtherGameObject(GameObject gameObject) { }
+        public virtual void CollidedWithOtherGameObject(GameObject gameObject = null) { 
+            DestroyMyself();
+        }
 
 
 
@@ -52,10 +52,14 @@ namespace Drifter.Class.AbstractClass
         {
             if (Position.Y > EndOfScreenPosition + 32 || Position.Y < 0 - 33)
             {
-                GameObjectSpawner.AddToDeleteList(this);
+                DestroyMyself();
             }
         }
 
+        protected void DestroyMyself()
+        {
+            GameObjectSpawner.AddToDeleteList(this);
+        }
 
 
         protected virtual void CheckObjectAtEdge()

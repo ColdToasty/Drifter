@@ -127,24 +127,15 @@ namespace Drifter
                 if (player.collisionCircle.Intersects(o.collisionCircle))
                 {
                     o.CollidedWithOtherGameObject();
-                    player.CollidedWithOtherGameObject();
-                    GameObjectSpawner.AddToDeleteList(o);
+                    //player.CollidedWithOtherGameObject();
                 }
                 foreach (Projectile p in GameObjectSpawner.projectiles)
                 {
                     if (o.collisionCircle.Intersects(p.collisionCircle))
                     {
-                        o.CollidedWithOtherGameObject();
                         p.CollidedWithOtherGameObject();
-                        o.HitByProjectile(p.TypeOfProjectile);
-                        if(o.Health <= 0)
-                        {
-                            GameObjectSpawner.AddToDeleteList(o);
-                        }
-                        GameObjectSpawner.AddToDeleteList(p);
+                        o.CollidedWithOtherGameObject(p);
                     }
-
-
                 }
             }
 
@@ -152,9 +143,8 @@ namespace Drifter
             {
                 if (i.collisionCircle.Intersects(player.collisionCircle))
                 {
-                    i.CollidedWithOtherGameObject();
                     player.CollidedWithOtherGameObject(i);
-                    GameObjectSpawner.AddToDeleteList(i);
+                    i.CollidedWithOtherGameObject();
                 }
             }
 
@@ -165,8 +155,8 @@ namespace Drifter
                     if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
                     {
                         System.Diagnostics.Trace.WriteLine($"{enemyProjectile.CurrentPosition} collides with {p.CurrentPosition}");
-                        enemyProjectile.CollidedWithOtherGameObject(p);
-                        p.CollidedWithOtherGameObject(p);
+                        enemyProjectile.CollidedWithOtherGameObject();
+                        p.CollidedWithOtherGameObject(enemyProjectile);
                     }
                 }
 
