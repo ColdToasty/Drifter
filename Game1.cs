@@ -22,7 +22,7 @@ namespace Drifter
         public static int ScreenHeight { get; private set; }
         public static int ScreenWidth { get; private set; }
 
-        private Random random;
+        public static Random Random = new Random();
         private Player player;
         private InputHandler inputHandler;
 
@@ -65,7 +65,6 @@ namespace Drifter
             canShoot = true;
             previousTimeInSeconds = 0;
             shootTimer = new Timer();
-            random = new Random();
 
             SpawnTypeSelector.Initialise();
 

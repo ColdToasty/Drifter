@@ -18,7 +18,6 @@ namespace Drifter.Class.Factory
         public static int SpawnXAxisRange { get; private set; }
         public static int SpawnYAxisRange { get; private set; }
 
-        private static Random random = new Random();
 
         public static List<Projectile> projectiles = new List<Projectile>();
         public static List<Obstacle> obstacles = new List<Obstacle>();
@@ -99,7 +98,6 @@ namespace Drifter.Class.Factory
         }
 
 
-
         public static void CreateProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.Missle)
         {
             AddToList(new Projectile(projectileTexture, startPosition, isMovingNegative, projectileType));
@@ -115,11 +113,11 @@ namespace Drifter.Class.Factory
         //used to create an obstacle based on probability
         public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
-            int spawnObstacle = random.Next(11);
+            int spawnObstacle = Game1.Random.Next(11);
             if (spawnObstacle <=4)
             {
                 //dictate which side of the screen to spawn
-                int spawnXPosition = random.Next(2);
+                int spawnXPosition = Game1.Random.Next(2);
 
                 //if 0 then spawn left
                 //if 1 then spawn right
@@ -137,14 +135,14 @@ namespace Drifter.Class.Factory
                 else
                 {
                     //pick y spawn range
-                    int spawnYPosition = random.Next(SpawnYAxisRange);
+                    int spawnYPosition = Game1.Random.Next(SpawnYAxisRange);
                     CreateAngledAsteroid(texture, new Vector2(spawnXPosition, spawnYPosition));
                 }
 
             }
             else
             {
-                int spawnXPosition = random.Next(32, SpawnXAxisRange - 32);
+                int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
                 AddToList(new Obstacle(texture, new Vector2(spawnXPosition, 0), obstacleType));
             }
         }
@@ -169,10 +167,10 @@ namespace Drifter.Class.Factory
 
         public static void CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
         {
-            int spawnObstacle = random.Next(5);
+            int spawnObstacle = Game1.Random.Next(5);
             if (spawnObstacle <= 4)
             {
-                int spawnXPosition = random.Next(32, SpawnXAxisRange - 32);
+                int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
                 AddToList(new Item(texture, new Vector2(spawnXPosition, 0), itemType));
             }
         }   

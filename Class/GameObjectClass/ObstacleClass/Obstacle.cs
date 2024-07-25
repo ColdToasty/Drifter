@@ -27,7 +27,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         public int Health { get { return health; } }
 
-        protected Random random;
 
         //For worm
         //private int moveOnX = 50;
@@ -43,7 +42,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
             IncreaseScoreValue = 100;
             collisionCircle = new CollisionCircle(Position + new Vector2(8, 8), 16);
-            this.random = new Random();
 
             SetHealth();
             SetTravelSpeed();

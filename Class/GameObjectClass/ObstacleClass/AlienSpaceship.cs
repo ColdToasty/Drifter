@@ -19,7 +19,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         private Timer deathTimer;
         //Will place intervals on when projectile will spawn
         private Timer shootTimer;
-        private Random random = new Random();
         private enum Move { Move, Stop}
 
         private Move moveToMake;
@@ -87,7 +86,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
             else
             {
-                movementPick = random.Next(movePickRate + stopPickRate);
+                movementPick = Game1.Random.Next(movePickRate + stopPickRate);
 
                 if (movementPick < stopPickRate)
                 {

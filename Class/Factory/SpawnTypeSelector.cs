@@ -13,7 +13,6 @@ namespace Drifter.Class.Factory
 
     internal static class SpawnTypeSelector
     {
-        private static Random random = new Random();
 
         private static Dictionary<int, List<int>> ScoreObstacleChanceValues;
 
