@@ -45,12 +45,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             collisionCircle = new CollisionCircle(Position + new Vector2(8, 8), 16);
             this.random = new Random();
 
-            SetUpHealth();
-            SetUpTravelSpeed();
-            SetUpScoreIncreaseValue();
+            SetHealth();
+            SetTravelSpeed();
+            SetScoreIncreaseValue();
         }
 
-        private void SetUpHealth()
+        private void SetHealth()
         {
             healthValues = new Dictionary<ObstacleType, int>()
             {
@@ -58,15 +58,15 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 {ObstacleType.AngledAsteroid, 1},
                 {ObstacleType.ShatteringAsteroid, 1},
                 {ObstacleType.SpaceWorm, 3 },
-                {ObstacleType.AlienSpaceship, 2},
-                {ObstacleType.KamakaziAlienSpaceship, 2},
+                {ObstacleType.AlienSpaceship, 3},
+                {ObstacleType.KamakaziAlienSpaceship, 3},
                 {ObstacleType.Blackhole, 50},
                 {ObstacleType.SpacePipe, 50}
             };
             health = healthValues[obstacleType];
         }
 
-        private void SetUpTravelSpeed()
+        private void SetTravelSpeed()
         {
             travelSpeeds = new Dictionary<ObstacleType, int>()
             {
@@ -83,7 +83,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             travelSpeed = travelSpeeds[obstacleType];
         }
 
-        private void SetUpScoreIncreaseValue()
+        private void SetScoreIncreaseValue()
         {
             scoreIncreaseValues = new Dictionary<ObstacleType, int>()
             {

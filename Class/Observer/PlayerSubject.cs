@@ -7,14 +7,14 @@ using Drifter.Interface;
 
 namespace Drifter.Class.Observer
 {
-    internal class Subject : ISubject
+    internal class PlayerSubject : ISubject
     {
         private List<IObserver> observers;
 
 
         //need some object subject observes
 
-        public Subject() {
+        public PlayerSubject() {
             this.observers = new List<IObserver>();
         }
 

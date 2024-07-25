@@ -59,7 +59,8 @@ namespace Drifter
 
             ScreenHeight = _graphics.PreferredBackBufferHeight;
             ScreenWidth = _graphics.PreferredBackBufferWidth;
-            GameObjectSpawner.SetSpawnAxisRange(ScreenWidth);
+            GameObjectSpawner.SetSpawnXAxisRange(ScreenWidth);
+            GameObjectSpawner.SetSpawnYAxisRange(ScreenHeight / 5 );
 
             canShoot = true;
             previousTimeInSeconds = 0;
@@ -200,7 +201,7 @@ namespace Drifter
 
         private void ShootProjectile()
         {
-           GameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition, true);
+           GameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition + new Vector2(0, 16), true);
         }
 
 
@@ -263,16 +264,6 @@ namespace Drifter
             _spriteBatch.Begin();
 
 
-            _spriteBatch.Draw(
-            playerTexture,
-            player.CurrentPosition,
-            Color.White
-            );
-
-            _spriteBatch.Draw(
-            ball,
-            player.CurrentPosition + new Vector2(8, 8),
-            Color.White);
 
 
             //Draw projectiles
@@ -345,6 +336,18 @@ namespace Drifter
                 );
            
             }
+
+
+            _spriteBatch.Draw(
+            playerTexture,
+            player.CurrentPosition,
+            Color.White
+            );
+
+            _spriteBatch.Draw(
+            ball,
+            player.CurrentPosition + new Vector2(8, 8),
+            Color.White);
 
 
             //Draw score

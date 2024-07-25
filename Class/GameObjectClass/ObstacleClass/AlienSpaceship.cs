@@ -24,11 +24,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         private Move moveToMake;
 
-        private int movePickRate = 7;
-        private int stopPickRate = 4;
+        private int movePickRate = 8;
+        private int stopPickRate = 2;
 
         private int movementPick;
-
 
 
         public AlienSpaceship(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.AlienSpaceship) : base(texture, startPosition, obstacleType)
@@ -38,6 +37,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.shootTimer = new Timer();
             this.deathTimer = new Timer();
             this.moveToMake = Move.Move;
+
         }
 
 
@@ -49,8 +49,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             if (deathTimer.Set)
             {
                 if(Timer.CheckTimeReached(gameTime, deathTimer)){
-
+                    DestroyMyself();
                 }
+            }
+            else
+            {
+                deathTimer.SetStartTimeAndStopTime(gameTime, 30000);
             }
         }
 
@@ -85,7 +89,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             {
                 movementPick = random.Next(movePickRate + stopPickRate);
 
-                if (movementPick <= stopPickRate)
+                if (movementPick < stopPickRate)
                 {
                     moveToMake = Move.Stop;
                     movementTimer.SetStartTimeAndStopTime(gameTime, 5000);
@@ -98,12 +102,16 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
         }
 
+
         private void CheckShootTimer(GameTime gameTime)
         {
             if (!shootTimer.Set)
             {
-                GameObjectSpawner.CreateEnemyProjectile(this.ObjectTexture, CurrentPosition, false);
-                shootTimer.SetStartTimeAndStopTime(gameTime, 4000);
+                if(moveToMake == Move.Move)
+                {
+                    GameObjectSpawner.CreateEnemyProjectile(this.ObjectTexture, CurrentPosition, false);
+                    shootTimer.SetStartTimeAndStopTime(gameTime, 4000);
+                }
             }
             else
             {

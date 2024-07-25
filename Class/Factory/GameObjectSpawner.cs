@@ -15,7 +15,8 @@ namespace Drifter.Class.Factory
     //Spawns gameObjects as well as responsible for deleting them
     internal static class GameObjectSpawner
     {
-        public static int SpawnAxisRange { get; set; }
+        public static int SpawnXAxisRange { get; private set; }
+        public static int SpawnYAxisRange { get; private set; }
 
         private static Random random = new Random();
 
@@ -87,10 +88,16 @@ namespace Drifter.Class.Factory
         }
 
 
-        public static void SetSpawnAxisRange(int AxisRange)
+        public static void SetSpawnXAxisRange(int AxisRange)
         {
-            SpawnAxisRange = AxisRange;
+            SpawnXAxisRange = AxisRange;
         }
+
+        public static void SetSpawnYAxisRange(int axisRange)
+        {
+            SpawnYAxisRange = axisRange;
+        }
+
 
 
         public static void CreateProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.Missle)
@@ -105,30 +112,59 @@ namespace Drifter.Class.Factory
         }
 
 
-
-         public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
+        //used to create an obstacle based on probability
+        public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
             int spawnObstacle = random.Next(11);
-            if (spawnObstacle <= 1)
+            if (spawnObstacle <=4)
             {
+                //dictate which side of the screen to spawn
                 int spawnXPosition = random.Next(2);
-                if(spawnXPosition == 0)
+
+                //if 0 then spawn left
+                //if 1 then spawn right
+                if (spawnXPosition != 0)
                 {
-                    //spawns left edge of screen
-                    AddToList(new AlienSpaceship(texture, new Vector2(spawnXPosition, 64), Obstacle.ObstacleType.AlienSpaceship));
+                    //spawns right end of the screen
+                    spawnXPosition = SpawnXAxisRange - 32;
+
+                }
+                //if number is less than equal to 1 then
+                if (spawnObstacle == 0)
+                {
+                    CreateAlienSpaceship(texture, new Vector2(spawnXPosition, 64));
                 }
                 else
                 {
-                    //spawns right end of the screen
-                    AddToList(new AlienSpaceship(texture, new Vector2(SpawnAxisRange-32, 64), Obstacle.ObstacleType.AlienSpaceship));
+                    //pick y spawn range
+                    int spawnYPosition = random.Next(SpawnYAxisRange);
+                    CreateAngledAsteroid(texture, new Vector2(spawnXPosition, spawnYPosition));
                 }
+
             }
             else
             {
-                int spawnXPosition = random.Next(32, SpawnAxisRange - 32);
+                int spawnXPosition = random.Next(32, SpawnXAxisRange - 32);
                 AddToList(new Obstacle(texture, new Vector2(spawnXPosition, 0), obstacleType));
             }
         }
+
+
+        public static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
+        {
+            AddToList(new ShatteringAsteroid(texture, spawnPosition));
+        }
+
+        public static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)
+        {
+            AddToList(new AlienSpaceship(texture, spawnPosition));
+        }
+
+        public static void CreateAngledAsteroid(Texture2D texture, Vector2 spawnPosition, bool setCustomDirection = false, bool moveLeft = false)
+        {
+            AddToList(new AngledAsteroid(texture, spawnPosition, setCustomDirection, moveLeft));
+        }
+
 
 
         public static void CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
@@ -136,7 +172,7 @@ namespace Drifter.Class.Factory
             int spawnObstacle = random.Next(5);
             if (spawnObstacle <= 4)
             {
-                int spawnXPosition = random.Next(32, SpawnAxisRange - 32);
+                int spawnXPosition = random.Next(32, SpawnXAxisRange - 32);
                 AddToList(new Item(texture, new Vector2(spawnXPosition, 0), itemType));
             }
         }   
