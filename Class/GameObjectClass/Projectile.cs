@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
+using Drifter.Class.Factory;
 
 
 namespace Drifter.Class.GameObjectClass
@@ -24,9 +25,16 @@ namespace Drifter.Class.GameObjectClass
 
         public ProjectileType TypeOfProjectile { get { return projectileType; } }
 
-        public bool IsMovingNegative = false;
 
-        public Projectile(Texture2D texture, Vector2 startPosition,bool isMovingNegative, ProjectileType projectileType = ProjectileType.Missle)
+        public bool IsMovingNegative = true;
+
+        private Vector2 enemyProjectileCollisionCirclePlacement = new Vector2(8, 8);
+        private Vector2 playerProjectileCollisionCirclePlacement = new Vector2(8, -4);
+
+        private int enemyProjectileCollisionCircleRadius = 16;
+        private int playerProjectileCollisionCircleRadius = 8;
+
+        public Projectile(Texture2D texture, Vector2 startPosition, bool isMovingNegative, ProjectileType projectileType = ProjectileType.Missle)
         {
             SetProjectileTravelSpeed(0);
 
@@ -36,8 +44,22 @@ namespace Drifter.Class.GameObjectClass
             this.Position = startPosition;
             this.Position.X += texture.Width / 2;
             this.IsMovingNegative = isMovingNegative;
-            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(8, -4), 8);
+            
+            SetUpCollisionCircle();
         }
+
+        private void SetUpCollisionCircle()
+        {
+            if (projectileType == ProjectileType.EnemyProjectile)
+            {
+                this.collisionCircle = new CollisionCircle(this.Position + enemyProjectileCollisionCirclePlacement, enemyProjectileCollisionCircleRadius);
+            }
+            else
+            {
+                this.collisionCircle = new CollisionCircle(this.Position + playerProjectileCollisionCirclePlacement, playerProjectileCollisionCircleRadius);
+            }
+        }
+
 
         public void SetProjectileTravelSpeed(int scoreValue)
         {
@@ -50,6 +72,16 @@ namespace Drifter.Class.GameObjectClass
                 this.travelSpeed = 300;
             }
         }
+
+        public override void CollidedWithOtherGameObject(GameObject gameObject)
+        {
+            if(this.projectileType == ProjectileType.EnemyProjectile)
+            {
+                //increase score by 100
+            }
+            GameObjectSpawner.AddToDeleteList(this);
+        }
+
 
         //moving negative means going up
         public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
@@ -67,17 +99,18 @@ namespace Drifter.Class.GameObjectClass
         }
 
 
+
         protected override void UpdateCollisionCircle()
         {
             if (IsMovingNegative)
             {
-                this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
+                this.collisionCircle.Centre = this.Position + playerProjectileCollisionCirclePlacement;
             }
             else
             {
-                this.collisionCircle.Centre = this.Position - new Vector2(8, 8);
+                this.collisionCircle.Centre = this.Position + enemyProjectileCollisionCirclePlacement;
             }
-
         }
+
     }
 }

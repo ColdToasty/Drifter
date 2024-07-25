@@ -16,12 +16,13 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
     {
         public enum ObstacleType { Asteroid, AngledAsteroid, ShatteringAsteroid, SpaceWorm, AlienSpaceship, KamakaziAlienSpaceship, Blackhole, SpacePipe }
 
-        public readonly static int ObstacleTypeCount = Enum.GetValues(typeof(ObstacleType)).Length;
+        protected Dictionary<ObstacleType, int> healthValues, travelSpeeds, scoreIncreaseValues;
+
         protected ObstacleType obstacleType;
 
         protected int IncreaseScoreValue;
 
-        protected int health;
+        private int health;
 
         public int Health { get { return health; } }
 
@@ -38,11 +39,66 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             ObjectTexture = texture;
             this.obstacleType = obstacleType;
             travelSpeed = 100;
+
             IncreaseScoreValue = 100;
-            health = 2;
             collisionCircle = new CollisionCircle(Position + new Vector2(8, 8), 16);
             this.random = new Random();
+
+            SetUpHealth();
+            SetUpTravelSpeed();
+            SetUpScoreIncreaseValue();
         }
+
+        private void SetUpHealth()
+        {
+            healthValues = new Dictionary<ObstacleType, int>()
+            {
+                {ObstacleType.Asteroid, 1},
+                {ObstacleType.AngledAsteroid, 1},
+                {ObstacleType.ShatteringAsteroid, 1},
+                {ObstacleType.SpaceWorm, 3 },
+                {ObstacleType.AlienSpaceship, 2},
+                {ObstacleType.KamakaziAlienSpaceship, 2},
+                {ObstacleType.Blackhole, 50},
+                {ObstacleType.SpacePipe, 50}
+            };
+            health = healthValues[obstacleType];
+        }
+
+        private void SetUpTravelSpeed()
+        {
+            travelSpeeds = new Dictionary<ObstacleType, int>()
+            {
+                {ObstacleType.Asteroid, 100},
+                {ObstacleType.AngledAsteroid, 100},
+                {ObstacleType.ShatteringAsteroid, 100},
+                {ObstacleType.SpaceWorm, 50},
+                {ObstacleType.AlienSpaceship, 100},
+                {ObstacleType.KamakaziAlienSpaceship, 150},
+                {ObstacleType.Blackhole, 50},
+                {ObstacleType.SpacePipe, 50}
+            };
+
+            travelSpeed = travelSpeeds[obstacleType];
+        }
+
+        private void SetUpScoreIncreaseValue()
+        {
+            scoreIncreaseValues = new Dictionary<ObstacleType, int>()
+            {
+                {ObstacleType.Asteroid, 100},
+                {ObstacleType.AngledAsteroid, 150},
+                {ObstacleType.ShatteringAsteroid, 100},
+                {ObstacleType.SpaceWorm, 300 },
+                {ObstacleType.AlienSpaceship, 500},
+                {ObstacleType.KamakaziAlienSpaceship, 1000},
+                {ObstacleType.Blackhole, 0},
+                {ObstacleType.SpacePipe, 0}
+            };
+
+            IncreaseScoreValue = scoreIncreaseValues[obstacleType];
+        }
+
 
         public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {

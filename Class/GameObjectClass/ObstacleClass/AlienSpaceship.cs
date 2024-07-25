@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Drifter.Class.Tools;
 using Drifter.Class.Factory;
 using Drifter.Class.Commands;
-
+using Drifter.Class.AbstractClass;
 
 namespace Drifter.Class.GameObjectClass.ObstacleClass
 {
@@ -35,6 +35,8 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.shootTimer = new Timer();
             this.moveToMake = Move.Move;
         }
+
+
 
         public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
         {
@@ -105,7 +107,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         protected override void CheckObjectAtEdge()
         {
-
             if (CurrentPosition.X < 0)
             {
                 SetPositionAtEdgeOfScreen(0);
@@ -119,7 +120,13 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
         }
 
-
+        public override void CollidedWithOtherGameObject(GameObject gameObject)
+        {
+            //decrease health
+            //if health <= 0
+            //  destroy this 
+            //  increase score
+        }
 
     }
 }

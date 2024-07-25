@@ -27,8 +27,6 @@ namespace Drifter.Class.Factory
 
         public static void AddToList<TGameObject>(TGameObject gameObject) where TGameObject : GameObject
         {
-
-
             if (gameObject is Projectile)
             {
                 if ((gameObject as Projectile).TypeOfProjectile != Projectile.ProjectileType.EnemyProjectile)
@@ -40,7 +38,6 @@ namespace Drifter.Class.Factory
                     enemyProjectiles.Add(gameObject as Projectile);
                 }
             }
-
             else if (gameObject is Obstacle)
             {
                 obstacles.Add(gameObject as Obstacle);
@@ -50,13 +47,11 @@ namespace Drifter.Class.Factory
                 items.Add(gameObject as Item);
 
             }
-
             else
             {
                 //System.Diagnostics.Trace.WriteLine("Null");
             }
         }
-
 
 
         public static void AddToDeleteList(GameObject gameObject)
@@ -79,6 +74,7 @@ namespace Drifter.Class.Factory
                 }
                 else if (gameObject is Projectile)
                 {
+                    enemyProjectiles.Remove((Projectile)gameObject);
                     projectiles.Remove((Projectile)gameObject);
                 }
                 else if (gameObject is Item)
@@ -89,10 +85,12 @@ namespace Drifter.Class.Factory
             objectsToBeDeleted.Clear();
         }
 
+
         public static void SetSpawnAxisRange(int AxisRange)
         {
             SpawnAxisRange = AxisRange;
         }
+
 
         public static void CreateProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.Missle)
         {
@@ -106,7 +104,8 @@ namespace Drifter.Class.Factory
         }
 
 
-        public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
+
+         public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
             int spawnObstacle = random.Next(11);
             if (spawnObstacle <= 1)
@@ -129,6 +128,7 @@ namespace Drifter.Class.Factory
                 AddToList(new Obstacle(texture, new Vector2(spawnXPosition, 0), obstacleType));
             }
         }
+
 
         public static void CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
         {

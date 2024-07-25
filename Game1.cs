@@ -143,6 +143,8 @@ namespace Drifter
                         }
                         GameObjectSpawner.AddToDeleteList(p);
                     }
+
+
                 }
             }
 
@@ -153,6 +155,24 @@ namespace Drifter
                     i.CollidedWithOtherGameObject();
                     player.CollidedWithOtherGameObject(i);
                     GameObjectSpawner.AddToDeleteList(i);
+                }
+            }
+
+            foreach(Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
+            {
+                foreach (Projectile p in GameObjectSpawner.projectiles)
+                {
+                    if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
+                    {
+                        System.Diagnostics.Trace.WriteLine($"{enemyProjectile.CurrentPosition} collides with {p.CurrentPosition}");
+                        enemyProjectile.CollidedWithOtherGameObject(p);
+                        p.CollidedWithOtherGameObject(p);
+                    }
+                }
+
+                if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
+                {
+                    enemyProjectile.CollidedWithOtherGameObject(player);
                 }
             }
         }
@@ -191,8 +211,9 @@ namespace Drifter
 
         private void ShootProjectile()
         {
-                GameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition, true);
+           GameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition, true);
         }
+
 
         private void CheckPlayerInput(GameTime gameTime)
         {
