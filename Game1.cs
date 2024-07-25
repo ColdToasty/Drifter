@@ -154,7 +154,6 @@ namespace Drifter
                 {
                     if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
                     {
-                        System.Diagnostics.Trace.WriteLine($"{enemyProjectile.CurrentPosition} collides with {p.CurrentPosition}");
                         enemyProjectile.CollidedWithOtherGameObject();
                         p.CollidedWithOtherGameObject(enemyProjectile);
                     }

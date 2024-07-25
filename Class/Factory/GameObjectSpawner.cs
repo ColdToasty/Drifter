@@ -81,6 +81,7 @@ namespace Drifter.Class.Factory
                 {
                     items.Remove((Item)gameObject);
                 }
+
             }
             objectsToBeDeleted.Clear();
         }

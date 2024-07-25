@@ -130,13 +130,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
         }
 
-        public override void CollidedWithOtherGameObject(GameObject gameObject)
-        {
-            //decrease health
-            //if health <= 0
-            //  destroy this 
-            //  increase score
-        }
 
     }
 }

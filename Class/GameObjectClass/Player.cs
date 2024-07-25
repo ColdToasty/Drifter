@@ -24,20 +24,27 @@ namespace Drifter.Class.GameObjectClass
 
         public bool isDrifting;
 
+        private Vector2 startingPosition;
 
         public Player(Texture2D texture, Vector2 startingPosition) {
+
+            this.startingPosition = startingPosition;
+            this.ObjectTexture = texture;
+            Reset();
+
+        }
+
+
+        public void Reset()
+        {
             this.travelSpeed = 100;
             this.infiniteProjectile = false;
             this.Position = startingPosition;
             projectileType = Projectile.ProjectileType.Missle;
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(16, 16), 8);
-
-            this.ObjectTexture = texture;
-
             this.isMovingLeft = false;
             this.isDrifting = false;
-
-    }
+        }
 
 
         public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
