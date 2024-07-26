@@ -47,15 +47,15 @@ namespace Drifter.Class.GameObjectClass
         }
 
 
-        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
+        public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
             if (isMovingNegative)
             {
-                this.Position.X -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                this.Position.X -= this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             }
             else
             {
-                this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                this.Position.X += this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             }
 
             this.CheckObjectAtEdge();
@@ -63,17 +63,17 @@ namespace Drifter.Class.GameObjectClass
         }
 
 
-        public void Drift(GameTime gameTime)
+        public void Drift()
         {
             if (isDrifting)
             {
                 if (isMovingLeft)
                 {
-                    this.Position.X -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this.Position.X -= this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
                 }
                 else
                 {
-                    this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this.Position.X += this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
                 }
                 this.CheckObjectAtEdge();
                 this.collisionCircle.Centre = this.Position + new Vector2(16, 16);

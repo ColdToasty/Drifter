@@ -33,7 +33,7 @@ namespace Drifter.Class.AbstractClass
         public Vector2 CurrentPosition { get { return Position; } }
 
         //IsMovingNegative only used for player
-        public virtual void Run(GameTime gameTime, bool IsMovingNegative, float EndOfScreenPosition)
+        public virtual void Run(bool IsMovingNegative, float EndOfScreenPosition)
         {
             UpdateCollisionCircle();
             DidExitScreen(EndOfScreenPosition);

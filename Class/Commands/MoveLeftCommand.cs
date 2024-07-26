@@ -14,10 +14,10 @@ namespace Drifter.Class.Commands
     internal class MoveLeftCommand : Command
     {
 
-        public override void Execute<T>(GameTime gameTime, T gameObject)
+        public override void Execute<T>(T gameObject)
         {
             GameObject GameObject = gameObject as GameObject;
-            GameObject.Run(gameTime, true, Game1.ScreenHeight);
+            GameObject.Run(true, Game1.ScreenHeight);
             GameObject.isMovingLeft = true;
 
             if (gameObject is Player)

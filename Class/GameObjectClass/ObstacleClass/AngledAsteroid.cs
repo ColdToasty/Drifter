@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Drifter.Class.Tools;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -42,16 +43,16 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
 
 
-        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
+        public override void Run( bool isMovingNegative, float EndOfScreenPosition)
         {
-            base.Run(gameTime, isMovingNegative, EndOfScreenPosition);
+            base.Run(isMovingNegative, EndOfScreenPosition);
             if (this.isMovingLeft)
             {
-                this.Position.X -= travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                this.Position.X -= (travelSpeed / 2) * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             }
             else
             {
-                this.Position.X += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                this.Position.X += (travelSpeed / 2) * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             }
         }
 

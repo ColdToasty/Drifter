@@ -32,10 +32,10 @@ namespace Drifter.Class.Tools
         }
 
         //Checks if timer time has reached or passed
-        public static bool CheckTimeReached(GameTime gameTime, Timer timer)
+        public static bool CheckTimeReached(Timer timer)
         {
             
-            if (gameTime.TotalGameTime.TotalMilliseconds >= timer.EndTime)
+            if (Globals.GameTime.TotalGameTime.TotalMilliseconds >= timer.EndTime)
             {
                 return true;
             }
@@ -50,9 +50,9 @@ namespace Drifter.Class.Tools
         }
 
         //Start the Timer
-        public void SetStartTime(GameTime gameTime)
+        public void SetStartTime()
         {
-            this.startTime = gameTime.TotalGameTime.TotalMilliseconds;
+            this.startTime = Globals.GameTime.TotalGameTime.TotalMilliseconds;
             set = true;
         }
 
@@ -63,9 +63,9 @@ namespace Drifter.Class.Tools
         }
 
         //Sets both the startTime and endTime
-        public void SetStartTimeAndStopTime(GameTime gameTime, int milliseconds)
+        public void SetStartTimeAndStopTime(int milliseconds)
         {
-            SetStartTime(gameTime);
+            SetStartTime();
             this.endTime = this.startTime + milliseconds;;
         }
         

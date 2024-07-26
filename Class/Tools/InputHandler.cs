@@ -11,9 +11,9 @@ using Microsoft.Xna.Framework;
 
 namespace Drifter.Class.Tools
 {
-    internal class InputHandler
+    internal static class InputHandler
     {
-        public Command? Command;
+        public static Command? Command;
 
     }
 }

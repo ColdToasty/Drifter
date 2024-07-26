@@ -9,9 +9,9 @@ using Drifter.Class.AbstractClass;
 
 namespace Drifter.Class.Commands
 {
-    internal class Command
+    internal abstract class Command
     {
-        public virtual void Execute<T>(GameTime gameTime, T gameObject) { }
+        public abstract void Execute<T>(T gameObject);
 
 
     }

@@ -17,28 +17,28 @@ namespace Drifter
     public class Game1 : Game
     {
         private static GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
 
         public static int ScreenHeight { get; private set; }
         public static int ScreenWidth { get; private set; }
 
         public static Random Random = new Random();
         private Player player;
-        private InputHandler inputHandler;
+
 
         private MoveLeftCommand moveLeftCommand;
         private MoveRightCommand moveRightCommand;
         private StopDriftCommand stopDriftCommand;
+        private ShootCommand shootCommand;
+
+
+
 
         private Texture2D playerTexture, projectileMissile, projectileLaser, obstacleAsteroid, ball, coin;
 
-        private Vector2 playerPosition, textMiddlePoint;
+        private Vector2 playerStartPosition, textMiddlePoint;
 
-
+        //Out score counter font
         private SpriteFont spriteFont;
-
-        private Timer shootTimer;
-        private bool canShoot;
 
 
         private int previousTimeInSeconds;
@@ -50,9 +50,9 @@ namespace Drifter
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            playerPosition = new Vector2(_graphics.PreferredBackBufferWidth /2, _graphics.PreferredBackBufferHeight - _graphics.PreferredBackBufferHeight /4);
+            playerStartPosition = new Vector2(_graphics.PreferredBackBufferWidth /2, _graphics.PreferredBackBufferHeight - _graphics.PreferredBackBufferHeight /4);
 
-            inputHandler = new InputHandler();
+ 
             moveLeftCommand = new MoveLeftCommand();
             moveRightCommand = new MoveRightCommand();
             stopDriftCommand = new StopDriftCommand();
@@ -62,9 +62,8 @@ namespace Drifter
             GameObjectSpawner.SetSpawnXAxisRange(ScreenWidth);
             GameObjectSpawner.SetSpawnYAxisRange(ScreenHeight / 5 );
 
-            canShoot = true;
             previousTimeInSeconds = 0;
-            shootTimer = new Timer();
+
 
             SpawnTypeSelector.Initialise();
 
@@ -80,7 +79,10 @@ namespace Drifter
         //Load main game content
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.Content = Content;
+            Globals.GraphicsDevice = GraphicsDevice;
+
             ball = Content.Load<Texture2D>("CollisionShape/ball");
             projectileMissile = Content.Load<Texture2D>("Projectile/Missile");
             obstacleAsteroid = Content.Load<Texture2D>("Obstacle/Asteroid/Asteroid");
@@ -90,32 +92,35 @@ namespace Drifter
             textMiddlePoint = spriteFont.MeasureString(Score.ScoreValue.ToString("D10")) / 2;
 
             playerTexture = Content.Load<Texture2D>("Player/DefaultPlayer");
-            player = new Player(playerTexture, playerPosition);
+            player = new Player(playerTexture, playerStartPosition);
+            shootCommand = new ShootCommand(projectileMissile);
+
+            Globals.LoadContent();
         }
 
 
 
 
-        private void RunObjects(GameTime gameTime)
+        private void RunObjects()
         {
             for (int i = GameObjectSpawner.projectiles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.projectiles[i].Run(gameTime, GameObjectSpawner.projectiles[i].IsMovingNegative, ScreenHeight);
+                GameObjectSpawner.projectiles[i].Run(GameObjectSpawner.projectiles[i].IsMovingNegative, ScreenHeight);
             }
 
             for (int i = GameObjectSpawner.obstacles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.obstacles[i].Run(gameTime, GameObjectSpawner.obstacles[i].isMovingLeft, ScreenHeight);
+                GameObjectSpawner.obstacles[i].Run(GameObjectSpawner.obstacles[i].isMovingLeft, ScreenHeight);
             }
 
             for (int i = GameObjectSpawner.items.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.items[i].Run(gameTime, false, _graphics.PreferredBackBufferHeight);
+                GameObjectSpawner.items[i].Run(false, _graphics.PreferredBackBufferHeight);
             }
 
             for (int i = GameObjectSpawner.enemyProjectiles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.enemyProjectiles[i].Run(gameTime, false, ScreenHeight);
+                GameObjectSpawner.enemyProjectiles[i].Run(false, ScreenHeight);
             }
         }
 
@@ -172,6 +177,7 @@ namespace Drifter
 
         protected override void Update(GameTime gameTime)
         {
+            Globals.Update(gameTime);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
@@ -186,95 +192,77 @@ namespace Drifter
 
             Score.IncreaseScore(1);
 
-            CheckPlayerInput(gameTime);
+            CheckPlayerInput();
 
-            RunObjects(gameTime);
+            RunObjects();
             CheckCollision();
+            GameObjectSpawner.AddToListAfterLoop();
             GameObjectSpawner.DeleteGameObjects();
 
             //System.Diagnostics.Trace.WriteLine(obstacles.Count);
             //System.Diagnostics.Trace.WriteLine(projectiles.Count);
-            
+
             base.Update(gameTime);
         }
 
-        private void ShootProjectile()
-        {
-           GameObjectSpawner.CreateProjectile(projectileMissile, player.CurrentPosition + new Vector2(0, 16), true);
-        }
 
 
-        private void CheckPlayerInput(GameTime gameTime)
+        private void CheckPlayerInput()
         {
             var kstate = Keyboard.GetState();
 
             if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
             {
-                inputHandler.Command = moveLeftCommand;
+                InputHandler.Command = moveLeftCommand;
             }
 
             if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
             {
 
-                inputHandler.Command = moveRightCommand;
+                InputHandler.Command = moveRightCommand;
             }
 
 
             if(kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
             {
-                inputHandler.Command = stopDriftCommand;
+                InputHandler.Command = stopDriftCommand;
             }
 
             if (kstate.IsKeyDown(Keys.Space))
             {
-                if (shootTimer.Set)
-                {
-                    canShoot = Timer.CheckTimeReached(gameTime, shootTimer);
-                    if (canShoot)
-                    {
-                        shootTimer.ResetTimer();
-                    }
-                }
-                else
-                {
-                    ShootProjectile();
-                    shootTimer.SetStartTimeAndStopTime(gameTime, 500);
-                    canShoot = false;
-                }
+                shootCommand.Execute(player);
             }
 
-            if (inputHandler.Command != null)
+            if (InputHandler.Command != null)
             {
-                inputHandler.Command.Execute(gameTime, player);
+                InputHandler.Command.Execute(player);
             }
 
-            inputHandler.Command = null;
+            InputHandler.Command = null;
 
             if (player.isDrifting)
             {
-                player.Run(gameTime, player.isMovingLeft, ScreenHeight);
+                player.Run(player.isMovingLeft, ScreenHeight);
             }
         }
 
         //Draw sprites in game window
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin();
-
-
+            GraphicsDevice.Clear(Color.Black);
+            Globals.SpriteBatch.Begin();
 
 
             //Draw projectiles
             foreach (Projectile p in GameObjectSpawner.projectiles)
             {
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 p.Texture,
                 p.CurrentPosition,
                 Color.White
                 );
 
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 ball,
                 p.CurrentPosition,
                 Color.White);
@@ -282,13 +270,13 @@ namespace Drifter
 
             foreach (Projectile p in GameObjectSpawner.enemyProjectiles)
             {
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 p.Texture,
                 p.CurrentPosition,
                 Color.White
                 );
 
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 ball,
                 p.CurrentPosition,
                 Color.White);
@@ -297,14 +285,14 @@ namespace Drifter
             //Draw obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 o.Texture,
                 o.CurrentPosition,
                 Color.White
                 );
 
                 //draws their collisions shapes
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 ball,
                 o.CurrentPosition,
                 null,
@@ -321,14 +309,14 @@ namespace Drifter
             //Draw obstacles
             foreach (Item i in GameObjectSpawner.items)
             {
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 i.Texture,
                 i.CurrentPosition,
                 Color.White
                 );
 
                 //draws their collisions shapes
-                _spriteBatch.Draw(
+                Globals.SpriteBatch.Draw(
                 ball,
                 i.CurrentPosition,
                 Color.White
@@ -337,13 +325,13 @@ namespace Drifter
             }
 
 
-            _spriteBatch.Draw(
+            Globals.SpriteBatch.Draw(
             playerTexture,
             player.CurrentPosition,
             Color.White
             );
 
-            _spriteBatch.Draw(
+            Globals.SpriteBatch.Draw(
             ball,
             player.CurrentPosition + new Vector2(8, 8),
             Color.White);
@@ -351,11 +339,11 @@ namespace Drifter
 
             //Draw score
             Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 4 - _graphics.PreferredBackBufferHeight / 6);
-            _spriteBatch.DrawString(spriteFont, Score.ScoreValue.ToString("D10"), position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+            Globals.SpriteBatch.DrawString(spriteFont, Score.ScoreValue.ToString("D10"), position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
 
 
 
-            _spriteBatch.End();
+            Globals.SpriteBatch.End();
             base.Draw(gameTime);
         }
     }

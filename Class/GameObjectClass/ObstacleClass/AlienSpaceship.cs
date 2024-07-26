@@ -41,27 +41,27 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
 
 
-        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
+        public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
-            CheckMovementTimer(gameTime, isMovingNegative);
-            CheckShootTimer(gameTime);
+            CheckMovementTimer(isMovingNegative);
+            CheckShootTimer();
             if (deathTimer.Set)
             {
-                if(Timer.CheckTimeReached(gameTime, deathTimer)){
+                if(Timer.CheckTimeReached(deathTimer)){
                     DestroyMyself();
                 }
             }
             else
             {
-                deathTimer.SetStartTimeAndStopTime(gameTime, 30000);
+                deathTimer.SetStartTimeAndStopTime(30000);
             }
         }
 
-        private void CheckMovementTimer(GameTime gameTime, bool isMovingNegative)
+        private void CheckMovementTimer(bool isMovingNegative)
         {
             if (movementTimer.Set)
             {
-                if (Timer.CheckTimeReached(gameTime, movementTimer))
+                if (Timer.CheckTimeReached(movementTimer))
                 {
                     movementTimer.ResetTimer();
                 }
@@ -71,11 +71,11 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                     {
                         if (isMovingNegative)
                         {
-                            this.Position.X -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                            this.Position.X -= this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
                         }
                         else
                         {
-                            this.Position.X += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                            this.Position.X += this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
                         }
 
 
@@ -91,30 +91,30 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 if (movementPick < stopPickRate)
                 {
                     moveToMake = Move.Stop;
-                    movementTimer.SetStartTimeAndStopTime(gameTime, 5000);
+                    movementTimer.SetStartTimeAndStopTime(5000);
                 }
                 else
                 {
                     moveToMake = Move.Move;
-                    movementTimer.SetStartTimeAndStopTime(gameTime, 7000);
+                    movementTimer.SetStartTimeAndStopTime( 7000);
                 }
             }
         }
 
 
-        private void CheckShootTimer(GameTime gameTime)
+        private void CheckShootTimer()
         {
             if (!shootTimer.Set)
             {
                 if(moveToMake == Move.Move)
                 {
                     GameObjectSpawner.CreateEnemyProjectile(this.ObjectTexture, CurrentPosition, false);
-                    shootTimer.SetStartTimeAndStopTime(gameTime, 4000);
+                    shootTimer.SetStartTimeAndStopTime(4000);
                 }
             }
             else
             {
-                if (Timer.CheckTimeReached(gameTime, shootTimer))
+                if (Timer.CheckTimeReached(shootTimer))
                 {
                     shootTimer.ResetTimer();
                 }

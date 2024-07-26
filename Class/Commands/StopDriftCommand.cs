@@ -16,11 +16,11 @@ namespace Drifter.Class.Commands
 
         private Timer driftTimer = new Timer();
 
-        public override void Execute<T>(GameTime gameTime, T gameObject)
+        public override void Execute<T>(T gameObject)
         {
             if (driftTimer.Set)
             {
-                if(Timer.CheckTimeReached(gameTime, driftTimer))
+                if(Timer.CheckTimeReached(driftTimer))
                 {
                     StopDrift(gameObject as Player);
                     driftTimer.ResetTimer();
@@ -29,7 +29,7 @@ namespace Drifter.Class.Commands
             else
             {
                 StopDrift(gameObject as Player);
-                driftTimer.SetStartTimeAndStopTime(gameTime, 5000);
+                driftTimer.SetStartTimeAndStopTime(5000);
 
             }
         }

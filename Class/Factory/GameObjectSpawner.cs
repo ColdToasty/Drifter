@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Drifter.Class.GameObjectClass;
 using Drifter.Class.GameObjectClass.ObstacleClass;
-using Drifter;
 using Drifter.Class.AbstractClass;
+using Drifter.Class.Tools;
+
+
+
 namespace Drifter.Class.Factory
 {
 
@@ -24,6 +26,9 @@ namespace Drifter.Class.Factory
         public static List<Item> items = new List<Item>();
         private static List<GameObject> objectsToBeDeleted = new List<GameObject>();
         public static List<Projectile> enemyProjectiles = new List<Projectile>();
+        private static List<GameObject> objectsToBeAddedAfterLoop = new List<GameObject>();
+
+        private static Timer addToListTimer = new Timer();
 
         public static void AddToList<TGameObject>(TGameObject gameObject) where TGameObject : GameObject
         {
@@ -143,7 +148,7 @@ namespace Drifter.Class.Factory
             else
             {
                 int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
-                AddToList(new Obstacle(texture, new Vector2(spawnXPosition, 0), obstacleType));
+                AddToList(new ShatteringAsteroid(texture, new Vector2(spawnXPosition, 0), obstacleType));
             }
         }
 
@@ -162,6 +167,36 @@ namespace Drifter.Class.Factory
         {
             AddToList(new AngledAsteroid(texture, spawnPosition, setCustomDirection, moveLeft));
         }
+
+        //Used if objects need to be added during a run time loop
+        public static void AddToListAfterLoop(GameObject gameObject = null)
+        {
+            if (addToListTimer.Set)
+            {
+                if(Timer.CheckTimeReached(addToListTimer))
+                {
+                    foreach(GameObject o in objectsToBeAddedAfterLoop)
+                    {
+                        AddToList(o);
+                    }
+                    addToListTimer.ResetTimer();
+                    objectsToBeAddedAfterLoop.Clear();
+                }
+            }
+            else
+            {
+                addToListTimer.SetStartTimeAndStopTime(10);
+                if(gameObject != null)
+                {
+                    if (!objectsToBeAddedAfterLoop.Contains(gameObject))
+                    {
+                        objectsToBeAddedAfterLoop.Add(gameObject);
+                    }
+                    
+                }
+            }
+        }
+
 
 
 

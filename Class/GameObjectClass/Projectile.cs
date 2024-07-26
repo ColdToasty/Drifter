@@ -98,16 +98,16 @@ namespace Drifter.Class.GameObjectClass
 
 
         //moving negative means going up
-        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
+        public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
             if (isMovingNegative)
             {
-                this.Position.Y -= this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                this.Position.Y -= this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
                 
             }
             else
             {
-                this.Position.Y += this.travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                this.Position.Y += this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             }
             UpdateCollisionCircle();
         }

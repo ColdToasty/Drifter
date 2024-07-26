@@ -30,10 +30,10 @@ namespace Drifter.Class.GameObjectClass
             this.collisionCircle = new CollisionCircle(new Vector2(8, 8), 16);
         }
         
-        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
+        public override void Run( bool isMovingNegative, float EndOfScreenPosition)
         {
-            this.Position.Y += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            base.Run(gameTime, isMovingNegative, EndOfScreenPosition);
+            this.Position.Y += travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
+            base.Run(isMovingNegative, EndOfScreenPosition);
         }
 
 

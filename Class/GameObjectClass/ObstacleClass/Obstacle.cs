@@ -28,6 +28,8 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public int Health { get { return health; } }
 
 
+
+
         //For worm
         //private int moveOnX = 50;
         //private bool changeDirection = false;
@@ -100,10 +102,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
 
 
-        public override void Run(GameTime gameTime, bool isMovingNegative, float EndOfScreenPosition)
+        public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
-            Position.Y += travelSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            base.Run(gameTime, isMovingNegative, EndOfScreenPosition);
+            Position.Y += travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
+            base.Run(isMovingNegative, EndOfScreenPosition);
             collisionCircle.Centre = Position + new Vector2(16, 16);
         }
 
