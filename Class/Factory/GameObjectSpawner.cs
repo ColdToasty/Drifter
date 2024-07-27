@@ -111,7 +111,7 @@ namespace Drifter.Class.Factory
 
         public static void CreateEnemyProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.EnemyProjectile)
         {
-            AddToList(new Projectile(projectileTexture, startPosition, isMovingNegative, projectileType));
+            AddToList(new Projectile(Globals.GetTexture("enemyProjectile"), startPosition, isMovingNegative, projectileType));
         }
 
 
@@ -160,7 +160,7 @@ namespace Drifter.Class.Factory
 
         public static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)
         {
-            AddToList(new AlienSpaceship(texture, spawnPosition));
+            AddToList(new AlienSpaceship(Globals.GetTexture("purpleAlienSpaceship"), spawnPosition));
         }
 
         public static void CreateAngledAsteroid(Texture2D texture, Vector2 spawnPosition, bool setCustomDirection = false, bool moveLeft = false)

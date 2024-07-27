@@ -36,7 +36,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.shootTimer = new Timer();
             this.deathTimer = new Timer();
             this.moveToMake = Move.Move;
-
         }
 
 

@@ -34,7 +34,6 @@ namespace Drifter.Class.GameObjectClass
 
         }
 
-
         public void Reset()
         {
             this.travelSpeed = 100;

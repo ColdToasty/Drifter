@@ -8,5 +8,6 @@ namespace Drifter.Class.Observer
 {
     internal class AudioSubject
     {
+
     }
 }

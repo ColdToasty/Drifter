@@ -82,20 +82,22 @@ namespace Drifter
             Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.Content = Content;
             Globals.GraphicsDevice = GraphicsDevice;
+            Globals.LoadContent();
 
-            ball = Content.Load<Texture2D>("CollisionShape/ball");
-            projectileMissile = Content.Load<Texture2D>("Projectile/Missile");
-            obstacleAsteroid = Content.Load<Texture2D>("Obstacle/Asteroid/Asteroid");
-            coin = Content.Load<Texture2D>("Item/Coin/Coin");
+            ball = Globals.GetTexture("ball");
+
+            projectileMissile = Globals.GetTexture("projectileMissile");
+            playerTexture = Globals.GetTexture("player");
+            obstacleAsteroid = Globals.GetTexture("asteroid");
+            coin = Globals.GetTexture("coin");
+
 
             spriteFont = Content.Load<SpriteFont>("Font/MainFont");
             textMiddlePoint = spriteFont.MeasureString(Score.ScoreValue.ToString("D10")) / 2;
 
-            playerTexture = Content.Load<Texture2D>("Player/DefaultPlayer");
             player = new Player(playerTexture, playerStartPosition);
             shootCommand = new ShootCommand(projectileMissile);
 
-            Globals.LoadContent();
         }
 
 
@@ -250,8 +252,9 @@ namespace Drifter
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            Globals.SpriteBatch.Begin();
 
+
+            SpriteDrawer.DrawGameObjects();
 
             //Draw projectiles
             foreach (Projectile p in GameObjectSpawner.projectiles)
