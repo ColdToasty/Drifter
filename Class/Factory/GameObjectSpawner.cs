@@ -115,6 +115,8 @@ namespace Drifter.Class.Factory
         }
 
 
+
+
         //used to create an obstacle based on probability
         public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
@@ -156,6 +158,12 @@ namespace Drifter.Class.Factory
         public static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
         {
             AddToList(new ShatteringAsteroid(texture, spawnPosition));
+        }
+
+        public static void CreateSpacePipe()
+        {
+            int xSpawn = Game1.Random.Next(SpacePipe.leftHeadTexture.Width, Globals.ScreenWidth - (Globals.GapSize + SpacePipe.leftHeadTexture.Width));
+            AddToList(new SpacePipe(new Vector2(xSpawn, -80)));
         }
 
         public static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)

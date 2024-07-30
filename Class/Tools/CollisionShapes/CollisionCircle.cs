@@ -4,13 +4,12 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace Drifter.Class.Tools
+namespace Drifter.Class.Tools.CollisionShapes 
 {
     internal struct CollisionCircle
     {
@@ -27,8 +26,8 @@ namespace Drifter.Class.Tools
 
         public CollisionCircle(Vector2 centre, float radius = 16)
         {
-            this.Centre = centre;
-            this.Radius = radius;
+            Centre = centre;
+            Radius = radius;
             isDisabled = false;
         }
 
@@ -37,10 +36,12 @@ namespace Drifter.Class.Tools
             return (Centre - point).LengthSquared() <= Radius * Radius;
         }
 
-        public bool Intersects(CollisionCircle other) {
-            float distanceBetweenCircleAndOther = (other.Centre - this.Centre).LengthSquared();
-            float combindedRadius= this.Radius + other.Radius;
+        public bool Intersects(CollisionCircle other)
+        {
+            float distanceBetweenCircleAndOther = (other.Centre - Centre).LengthSquared();
+            float combindedRadius = Radius + other.Radius;
             return distanceBetweenCircleAndOther <= combindedRadius * combindedRadius;
         }
+
     }
 }

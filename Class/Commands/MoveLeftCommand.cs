@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.GameObjectClass;
 using Drifter.Class.GameObjectClass.ObstacleClass;
+using Drifter.Class.Tools;
 using Microsoft.Xna.Framework;
 
 
@@ -17,7 +18,7 @@ namespace Drifter.Class.Commands
         public override void Execute<T>(T gameObject)
         {
             GameObject GameObject = gameObject as GameObject;
-            GameObject.Run(true, Game1.ScreenHeight);
+            GameObject.Run(true, Globals.ScreenHeight);
             GameObject.isMovingLeft = true;
 
             if (gameObject is Player)

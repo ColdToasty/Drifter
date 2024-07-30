@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Factory;
-
+using Drifter.Class.Tools.CollisionShapes;
 
 namespace Drifter.Class.GameObjectClass
 {
@@ -34,6 +34,17 @@ namespace Drifter.Class.GameObjectClass
         private int enemyProjectileCollisionCircleRadius = 16;
         private int playerProjectileCollisionCircleRadius = 8;
 
+        private int projectileDamage { get; init; }
+        public int ProjectileDamge { get { return projectileDamage; } }
+
+        private static readonly Dictionary<ProjectileType, int> ProjectileDamageValues = new Dictionary<ProjectileType, int>()
+        {
+            { ProjectileType.Missle, 1},
+            { ProjectileType.EnemyProjectile, 1},
+            { ProjectileType.Laser, 3},
+            { ProjectileType.LaserBeam, 5}
+        };
+
         public Projectile(Texture2D texture, Vector2 startPosition, bool isMovingNegative, ProjectileType projectileType = ProjectileType.Missle)
         {
             SetProjectileTravelSpeed(0);
@@ -44,7 +55,8 @@ namespace Drifter.Class.GameObjectClass
             this.Position = startPosition;
             this.Position.X += texture.Width / 2;
             this.IsMovingNegative = isMovingNegative;
-            
+            this.projectileDamage = ProjectileDamageValues[this.projectileType];
+
             SetUpCollisionCircle();
         }
 

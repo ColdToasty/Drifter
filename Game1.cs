@@ -18,9 +18,6 @@ namespace Drifter
     {
         private static GraphicsDeviceManager _graphics;
 
-        public static int ScreenHeight { get; private set; }
-        public static int ScreenWidth { get; private set; }
-
         public static Random Random = new Random();
         private Player player;
 
@@ -57,10 +54,9 @@ namespace Drifter
             moveRightCommand = new MoveRightCommand();
             stopDriftCommand = new StopDriftCommand();
 
-            ScreenHeight = _graphics.PreferredBackBufferHeight;
-            ScreenWidth = _graphics.PreferredBackBufferWidth;
-            GameObjectSpawner.SetSpawnXAxisRange(ScreenWidth);
-            GameObjectSpawner.SetSpawnYAxisRange(ScreenHeight / 5 );
+            Globals.SetScreenMeasurements(_graphics.PreferredBackBufferHeight, _graphics.PreferredBackBufferWidth);
+            GameObjectSpawner.SetSpawnXAxisRange(Globals.ScreenWidth);
+            GameObjectSpawner.SetSpawnYAxisRange(Globals.ScreenHeight / 5 );
 
             previousTimeInSeconds = 0;
 
@@ -100,29 +96,26 @@ namespace Drifter
 
         }
 
-
-
-
         private void RunObjects()
         {
             for (int i = GameObjectSpawner.projectiles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.projectiles[i].Run(GameObjectSpawner.projectiles[i].IsMovingNegative, ScreenHeight);
+                GameObjectSpawner.projectiles[i].Run(GameObjectSpawner.projectiles[i].IsMovingNegative, Globals.ScreenHeight);
             }
 
             for (int i = GameObjectSpawner.obstacles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.obstacles[i].Run(GameObjectSpawner.obstacles[i].isMovingLeft, ScreenHeight);
+                GameObjectSpawner.obstacles[i].Run(GameObjectSpawner.obstacles[i].isMovingLeft, Globals.ScreenHeight);
             }
 
             for (int i = GameObjectSpawner.items.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.items[i].Run(false, _graphics.PreferredBackBufferHeight);
+                GameObjectSpawner.items[i].Run(false, Globals.ScreenHeight);
             }
 
             for (int i = GameObjectSpawner.enemyProjectiles.Count - 1; i >= 0; i--)
             {
-                GameObjectSpawner.enemyProjectiles[i].Run(false, ScreenHeight);
+                GameObjectSpawner.enemyProjectiles[i].Run(false, Globals.ScreenHeight);
             }
         }
 
@@ -172,10 +165,6 @@ namespace Drifter
                 }
             }
         }
-
-
-
-
 
         protected override void Update(GameTime gameTime)
         {
@@ -244,7 +233,7 @@ namespace Drifter
 
             if (player.isDrifting)
             {
-                player.Run(player.isMovingLeft, ScreenHeight);
+                player.Run(player.isMovingLeft, Globals.ScreenHeight);
             }
         }
 
@@ -288,25 +277,54 @@ namespace Drifter
             //Draw obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
-                Globals.SpriteBatch.Draw(
-                o.Texture,
-                o.CurrentPosition,
-                Color.White
-                );
+                if(o is SpacePipe)
+                {
+                    SpacePipe sp = (SpacePipe)o;
+                    Globals.SpriteBatch.Draw(
+                    SpacePipe.leftHeadTexture,
+                    new Vector2(sp.LeftHeadPosition, sp.CurrentPosition.Y),
+                    Color.White
+                    );
 
-                //draws their collisions shapes
-                Globals.SpriteBatch.Draw(
-                ball,
-                o.CurrentPosition,
-                null,
-                Color.White,
-                0,
-                Vector2.Zero,
-                //only 2.0f because ball texture is 16bits 
-                2.0f,
-                0,
-                0
-                );
+                    Globals.SpriteBatch.Draw(
+                    SpacePipe.rightHeadTexture,
+                    new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y),
+                    Color.White
+                    );
+
+                    foreach(int value in sp.GetXPositions())
+                    {
+                        Globals.SpriteBatch.Draw(
+                        SpacePipe.bodyTexture,
+                        new Vector2(value, sp.CurrentPosition.Y),
+                        Color.White
+                        );
+                    }
+
+                }
+                else
+                {
+                    Globals.SpriteBatch.Draw(
+                    o.Texture,
+                    o.CurrentPosition,
+                    Color.White
+                    );
+
+                    //draws their collisions shapes
+                    Globals.SpriteBatch.Draw(
+                    ball,
+                    o.CurrentPosition,
+                    null,
+                    Color.White,
+                    0,
+                    Vector2.Zero,
+                    //only 2.0f because ball texture is 16bits 
+                    2.0f,
+                    0,
+                    0
+                    );
+                }
+
             }
 
             //Draw obstacles

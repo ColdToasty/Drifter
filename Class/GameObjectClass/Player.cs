@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
-
+using Drifter.Class.Tools.CollisionShapes;
 
 
 namespace Drifter.Class.GameObjectClass

@@ -9,6 +9,7 @@ using Drifter.Class.Factory;
 using Drifter.Class.GameObjectClass;
 using Drifter.Class.AbstractClass;
 using Microsoft.Xna.Framework.Graphics;
+using Drifter.Class.GameObjectClass.ObstacleClass;
 
 namespace Drifter.Class.Commands
 {

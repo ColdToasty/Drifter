@@ -1,5 +1,6 @@
 ﻿using Drifter.Class.Factory;
 using Drifter.Class.Tools;
+using Drifter.Class.Tools.CollisionShapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -50,7 +51,7 @@ namespace Drifter.Class.AbstractClass
 
         protected virtual void DidExitScreen(float EndOfScreenPosition)
         {
-            if (Position.Y > EndOfScreenPosition + 32 || Position.Y < 0 - 33)
+            if (Position.Y > EndOfScreenPosition + 128 || Position.Y < 0 - 128)
             {
                 DestroyMyself();
             }
@@ -70,9 +71,9 @@ namespace Drifter.Class.AbstractClass
                 SetPositionAtEdgeOfScreen(0);
             }
 
-            else if (CurrentPosition.X + Texture.Width / 2 > Game1.ScreenWidth - Texture.Width / 2)
+            else if (CurrentPosition.X + Texture.Width / 2 > Globals.ScreenWidth - Texture.Width / 2)
             {
-                SetPositionAtEdgeOfScreen(Game1.ScreenWidth - Texture.Width);
+                SetPositionAtEdgeOfScreen(Globals.ScreenWidth - Texture.Width);
             }
         }
 

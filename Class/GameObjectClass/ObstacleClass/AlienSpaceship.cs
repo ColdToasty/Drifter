@@ -129,9 +129,9 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 isMovingLeft = false;
             }
 
-            else if (CurrentPosition.X + Texture.Width / 2 > Game1.ScreenWidth - Texture.Width / 2)
+            else if (CurrentPosition.X + Texture.Width / 2 > Globals.ScreenWidth - Texture.Width / 2)
             {
-                SetPositionAtEdgeOfScreen(Game1.ScreenWidth - Texture.Width);
+                SetPositionAtEdgeOfScreen(Globals.ScreenWidth - Texture.Width);
                 isMovingLeft = true;
             }
         }

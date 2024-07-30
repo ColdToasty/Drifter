@@ -10,6 +10,7 @@ using Drifter.Class.Tools;
 using Microsoft.Xna.Framework.Input;
 using System.Runtime.CompilerServices;
 using Drifter.Class.Factory;
+using Drifter.Class.Tools.CollisionShapes;
 
 namespace Drifter.Class.GameObjectClass.ObstacleClass
 {
@@ -18,6 +19,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public enum ObstacleType { Asteroid, AngledAsteroid, ShatteringAsteroid, SpaceWorm, AlienSpaceship, KamakaziAlienSpaceship, Blackhole, SpacePipe }
 
         protected Dictionary<ObstacleType, int> healthValues, travelSpeeds, scoreIncreaseValues;
+
 
         protected ObstacleType obstacleType;
 
@@ -48,6 +50,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             SetHealth();
             SetTravelSpeed();
             SetScoreIncreaseValue();
+        }
+
+        public Obstacle(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
+        {
+            this.Position = startPosition;
+            this.obstacleType = obstacleType;
         }
 
         private void SetHealth()
@@ -120,14 +128,14 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
             if(gameObject is Projectile)
             {
-                HitByProjectile(((Projectile)gameObject).TypeOfProjectile);
+                HitByProjectile(((Projectile)gameObject).ProjectileDamge);
             }
 
         }
 
-        private void HitByProjectile(Projectile.ProjectileType projectileType)
+        private void HitByProjectile(int damageAmount)
         {
-            health--;
+            health -= damageAmount;
             if (health <= 0)
             {
                 Score.IncreaseScore(IncreaseScoreValue);
