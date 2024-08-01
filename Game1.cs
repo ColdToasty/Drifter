@@ -124,7 +124,16 @@ namespace Drifter
             //checks player projectile collides with obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
-                if (player.collisionCircle.Intersects(o.collisionCircle))
+                if(o is SpacePipe)
+                {
+                    SpacePipe sp = (SpacePipe)o;
+                    System.Diagnostics.Trace.WriteLine(sp.leftPipeCollisionSquare.Intersects(player.collisionCircle));
+                    if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle))
+                    {
+
+                    }
+                }
+                else if (player.collisionCircle.Intersects(o.collisionCircle))
                 {
                     o.CollidedWithOtherGameObject();
                     //player.CollidedWithOtherGameObject();
@@ -292,7 +301,8 @@ namespace Drifter
                     Color.White
                     );
 
-                    foreach(int value in sp.GetXPositions())
+
+                    foreach (int value in sp.GetXPositions())
                     {
                         Globals.SpriteBatch.Draw(
                         SpacePipe.bodyTexture,
@@ -326,6 +336,8 @@ namespace Drifter
                 }
 
             }
+
+
 
             //Draw obstacles
             foreach (Item i in GameObjectSpawner.items)

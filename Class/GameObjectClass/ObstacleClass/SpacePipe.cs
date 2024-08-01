@@ -33,6 +33,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         //start position refers to the gap that player has to pass through
         public SpacePipe(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.SpacePipe) : base(startPosition, obstacleType)
         {
+
             this.Position = startPosition;
             this.leftHeadPosition = (int)this.Position.X - leftHeadTexture.Width;
             this.rightHeadPosition = (int)this.Position.X + GapSize;
@@ -42,13 +43,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.ObjectTexture = leftHeadTexture;
             this.travelSpeed = 75;
             PipeBodyAmountToSpawn();
-            int collisionSquareHeight = leftHeadTexture.Height;
-            leftPipeCollisionSquare = new CollisionSquare(leftPipeCollisionWidth, collisionSquareHeight);
-            rightPipeCollisionSquare = new CollisionSquare(rightPipeCollisionWidth, collisionSquareHeight);
-            SetCollisionSquares();
+
         }
 
-
+        //calculates how many bodyTextures to spawn at specific positions on both left and right sides
         private void PipeBodyAmountToSpawn()
         {
             float remainingSpaceLeft = this.Position.X - leftHeadTexture.Width;
@@ -56,6 +54,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
             leftPipeCollisionWidth = (int)remainingSpaceLeft;
             rightPipeCollisionWidth = (int)remaingSpaceRight;
+
 
 
             int leftAmountOfPipeBodiesToSpawn = (int)MathF.Ceiling(remainingSpaceLeft / bodyTexture.Width);
@@ -75,6 +74,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 bodyTextureXPositions.Add(rightValue);
                 rightValue += bodyTexture.Width;
             }
+
+            leftPipeCollisionSquare = new CollisionSquare(new Vector2(0, this.Position.Y), this.Position.X, bodyTexture.Height);
+            rightPipeCollisionSquare = new CollisionSquare(new Vector2((int)this.Position.X + GapSize, this.Position.Y), rightPipeCollisionWidth, bodyTexture.Height);
+
         }
 
         public int[] GetXPositions()
@@ -93,16 +96,16 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
             Position.Y += travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
-            SetCollisionSquares();
 
-            //System.Diagnostics.Trace.WriteLine($"{leftPipeCollisionSquare.Centre}, {rightPipeCollisionSquare.Centre}");
+
+            leftPipeCollisionSquare.UpdateRectangle(Position);
+            rightPipeCollisionSquare.UpdateRectangle(Position);
+
+
             DidExitScreen(EndOfScreenPosition);
         }
 
-        private void SetCollisionSquares()
-        {
 
-        }
 
     }
 }

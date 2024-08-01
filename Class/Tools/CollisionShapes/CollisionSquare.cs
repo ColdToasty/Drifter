@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
@@ -11,57 +12,50 @@ namespace Drifter.Class.Tools.CollisionShapes
     {
         public Vector2 Centre;
 
-        //centre = (half width of object texture and half height of object texture) + position of object
-        //radius = half of width of texture
+        public Rectangle rectangle;
 
         public bool isDisabled;
 
         private float width, height;
 
-        public CollisionSquare(float width, float height)
+        //startPosition being the top left corner
+        public CollisionSquare(Vector2 startPosition, float width, float height)
         {
-            Centre = new Vector2(width/2, height /2);
+            rectangle = new Rectangle((int) startPosition.X, (int) startPosition.Y, (int) width, (int) height);
+            Centre = new Vector2(rectangle.Center.X, startPosition.Y + rectangle.Center.Y);
             isDisabled = false;
             this.width = width;
             this.height = height;
         }
         
-        public void UpdateCentre(Vector2 ownerPosition)
+        public void UpdateRectangle(Vector2 position)
         {
-            Centre = ownerPosition + new Vector2(this.width/2, this.height/2);
+            rectangle.Y = (int)position.Y;
+            Centre = new Vector2(rectangle.Center.X, rectangle.Center.Y);
         }
-
-
+       
         public bool Contains(Vector2 point)
         {
             return false;
         }
 
-        public bool Intersects(CollisionCircle other)
+        public bool Intersects(CollisionCircle circle)
         {
-            Vector2 circleDistance;
-            //get distance between x values
-            circleDistance.X = Math.Abs(other.Centre.X - Centre.X);
-            //get distance between y values
-            circleDistance.Y = Math.Abs(other.Centre.X - Centre.Y);
+            float closestX = Math.Max(rectangle.X, Math.Min(circle.Centre.X, width));
+            float closestY = Math.Max(rectangle.Y, Math.Min(circle.Centre.Y, rectangle.Y + height));
 
-            //if x disance is greater that circle radius and x width then won't overlap
-            if (circleDistance.X > (this.width / 2 + other.Radius)) { return false; }
-            //if y disance is greater that circle radius and y width then won't overlap
-            if (circleDistance.Y > (this.height / 2 + other.Radius)) { return false; }
+            // Calculate the distance from the circle's center to this closest point
+            float distanceX = circle.Centre.X - closestX;
+            float distanceY = circle.Centre.Y - closestY;
 
-
-            if (circleDistance.X <= (this.width / 2)) { return true; }
-            if (circleDistance.Y <= (this.height / 2)) { return true; }
-
-
-            float cornerDistance_sq = (circleDistance.X - this.width / 2) * (circleDistance.X - this.width / 2) +
-                                 (circleDistance.Y - this.height / 2) * (circleDistance.Y - this.height / 2);
-
-            return (cornerDistance_sq <= (other.Radius * other.Radius));
+            // If the distance is less than or equal to the radius, they overlap
+            float distanceSquared = distanceX * distanceX + distanceY * distanceY;
+            return distanceSquared <= circle.Radius * circle.Radius;
         }
 
-        public bool Intersects(CollisionSquare other)
+
+        //Currently dont need to check for square
+        private bool Intersects(CollisionSquare other)
         {
             throw new NotImplementedException();
         }
