@@ -119,65 +119,11 @@ namespace Drifter
             }
         }
 
-        private void CheckCollision()
-        {
-            //checks player projectile collides with obstacles
-            foreach (Obstacle o in GameObjectSpawner.obstacles)
-            {
-                if(o is SpacePipe)
-                {
-                    SpacePipe sp = (SpacePipe)o;
-                    System.Diagnostics.Trace.WriteLine(sp.leftPipeCollisionSquare.Intersects(player.collisionCircle));
-                    if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle))
-                    {
 
-                    }
-                }
-                else if (player.collisionCircle.Intersects(o.collisionCircle))
-                {
-                    o.CollidedWithOtherGameObject();
-                    //player.CollidedWithOtherGameObject();
-                }
-                foreach (Projectile p in GameObjectSpawner.projectiles)
-                {
-                    if (o.collisionCircle.Intersects(p.collisionCircle))
-                    {
-                        p.CollidedWithOtherGameObject();
-                        o.CollidedWithOtherGameObject(p);
-                    }
-                }
-            }
-
-            foreach(Item i in GameObjectSpawner.items)
-            {
-                if (i.collisionCircle.Intersects(player.collisionCircle))
-                {
-                    player.CollidedWithOtherGameObject(i);
-                    i.CollidedWithOtherGameObject();
-                }
-            }
-
-            foreach(Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
-            {
-                foreach (Projectile p in GameObjectSpawner.projectiles)
-                {
-                    if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
-                    {
-                        enemyProjectile.CollidedWithOtherGameObject();
-                        p.CollidedWithOtherGameObject(enemyProjectile);
-                    }
-                }
-
-                if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
-                {
-                    enemyProjectile.CollidedWithOtherGameObject(player);
-                }
-            }
-        }
 
         protected override void Update(GameTime gameTime)
         {
-            Globals.Update(gameTime);
+            Globals.Update(gameTime, player);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
@@ -185,7 +131,7 @@ namespace Drifter
 
             if((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
             {
-                GameObjectSpawner.CreateObstacle(obstacleAsteroid);
+                //GameObjectSpawner.CreateObstacle(obstacleAsteroid);
                 GameObjectSpawner.CreateItem(coin);
                 previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
             }
@@ -195,7 +141,7 @@ namespace Drifter
             CheckPlayerInput();
 
             RunObjects();
-            CheckCollision();
+
             GameObjectSpawner.AddToListAfterLoop();
             GameObjectSpawner.DeleteGameObjects();
 
@@ -302,6 +248,37 @@ namespace Drifter
                     );
 
 
+                    //draw right side top left
+                    Globals.SpriteBatch.Draw(
+                    ball,
+                    new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y),
+                    Color.White
+                    );
+
+                    //draw right side top left
+                    Globals.SpriteBatch.Draw(
+                    ball,
+                    new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y + sp.rightPipeCollisionSquare.rectangle.Height),
+                    Color.White
+                    );
+
+                    Globals.SpriteBatch.Draw(
+                    ball,
+                    new Vector2(sp.RightHeadPosition + sp.rightPipeCollisionSquare.rectangle.Width - 16, sp.CurrentPosition.Y),
+                    Color.White
+                    );
+
+
+                    Globals.SpriteBatch.Draw(
+                    ball,
+                    new Vector2(sp.RightHeadPosition + sp.rightPipeCollisionSquare.rectangle.Width - 16, sp.CurrentPosition.Y + sp.rightPipeCollisionSquare.rectangle.Height),
+                    Color.White
+                    );
+
+
+
+
+
                     foreach (int value in sp.GetXPositions())
                     {
                         Globals.SpriteBatch.Draw(
@@ -357,17 +334,20 @@ namespace Drifter
            
             }
 
+            if (player.IsAlive)
+            {
+                Globals.SpriteBatch.Draw(
+                playerTexture,
+                player.CurrentPosition,
+                Color.White
+                );
 
-            Globals.SpriteBatch.Draw(
-            playerTexture,
-            player.CurrentPosition,
-            Color.White
-            );
+                Globals.SpriteBatch.Draw(
+                ball,
+                player.CurrentPosition + new Vector2(8, 8),
+                Color.White);
+            }
 
-            Globals.SpriteBatch.Draw(
-            ball,
-            player.CurrentPosition + new Vector2(8, 8),
-            Color.White);
 
 
             //Draw score

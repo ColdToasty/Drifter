@@ -32,15 +32,17 @@ namespace Drifter.Class.Tools.CollisionShapes
         {
             rectangle.Y = (int)position.Y;
             Centre = new Vector2(rectangle.Center.X, rectangle.Center.Y);
+            
         }
        
-        public bool Contains(Vector2 point)
-        {
-            return false;
-        }
 
         public bool Intersects(CollisionCircle circle)
         {
+            if (rectangle.Contains(circle.Centre))
+            {
+                return true;
+            }
+
             float closestX = Math.Max(rectangle.X, Math.Min(circle.Centre.X, width));
             float closestY = Math.Max(rectangle.Y, Math.Min(circle.Centre.Y, rectangle.Y + height));
 

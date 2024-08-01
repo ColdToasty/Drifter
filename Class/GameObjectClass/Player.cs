@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Tools.CollisionShapes;
+using Drifter.Class.GameObjectClass.ObstacleClass;
 
 
 namespace Drifter.Class.GameObjectClass
@@ -25,6 +26,10 @@ namespace Drifter.Class.GameObjectClass
         public bool isDrifting;
 
         private Vector2 startingPosition;
+
+        private bool isAlive;
+
+        public bool IsAlive { get { return isAlive; } }
 
         public Player(Texture2D texture, Vector2 startingPosition) {
 
@@ -43,6 +48,7 @@ namespace Drifter.Class.GameObjectClass
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(16, 16), 8);
             this.isMovingLeft = false;
             this.isDrifting = false;
+            this.isAlive = true;
         }
 
 
@@ -94,8 +100,14 @@ namespace Drifter.Class.GameObjectClass
                 Item item = (Item)gameObject;
                 ConsumeItem(item);
             }
+            else if(gameObject is Obstacle)
+            {
+                DestroyMyself();
+                isAlive = false;
+            }
             
         }
+
 
         private void ConsumeItem(Item item)
         {

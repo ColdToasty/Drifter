@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Drifter.Class.Factory;
+using Drifter.Class.GameObjectClass;
 using Drifter.Class.GameObjectClass.ObstacleClass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -24,9 +26,67 @@ namespace Drifter.Class.Tools
         public static int ScreenWidth { get; private set; }
 
         public static int GapSize { get; set; }
-        public static void Update(GameTime gt)
+        public static void Update(GameTime gt, Player player = null)
         {
             GameTime = gt;
+
+                //checks player projectile collides with obstacles
+                foreach (Obstacle o in GameObjectSpawner.obstacles)
+                {
+                    if (o is SpacePipe)
+                    {
+                        SpacePipe sp = (SpacePipe)o;
+                        if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle) || sp.rightPipeCollisionSquare.Intersects(player.collisionCircle))
+                        {
+                            player.CollidedWithOtherGameObject(sp);
+                        }
+
+                    }
+                    else if (player.collisionCircle.Intersects(o.collisionCircle))
+                    {
+                        o.CollidedWithOtherGameObject();
+                        player.CollidedWithOtherGameObject(o);
+                    }
+                    foreach (Projectile p in GameObjectSpawner.projectiles)
+                    {
+                        if (o.collisionCircle.Intersects(p.collisionCircle))
+                        {
+                            p.CollidedWithOtherGameObject();
+                            o.CollidedWithOtherGameObject(p);
+                        }
+                    }
+                }
+
+                foreach (Item i in GameObjectSpawner.items)
+                {
+                    if (i.collisionCircle.Intersects(player.collisionCircle))
+                    {
+                        player.CollidedWithOtherGameObject(i);
+                        i.CollidedWithOtherGameObject();
+                    }
+                }
+
+                foreach (Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
+                {
+                    foreach (Projectile p in GameObjectSpawner.projectiles)
+                    {
+                        if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
+                        {
+                            enemyProjectile.CollidedWithOtherGameObject();
+                            p.CollidedWithOtherGameObject(enemyProjectile);
+                        }
+                    }
+
+                    if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
+                    {
+                        enemyProjectile.CollidedWithOtherGameObject(player);
+                        player.CollidedWithOtherGameObject(enemyProjectile);
+                    }
+                }
+            
+
+
+
         }
 
         private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();

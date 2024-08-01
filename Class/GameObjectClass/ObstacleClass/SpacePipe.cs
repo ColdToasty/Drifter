@@ -56,6 +56,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             rightPipeCollisionWidth = (int)remaingSpaceRight;
 
 
+            System.Diagnostics.Trace.WriteLine($"ScreenWidth - { Globals.ScreenWidth}");
+            System.Diagnostics.Trace.WriteLine($"leftPipeWidth - {this.Position.X}");
+            System.Diagnostics.Trace.WriteLine($"rightPipeWidth - {rightPipeCollisionWidth}");
+            System.Diagnostics.Trace.WriteLine($"GapSize - {GapSize}");
+            System.Diagnostics.Trace.WriteLine($"{Globals.ScreenWidth - (this.Position.X + GapSize)}");
+            System.Diagnostics.Trace.WriteLine($"");
 
             int leftAmountOfPipeBodiesToSpawn = (int)MathF.Ceiling(remainingSpaceLeft / bodyTexture.Width);
             int rightAmountOfPipeBodiesToSpawn = (int)MathF.Ceiling(remaingSpaceRight / bodyTexture.Width);
@@ -76,8 +82,9 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
 
             leftPipeCollisionSquare = new CollisionSquare(new Vector2(0, this.Position.Y), this.Position.X, bodyTexture.Height);
-            rightPipeCollisionSquare = new CollisionSquare(new Vector2((int)this.Position.X + GapSize, this.Position.Y), rightPipeCollisionWidth, bodyTexture.Height);
+            rightPipeCollisionSquare = new CollisionSquare(new Vector2((int)this.Position.X + GapSize, this.Position.Y), remaingSpaceRight, bodyTexture.Height);
 
+            System.Diagnostics.Trace.WriteLine($"{rightPipeCollisionSquare.rectangle.Width}");
         }
 
         public int[] GetXPositions()
@@ -102,6 +109,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             rightPipeCollisionSquare.UpdateRectangle(Position);
 
 
+            //System.Diagnostics.Trace.WriteLine(rightPipeCollisionSquare.rectangle.Width);
             DidExitScreen(EndOfScreenPosition);
         }
 
