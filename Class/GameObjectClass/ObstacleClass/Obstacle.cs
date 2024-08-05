@@ -54,11 +54,14 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         public Obstacle(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
         {
+            SetHealth();
+            SetTravelSpeed();
+            SetScoreIncreaseValue();
             this.Position = startPosition;
             this.obstacleType = obstacleType;
         }
 
-        private void SetHealth()
+        protected void SetHealth()
         {
             healthValues = new Dictionary<ObstacleType, int>()
             {
@@ -74,7 +77,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             health = healthValues[obstacleType];
         }
 
-        private void SetTravelSpeed()
+        protected void SetTravelSpeed()
         {
             travelSpeeds = new Dictionary<ObstacleType, int>()
             {
@@ -85,13 +88,13 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 {ObstacleType.AlienSpaceship, 100},
                 {ObstacleType.KamakaziAlienSpaceship, 150},
                 {ObstacleType.Blackhole, 50},
-                {ObstacleType.SpacePipe, 50}
+                {ObstacleType.SpacePipe, 75}
             };
 
             travelSpeed = travelSpeeds[obstacleType];
         }
 
-        private void SetScoreIncreaseValue()
+        protected void SetScoreIncreaseValue()
         {
             scoreIncreaseValues = new Dictionary<ObstacleType, int>()
             {
@@ -120,7 +123,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         public override void CollidedWithOtherGameObject(GameObject gameObject = null)
         {
-            if(gameObject is null)
+            if(gameObject is null || gameObject is Player)
             {
                 base.CollidedWithOtherGameObject();
                 return;

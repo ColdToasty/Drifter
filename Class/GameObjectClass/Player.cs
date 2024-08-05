@@ -102,8 +102,15 @@ namespace Drifter.Class.GameObjectClass
             }
             else if(gameObject is Obstacle)
             {
+                if(gameObject is BlackHole)
+                {
+                   
+                }
+
                 DestroyMyself();
                 isAlive = false;
+                
+
             }
             
         }

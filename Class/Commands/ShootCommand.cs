@@ -32,7 +32,7 @@ namespace Drifter.Class.Commands
                 if (canShoot)
                 {
                     shootTimer.ResetTimer();
-                    GameObjectSpawner.CreateSpacePipe();
+                    GameObjectSpawner.CreateBlackHole();
                 }
             }
         else

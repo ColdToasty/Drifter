@@ -17,7 +17,7 @@ namespace Drifter.Class.Tools.CollisionShapes
         public Vector2 Centre;
 
         //Set size of circle
-        public float Radius;
+        public float Radius { get; init; }
 
         //centre = (half width of object texture and half height of object texture) + position of object
         //radius = half of width of texture

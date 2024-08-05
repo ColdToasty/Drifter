@@ -1,4 +1,5 @@
-﻿using Drifter.Class.Tools;
+﻿
+using Drifter.Class.Tools;
 using Drifter.Class.Tools.CollisionShapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -41,7 +42,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.bodyTextureXPositions = new List<int>();
 
             this.ObjectTexture = leftHeadTexture;
-            this.travelSpeed = 75;
+            SetHealth();
+            SetTravelSpeed();
+            SetScoreIncreaseValue();
+
             PipeBodyAmountToSpawn();
 
         }

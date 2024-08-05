@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Drifter.Class.AbstractClass
 {
-    internal class GameObject
+    internal abstract class GameObject
     {
         protected int travelSpeed { get; set; }
 

@@ -53,7 +53,6 @@ namespace Drifter
             moveLeftCommand = new MoveLeftCommand();
             moveRightCommand = new MoveRightCommand();
             stopDriftCommand = new StopDriftCommand();
-
             Globals.SetScreenMeasurements(_graphics.PreferredBackBufferHeight, _graphics.PreferredBackBufferWidth);
             GameObjectSpawner.SetSpawnXAxisRange(Globals.ScreenWidth);
             GameObjectSpawner.SetSpawnYAxisRange(Globals.ScreenHeight / 5 );
@@ -179,6 +178,7 @@ namespace Drifter
                 shootCommand.Execute(player);
             }
 
+
             if (InputHandler.Command != null)
             {
                 InputHandler.Command.Execute(player);
@@ -191,6 +191,8 @@ namespace Drifter
                 player.Run(player.isMovingLeft, Globals.ScreenHeight);
             }
         }
+
+
 
         //Draw sprites in game window
         protected override void Draw(GameTime gameTime)
@@ -246,37 +248,6 @@ namespace Drifter
                     new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y),
                     Color.White
                     );
-
-
-                    //draw right side top left
-                    Globals.SpriteBatch.Draw(
-                    ball,
-                    new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y),
-                    Color.White
-                    );
-
-                    //draw right side top left
-                    Globals.SpriteBatch.Draw(
-                    ball,
-                    new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y + sp.rightPipeCollisionSquare.rectangle.Height),
-                    Color.White
-                    );
-
-                    Globals.SpriteBatch.Draw(
-                    ball,
-                    new Vector2(sp.RightHeadPosition + sp.rightPipeCollisionSquare.rectangle.Width - 16, sp.CurrentPosition.Y),
-                    Color.White
-                    );
-
-
-                    Globals.SpriteBatch.Draw(
-                    ball,
-                    new Vector2(sp.RightHeadPosition + sp.rightPipeCollisionSquare.rectangle.Width - 16, sp.CurrentPosition.Y + sp.rightPipeCollisionSquare.rectangle.Height),
-                    Color.White
-                    );
-
-
-
 
 
                     foreach (int value in sp.GetXPositions())

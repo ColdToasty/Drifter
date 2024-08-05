@@ -42,11 +42,24 @@ namespace Drifter.Class.Tools
                         }
 
                     }
+                    else if(o is BlackHole)
+                    {
+                        BlackHole blackHole = (BlackHole)o;
+                        if (blackHole.pullPlayerCircle.Intersects(player.collisionCircle))
+                        {
+                            blackHole.CollidedWithOtherGameObject(player);
+                        }
+                        if (blackHole.collisionCircle.Intersects(player.collisionCircle))
+                        {
+                            player.CollidedWithOtherGameObject(blackHole);
+                        }
+                    }
                     else if (player.collisionCircle.Intersects(o.collisionCircle))
                     {
                         o.CollidedWithOtherGameObject();
                         player.CollidedWithOtherGameObject(o);
                     }
+
                     foreach (Projectile p in GameObjectSpawner.projectiles)
                     {
                         if (o.collisionCircle.Intersects(p.collisionCircle))
@@ -55,6 +68,8 @@ namespace Drifter.Class.Tools
                             o.CollidedWithOtherGameObject(p);
                         }
                     }
+
+
                 }
 
                 foreach (Item i in GameObjectSpawner.items)
@@ -142,7 +157,7 @@ namespace Drifter.Class.Tools
             textures.Add("spacePipeBody", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeBody"));
             textures.Add("spacePipeHeadLeft", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeHeadLeft"));
             textures.Add("spacePipeHeadRight", Content.Load<Texture2D>("Obstacle/SpacePipe/spacePipeHeadRight"));
-
+            textures.Add("blackHole", Content.Load<Texture2D>("Obstacle/BlackHole/BlackHole"));
             textures.Add("purpleAlienSpaceship", Content.Load<Texture2D>("Obstacle/AlienSpaceship/PurpleAlienSpaceship"));
         }
 

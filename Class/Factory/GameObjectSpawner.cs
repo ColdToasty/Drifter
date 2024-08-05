@@ -155,6 +155,23 @@ namespace Drifter.Class.Factory
         }
 
 
+        public static void CreateBlackHole()
+        {
+            //if 0 spawn left edge of screen
+            int spawnPosition = Game1.Random.Next(2);
+            switch (spawnPosition)
+            {
+                case 0:
+                    spawnPosition = -32;
+                    break;
+                case 1:
+                    spawnPosition = Globals.ScreenWidth - 32;
+                    break;
+            }
+
+            AddToList(new BlackHole(new Vector2(spawnPosition, -80)));
+        }
+
         public static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
         {
             AddToList(new ShatteringAsteroid(texture, spawnPosition));
@@ -165,6 +182,7 @@ namespace Drifter.Class.Factory
             int xSpawn = Game1.Random.Next(SpacePipe.leftHeadTexture.Width, Globals.ScreenWidth - (Globals.GapSize + SpacePipe.leftHeadTexture.Width));
             AddToList(new SpacePipe(new Vector2(xSpawn, -80)));
         }
+
 
         public static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)
         {
