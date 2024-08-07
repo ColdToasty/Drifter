@@ -16,7 +16,7 @@ namespace Drifter.Class.AbstractClass
     {
         protected int travelSpeed { get; set; }
 
-        protected Texture2D ObjectTexture { get; init; }
+        protected Texture2D ObjectTexture { get; set; }
 
         public Texture2D Texture { get { return ObjectTexture; } }
 

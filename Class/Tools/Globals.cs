@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Drifter.Class.Factory;
 using Drifter.Class.GameObjectClass;
+using Drifter.Class.GameObjectClass.ItemClass;
 using Drifter.Class.GameObjectClass.ObstacleClass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -29,7 +30,8 @@ namespace Drifter.Class.Tools
         public static void Update(GameTime gt, Player player = null)
         {
             GameTime = gt;
-
+            if (player.IsAlive)
+            {
                 //checks player projectile collides with obstacles
                 foreach (Obstacle o in GameObjectSpawner.obstacles)
                 {
@@ -42,7 +44,7 @@ namespace Drifter.Class.Tools
                         }
 
                     }
-                    else if(o is BlackHole)
+                    else if (o is BlackHole)
                     {
                         BlackHole blackHole = (BlackHole)o;
                         if (blackHole.pullPlayerCircle.Intersects(player.collisionCircle))
@@ -98,10 +100,8 @@ namespace Drifter.Class.Tools
                         player.CollidedWithOtherGameObject(enemyProjectile);
                     }
                 }
-            
-
-
-
+            }
+              
         }
 
         private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
@@ -146,6 +146,9 @@ namespace Drifter.Class.Tools
         private static void LoadItemTextures()
         {
             textures.Add("coin", Content.Load<Texture2D>("Item/Coin/Coin"));
+            textures.Add("superNova", Content.Load<Texture2D>("Item/Supernova/Supernova"));
+            textures.Add("laserItem", Content.Load<Texture2D>("Item/Projectile/Laser"));
+            textures.Add("laserBeamItem", Content.Load<Texture2D>("Item/Projectile/LaserBeam"));
         }
 
         private static void LoadObstacleTextures()

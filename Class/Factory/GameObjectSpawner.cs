@@ -8,6 +8,8 @@ using Drifter.Class.GameObjectClass;
 using Drifter.Class.GameObjectClass.ObstacleClass;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Tools;
+using Drifter.Class.GameObjectClass.ItemClass;
+using System.Runtime.CompilerServices;
 
 
 
@@ -64,6 +66,14 @@ namespace Drifter.Class.Factory
             objectsToBeDeleted.Add(gameObject);
         }
 
+        public static void DeleteAllEnemies()
+        {
+            obstacles.Clear();
+            enemyProjectiles.Clear();
+        }
+
+
+        private static int GameObjectStartTop = -80;
 
         //Deletes gameObjects by removing them from their respective list and setting them to null
         //Also resets the objectsToBeDeleted list at the end
@@ -150,7 +160,7 @@ namespace Drifter.Class.Factory
             else
             {
                 int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
-                AddToList(new ShatteringAsteroid(texture, new Vector2(spawnXPosition, 0), obstacleType));
+                AddToList(new ShatteringAsteroid(texture, new Vector2(spawnXPosition, GameObjectStartTop), obstacleType));
             }
         }
 
@@ -169,7 +179,7 @@ namespace Drifter.Class.Factory
                     break;
             }
 
-            AddToList(new BlackHole(new Vector2(spawnPosition, -80)));
+            AddToList(new BlackHole(new Vector2(spawnPosition, GameObjectStartTop)));
         }
 
         public static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
@@ -180,7 +190,7 @@ namespace Drifter.Class.Factory
         public static void CreateSpacePipe()
         {
             int xSpawn = Game1.Random.Next(SpacePipe.leftHeadTexture.Width, Globals.ScreenWidth - (Globals.GapSize + SpacePipe.leftHeadTexture.Width));
-            AddToList(new SpacePipe(new Vector2(xSpawn, -80)));
+            AddToList(new SpacePipe(new Vector2(xSpawn, GameObjectStartTop)));
         }
 
 
@@ -224,21 +234,23 @@ namespace Drifter.Class.Factory
         }
 
 
-
-
         public static void CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
         {
             int spawnObstacle = Game1.Random.Next(5);
             if (spawnObstacle <= 4)
             {
                 int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
-                AddToList(new Item(texture, new Vector2(spawnXPosition, 0), itemType));
+                AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), itemType));
             }
-        }   
+        }
 
 
 
-            
-            
+        public static void CreateCoin()
+        {
+                int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
+                AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), Item.ItemType.Coin));
+        }
+
     }
 }

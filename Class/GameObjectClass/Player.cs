@@ -10,6 +10,9 @@ using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Tools.CollisionShapes;
 using Drifter.Class.GameObjectClass.ObstacleClass;
+using Drifter.Class.GameObjectClass.ItemClass;
+using static Drifter.Class.GameObjectClass.Projectile;
+using Drifter.Class.Factory;
 
 
 namespace Drifter.Class.GameObjectClass
@@ -31,16 +34,21 @@ namespace Drifter.Class.GameObjectClass
 
         public bool IsAlive { get { return isAlive; } }
 
+        public bool IsUnhurtable { get; private set; }
+
+        private Timer itemDurationTimer;
+
+        private Item.ItemType? itemTypeActive;
         public Player(Texture2D texture, Vector2 startingPosition) {
 
             this.startingPosition = startingPosition;
             this.ObjectTexture = texture;
             Reset();
-
         }
 
         public void Reset()
         {
+            this.itemDurationTimer = new Timer();
             this.travelSpeed = 100;
             this.infiniteProjectile = false;
             this.Position = startingPosition;
@@ -49,11 +57,17 @@ namespace Drifter.Class.GameObjectClass
             this.isMovingLeft = false;
             this.isDrifting = false;
             this.isAlive = true;
+            this.IsUnhurtable = false;
         }
 
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
+            if (Timer.CheckTimeReached(itemDurationTimer))
+            {
+                ExpireItem();
+            }
+            
             if (isMovingNegative)
             {
                 this.Position.X -= this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
@@ -65,8 +79,8 @@ namespace Drifter.Class.GameObjectClass
 
             this.CheckObjectAtEdge();
             this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
-        }
 
+        }
 
         public void Drift()
         {
@@ -102,20 +116,13 @@ namespace Drifter.Class.GameObjectClass
             }
             else if(gameObject is Obstacle)
             {
-                if(gameObject is BlackHole)
-                {
-                   
-                }
-
                 DestroyMyself();
                 isAlive = false;
-                
-
             }
             
         }
 
-
+        //Applies the item's effect and sets the duration timer
         private void ConsumeItem(Item item)
         {
             switch (item.TypeOfItem)
@@ -123,30 +130,59 @@ namespace Drifter.Class.GameObjectClass
                 case Item.ItemType.Coin:
                     Score.IncreaseScore(1000);
                     break;
+
                 case Item.ItemType.Invincibility:
+                    this.IsUnhurtable = true;
                     break;
+
                 case Item.ItemType.Reflect:
+                    this.IsUnhurtable = true;
                     break;
 
                 case Item.ItemType.InfiniteMissiles:
                     infiniteProjectile = true;
                     break;
 
-                case Item.ItemType.LaserBeam:
-                    SetProjectileType(Projectile.ProjectileType.LaserBeam);
+                case Item.ItemType.Laser:
+                    this.projectileType = Projectile.ProjectileType.Laser;
                     break;
 
-                case Item.ItemType.InfiniteLaserBeam:
-                    SetProjectileType(Projectile.ProjectileType.LaserBeam);
+                case Item.ItemType.LaserBeam:
+                    this.projectileType = Projectile.ProjectileType.LaserBeam;
                     infiniteProjectile = true;
                     break;
 
+                case Item.ItemType.SuperNova:
+                    GameObjectSpawner.DeleteGameObjects();
+                    break;
             }
+
+            itemTypeActive = item.TypeOfItem;
+            itemDurationTimer.SetStartTimeAndStopTime(item.ItemDuration);
         }
 
-        private void SetProjectileType(Projectile.ProjectileType projectileType)
+        //reset itemTypeActive and timer
+        private void ExpireItem()
         {
-            this.projectileType = projectileType;
+            switch (itemTypeActive)
+            {
+                case Item.ItemType.Invincibility:
+                case Item.ItemType.Reflect:
+                    this.IsUnhurtable = false;
+                    break;
+
+
+                case Item.ItemType.Laser:
+                case Item.ItemType.LaserBeam:
+                case Item.ItemType.InfiniteMissiles:
+                    projectileType = ProjectileType.Missle;
+                    infiniteProjectile = false;
+                    break;
+
+
+            }
+            itemTypeActive = null;
+            itemDurationTimer.ResetTimer();
         }
 
     }

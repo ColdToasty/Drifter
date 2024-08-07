@@ -10,6 +10,7 @@ using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Commands;
 using Drifter.Class.GameObjectClass.ObstacleClass;
+using Drifter.Class.GameObjectClass.ItemClass;
 
 
 namespace Drifter
@@ -26,8 +27,6 @@ namespace Drifter
         private MoveRightCommand moveRightCommand;
         private StopDriftCommand stopDriftCommand;
         private ShootCommand shootCommand;
-
-
 
 
         private Texture2D playerTexture, projectileMissile, projectileLaser, obstacleAsteroid, ball, coin;
@@ -59,6 +58,7 @@ namespace Drifter
 
             previousTimeInSeconds = 0;
 
+            
 
             SpawnTypeSelector.Initialise();
 
@@ -128,24 +128,23 @@ namespace Drifter
                 Exit();
             }
 
-            if((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
+            if (player.IsAlive)
             {
-                //GameObjectSpawner.CreateObstacle(obstacleAsteroid);
-                GameObjectSpawner.CreateItem(coin);
-                previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
+                if ((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
+                {
+                    GameObjectSpawner.CreateObstacle(obstacleAsteroid);
+                    GameObjectSpawner.CreateItem(coin);
+                    previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
+                }
+
+
+                Score.IncreaseScore(1);
+                CheckPlayerInput();
+                RunObjects();
             }
-
-            Score.IncreaseScore(1);
-
-            CheckPlayerInput();
-
-            RunObjects();
 
             GameObjectSpawner.AddToListAfterLoop();
             GameObjectSpawner.DeleteGameObjects();
-
-            //System.Diagnostics.Trace.WriteLine(obstacles.Count);
-            //System.Diagnostics.Trace.WriteLine(projectiles.Count);
 
             base.Update(gameTime);
         }
@@ -154,42 +153,44 @@ namespace Drifter
 
         private void CheckPlayerInput()
         {
-            var kstate = Keyboard.GetState();
+                var kstate = Keyboard.GetState();
 
-            if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
-            {
-                InputHandler.Command = moveLeftCommand;
-            }
+                if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
+                {
+                    InputHandler.Command = moveLeftCommand;
+                }
 
-            if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
-            {
+                if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
+                {
 
-                InputHandler.Command = moveRightCommand;
-            }
-
-
-            if(kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
-            {
-                InputHandler.Command = stopDriftCommand;
-            }
-
-            if (kstate.IsKeyDown(Keys.Space))
-            {
-                shootCommand.Execute(player);
-            }
+                    InputHandler.Command = moveRightCommand;
+                }
 
 
-            if (InputHandler.Command != null)
-            {
-                InputHandler.Command.Execute(player);
-            }
+                if (kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
+                {
+                    InputHandler.Command = stopDriftCommand;
+                }
 
-            InputHandler.Command = null;
+                if (kstate.IsKeyDown(Keys.Space))
+                {
+                    shootCommand.Execute(player);
+                }
 
-            if (player.isDrifting)
-            {
-                player.Run(player.isMovingLeft, Globals.ScreenHeight);
-            }
+
+                if (InputHandler.Command != null)
+                {
+                    InputHandler.Command.Execute(player);
+                }
+
+                InputHandler.Command = null;
+
+                if (player.isDrifting)
+                {
+                    player.Run(player.isMovingLeft, Globals.ScreenHeight);
+                }
+            
+
         }
 
 
