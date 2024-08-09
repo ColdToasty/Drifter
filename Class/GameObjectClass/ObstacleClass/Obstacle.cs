@@ -52,6 +52,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             SetScoreIncreaseValue();
         }
 
+        //Use when >1 texture
         public Obstacle(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
         {
             SetHealth();

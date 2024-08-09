@@ -18,9 +18,9 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         private bool isOnLeft;
 
         private int blackHolePullRange = (Globals.ScreenWidth / 5) * 2; 
-        public BlackHole(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Blackhole) : base(startPosition, obstacleType)
+        public BlackHole(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Blackhole) : base(texture, startPosition, obstacleType)
         {
-            this.ObjectTexture = Globals.GetTexture("blackHole");
+            this.ObjectTexture = texture;
             this.Position = startPosition;
             if(startPosition.X <= 0)
             {

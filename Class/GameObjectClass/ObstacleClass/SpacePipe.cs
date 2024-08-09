@@ -20,7 +20,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         public CollisionSquare leftPipeCollisionSquare, rightPipeCollisionSquare;
 
-        public static Texture2D leftHeadTexture, rightHeadTexture, bodyTexture;
+        public Texture2D leftHeadTexture, rightHeadTexture, bodyTexture;
 
         private List<int> bodyTextureXPositions;
 
@@ -32,7 +32,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public int RightHeadPosition { get { return rightHeadPosition; } }
 
         //start position refers to the gap that player has to pass through
-        public SpacePipe(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.SpacePipe) : base(startPosition, obstacleType)
+        public SpacePipe(Texture2D bodyTexture, Texture2D leftHeadTexture, Texture2D rightHeadTexture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.SpacePipe) : base(startPosition, obstacleType)
         {
 
             this.Position = startPosition;
@@ -45,7 +45,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             SetHealth();
             SetTravelSpeed();
             SetScoreIncreaseValue();
-
+            SetTextures(bodyTexture, leftHeadTexture, rightHeadTexture);
             PipeBodyAmountToSpawn();
 
         }
@@ -97,11 +97,11 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         }
 
 
-        public static void SetTextures(Texture2D leftHeadTexture, Texture2D rightHeadTexture, Texture2D bodyTexture)
+        private void SetTextures(Texture2D bodyTexture,  Texture2D leftHeadTexture, Texture2D rightHeadTexture)
         {
-            SpacePipe.leftHeadTexture = leftHeadTexture;
-            SpacePipe.rightHeadTexture = rightHeadTexture;
-            SpacePipe.bodyTexture = bodyTexture;
+            this.leftHeadTexture = leftHeadTexture;
+            this.rightHeadTexture = rightHeadTexture;
+            this.bodyTexture = bodyTexture;
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)

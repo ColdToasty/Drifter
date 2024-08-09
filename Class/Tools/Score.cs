@@ -8,12 +8,16 @@ namespace Drifter.Class.Tools
 {
     internal static class Score
     {
-        private static int score = 0;
-        public static int ScoreValue { get { return score; } }
+        //Score max 999,999,999,999
+        private static long score = 0;
+        public static long ScoreValue { get { return score; } }
 
-        public static void IncreaseScore(int value)
+        public static void IncreaseScore(long value = 1)
         {
-            score += value;
+            if(score + value <= 999999999999)
+            {
+                score += value;
+            }
         }
         
 

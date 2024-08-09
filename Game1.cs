@@ -19,7 +19,6 @@ namespace Drifter
     {
         private static GraphicsDeviceManager _graphics;
 
-        public static Random Random = new Random();
         private Player player;
 
 
@@ -58,8 +57,8 @@ namespace Drifter
 
             previousTimeInSeconds = 0;
 
-            
 
+            Score.Reset();
             SpawnTypeSelector.Initialise();
 
         }
@@ -132,15 +131,16 @@ namespace Drifter
             {
                 if ((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
                 {
-                    GameObjectSpawner.CreateObstacle(obstacleAsteroid);
-                    GameObjectSpawner.CreateItem(coin);
+                    Obstacle.ObstacleType ob = SpawnTypeSelector.ChooseObstacleType();
+                    GameObjectSpawner.CreateObstacle(ob);
+                    GameObjectSpawner.CreateObstacle(Obstacle.ObstacleType.Asteroid);
                     previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
                 }
-
-
-                Score.IncreaseScore(1);
+                Score.IncreaseScore();
+                GameObjectSpawner.CreateCoin();
                 CheckPlayerInput();
                 RunObjects();
+
             }
 
             GameObjectSpawner.AddToListAfterLoop();
@@ -239,13 +239,13 @@ namespace Drifter
                 {
                     SpacePipe sp = (SpacePipe)o;
                     Globals.SpriteBatch.Draw(
-                    SpacePipe.leftHeadTexture,
+                    sp.leftHeadTexture,
                     new Vector2(sp.LeftHeadPosition, sp.CurrentPosition.Y),
                     Color.White
                     );
 
                     Globals.SpriteBatch.Draw(
-                    SpacePipe.rightHeadTexture,
+                    sp.rightHeadTexture,
                     new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y),
                     Color.White
                     );
@@ -254,7 +254,7 @@ namespace Drifter
                     foreach (int value in sp.GetXPositions())
                     {
                         Globals.SpriteBatch.Draw(
-                        SpacePipe.bodyTexture,
+                        sp.bodyTexture,
                         new Vector2(value, sp.CurrentPosition.Y),
                         Color.White
                         );
@@ -324,7 +324,7 @@ namespace Drifter
 
             //Draw score
             Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 4 - _graphics.PreferredBackBufferHeight / 6);
-            Globals.SpriteBatch.DrawString(spriteFont, Score.ScoreValue.ToString("D10"), position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+            Globals.SpriteBatch.DrawString(spriteFont, Score.ScoreValue.ToString("D12"), position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
 
 
 

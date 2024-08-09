@@ -21,7 +21,11 @@ namespace Drifter.Class.Factory
 
         private static Timer obstacleSpawnTimer;
         private static Timer itemSpawnTimer;
+        private static Timer coolDownTimer;
 
+        private static int maxProbability = 1000;
+
+        private static List<int> obstacleSpawnChances;
         public static void Initialise()
         {
 
@@ -31,51 +35,62 @@ namespace Drifter.Class.Factory
 
             obstacleSpawnTimer = new Timer();
             itemSpawnTimer = new Timer();
-            ScoreObstacleChanceValues = new Dictionary<int, List<int>>()
-            {
-                { 10000, new List<int> { 1, 2, 4, 5 }},
-                { 20000, new List<int> { 1, 2, 4, 5 }},
-                { 30000, new List<int> { 1, 2, 4, 5 }},
-                { 40000, new List<int> { 1, 2, 4, 5 }},
-                { 50000, new List<int> { 1, 2, 4, 5 }}
-            };
+            coolDownTimer = new Timer();
 
-                ScoreItemChanceValues = new Dictionary<int, List<int>>()
-            {
-                { 10000, new List<int> { 1, 2, 4, 5 }},
-                { 20000, new List<int> { 1, 2, 4, 5 }},
-                { 30000, new List<int> { 1, 2, 4, 5 }},
-                { 40000, new List<int> { 1, 2, 4, 5 }},
-                { 50000, new List<int> { 1, 2, 4, 5 }}
-            };
-
-
-            ObstacleSpawnTimes = new Dictionary<int, int>()
-            {
-                { 10000, 6},
-                { 20000, 5},
-                { 30000, 5},
-                { 40000, 3},
-                { 50000, 2}
-            };
-
-            ItemSpawnTimes = new Dictionary<int, int>()
-            {
-                { 10000, 5},
-                { 20000, 7},
-                { 30000, 9},
-                { 40000, 11},
-                { 50000, 15}
-            };
+            obstacleSpawnChances = new List<int> { 300, 600, 700, 900, 950 };
 
             isInitialised = true;
             
         }
 
-
-        public static Obstacle.ObstacleType? ChooseObstacleType()
+        public static Obstacle.ObstacleType ChooseObstacleType()
         {
-            return null;
+            int obstacleIndex = 0;
+
+            int randomValue = Globals.Random.Next(1, maxProbability + 1);
+
+            Obstacle.ObstacleType typeToReturn; 
+            do
+            {
+                //increases index if randomValue is greater than current index
+                if (randomValue > obstacleSpawnChances[obstacleIndex])
+                {
+
+                    obstacleIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            } while (obstacleIndex < obstacleSpawnChances.Count);
+
+            if(obstacleIndex >= obstacleSpawnChances.Count)
+            {
+                obstacleIndex--;
+            }
+
+            switch (obstacleSpawnChances[obstacleIndex])
+            {
+                case 300:
+                    typeToReturn = Obstacle.ObstacleType.AngledAsteroid;
+                    break;
+                case 600:
+                    typeToReturn = Obstacle.ObstacleType.ShatteringAsteroid;
+                    break;
+                case 700:
+                    typeToReturn =  Obstacle.ObstacleType.AlienSpaceship;
+                    break;
+                case 900:
+                    typeToReturn = Obstacle.ObstacleType.Blackhole;
+                    break;
+                case 950:
+                    typeToReturn =  Obstacle.ObstacleType.SpacePipe;
+                    break;
+                default:
+                    typeToReturn = Obstacle.ObstacleType.Asteroid;
+                    break;
+            }
+            return typeToReturn;
         }
 
 
@@ -84,5 +99,8 @@ namespace Drifter.Class.Factory
         {
             return null;
         }
+
+
+
     }
 }

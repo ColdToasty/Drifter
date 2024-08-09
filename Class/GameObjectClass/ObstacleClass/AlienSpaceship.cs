@@ -85,7 +85,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
             else
             {
-                movementPick = Game1.Random.Next(movePickRate + stopPickRate);
+                movementPick = Globals.Random.Next(movePickRate + stopPickRate);
 
                 if (movementPick < stopPickRate)
                 {

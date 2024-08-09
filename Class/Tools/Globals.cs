@@ -27,6 +27,8 @@ namespace Drifter.Class.Tools
         public static int ScreenWidth { get; private set; }
 
         public static int GapSize { get; set; }
+
+        public static Random Random = new Random();
         public static void Update(GameTime gt, Player player = null)
         {
             GameTime = gt;
@@ -157,9 +159,9 @@ namespace Drifter.Class.Tools
             textures.Add("asteroid", Content.Load<Texture2D>("Obstacle/Asteroid/Asteroid"));
 
             //SpacePipe Texture
-            textures.Add("spacePipeBody", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeBody"));
-            textures.Add("spacePipeHeadLeft", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeHeadLeft"));
-            textures.Add("spacePipeHeadRight", Content.Load<Texture2D>("Obstacle/SpacePipe/spacePipeHeadRight"));
+            textures.Add("pipeBody", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeBody"));
+            textures.Add("pipeHeadLeft", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeHeadLeft"));
+            textures.Add("pipeHeadRight", Content.Load<Texture2D>("Obstacle/SpacePipe/spacePipeHeadRight"));
             textures.Add("blackHole", Content.Load<Texture2D>("Obstacle/BlackHole/BlackHole"));
             textures.Add("purpleAlienSpaceship", Content.Load<Texture2D>("Obstacle/AlienSpaceship/PurpleAlienSpaceship"));
         }
@@ -167,7 +169,6 @@ namespace Drifter.Class.Tools
 
         private static void SetTexturesForGameObjects()
         {
-            SpacePipe.SetTextures(textures["spacePipeHeadLeft"], textures["spacePipeHeadRight"], textures["spacePipeBody"]);
         }
 
 

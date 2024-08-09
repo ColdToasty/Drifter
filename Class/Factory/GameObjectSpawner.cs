@@ -73,7 +73,10 @@ namespace Drifter.Class.Factory
         }
 
 
+        
         private static int GameObjectStartTop = -80;
+
+        private static Timer CoinSpawnTimer = new Timer();
 
         //Deletes gameObjects by removing them from their respective list and setting them to null
         //Also resets the objectsToBeDeleted list at the end
@@ -128,58 +131,88 @@ namespace Drifter.Class.Factory
 
 
         //used to create an obstacle based on probability
-        public static void CreateObstacle(Texture2D texture, Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
+        public static void CreateObstacle(Obstacle.ObstacleType obstacleType = Obstacle.ObstacleType.Asteroid)
         {
-            int spawnObstacle = Game1.Random.Next(11);
-            if (spawnObstacle <=4)
+            switch (obstacleType)
             {
-                //dictate which side of the screen to spawn
-                int spawnXPosition = Game1.Random.Next(2);
+                case Obstacle.ObstacleType.Asteroid:
+                    CreateAsteroid(Globals.GetTexture("asteroid"), PickStartingPoint(obstacleType));
+                    break;
+                
+                case Obstacle.ObstacleType.AngledAsteroid:
+                    CreateAngledAsteroid(Globals.GetTexture("asteroid"), PickStartingPoint(obstacleType));
+                    break;
+                
+                case Obstacle.ObstacleType.ShatteringAsteroid:
+                    CreateShatteringAsteroid(Globals.GetTexture("asteroid"), PickStartingPoint(obstacleType));
+                    break;
+                
+                case Obstacle.ObstacleType.AlienSpaceship:
+                    CreateAlienSpaceship(Globals.GetTexture("purpleAlienSpaceship"), PickStartingPoint(obstacleType));
+                    break;
+                
+                case Obstacle.ObstacleType.Blackhole:
+                    CreateBlackHole(Globals.GetTexture("blackHole"), PickStartingPoint(obstacleType));
+                    break;
 
-                //if 0 then spawn left
-                //if 1 then spawn right
-                if (spawnXPosition != 0)
-                {
-                    //spawns right end of the screen
-                    spawnXPosition = SpawnXAxisRange - 32;
-
-                }
-                //if number is less than equal to 1 then
-                if (spawnObstacle == 0)
-                {
-                    CreateAlienSpaceship(texture, new Vector2(spawnXPosition, 64));
-                }
-                else
-                {
-                    //pick y spawn range
-                    int spawnYPosition = Game1.Random.Next(SpawnYAxisRange);
-                    CreateAngledAsteroid(texture, new Vector2(spawnXPosition, spawnYPosition));
-                }
-
-            }
-            else
-            {
-                int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
-                AddToList(new ShatteringAsteroid(texture, new Vector2(spawnXPosition, GameObjectStartTop), obstacleType));
+                case Obstacle.ObstacleType.SpacePipe:
+                    CreateSpacePipe(Globals.GetTexture("pipeBody"), Globals.GetTexture("pipeHeadLeft"), Globals.GetTexture("pipeHeadRight"));
+                    break;
             }
         }
 
-
-        public static void CreateBlackHole()
+        private static Vector2 PickStartingPoint(Obstacle.ObstacleType obstacleType)
         {
-            //if 0 spawn left edge of screen
-            int spawnPosition = Game1.Random.Next(2);
-            switch (spawnPosition)
+            int x = 0;
+            int y = 0;
+            switch (obstacleType)
             {
-                case 0:
-                    spawnPosition = -32;
+                case Obstacle.ObstacleType.Asteroid:
+                case Obstacle.ObstacleType.ShatteringAsteroid:
+                    x = Globals.Random.Next(32, SpawnXAxisRange-32);
+                    y = GameObjectStartTop;
                     break;
-                case 1:
-                    spawnPosition = Globals.ScreenWidth - 32;
-                    break;
-            }
 
-            AddToList(new BlackHole(new Vector2(spawnPosition, GameObjectStartTop)));
+                case Obstacle.ObstacleType.AngledAsteroid:
+                    x = ChooseEdge();
+                    y = Globals.Random.Next(16, 32);
+                    break;
+                case Obstacle.ObstacleType.AlienSpaceship:
+                    x = ChooseEdge();
+                    y = 64;
+                    break;
+
+                case Obstacle.ObstacleType.Blackhole:
+                    x = ChooseEdge();
+                    y = GameObjectStartTop;
+                    break;
+
+            }
+            return new Vector2(x, y);
+        }
+
+        //choose left or right edge
+        private static int ChooseEdge()
+        {
+            int side = Globals.Random.Next(2);
+            if (side == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return SpawnXAxisRange - 32;
+            }
+        }
+
+        public static void CreateBlackHole(Texture2D texture, Vector2 spawnPosition)
+        {
+            AddToList(new BlackHole(texture, spawnPosition));
+        }
+
+        public static void CreateAsteroid(Texture2D texture, Vector2 spawnPosition)
+        {
+            AddToList(new Obstacle(texture, spawnPosition));
         }
 
         public static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
@@ -187,22 +220,24 @@ namespace Drifter.Class.Factory
             AddToList(new ShatteringAsteroid(texture, spawnPosition));
         }
 
-        public static void CreateSpacePipe()
+        public static void CreateAngledAsteroid(Texture2D texture, Vector2 spawnPosition, bool setCustomDirection = false, bool moveLeft = false)
         {
-            int xSpawn = Game1.Random.Next(SpacePipe.leftHeadTexture.Width, Globals.ScreenWidth - (Globals.GapSize + SpacePipe.leftHeadTexture.Width));
-            AddToList(new SpacePipe(new Vector2(xSpawn, GameObjectStartTop)));
+            AddToList(new AngledAsteroid(texture, spawnPosition, setCustomDirection, moveLeft));
+        }
+
+        public static void CreateSpacePipe(Texture2D pipeBody, Texture2D leftHead, Texture2D righthead)
+        {
+            int xSpawn = Globals.Random.Next(pipeBody.Width, Globals.ScreenWidth - (Globals.GapSize + pipeBody.Width));
+            AddToList(new SpacePipe(pipeBody, leftHead, righthead, new Vector2(xSpawn, GameObjectStartTop)));
         }
 
 
         public static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)
         {
-            AddToList(new AlienSpaceship(Globals.GetTexture("purpleAlienSpaceship"), spawnPosition));
+            AddToList(new AlienSpaceship(texture, spawnPosition));
         }
 
-        public static void CreateAngledAsteroid(Texture2D texture, Vector2 spawnPosition, bool setCustomDirection = false, bool moveLeft = false)
-        {
-            AddToList(new AngledAsteroid(texture, spawnPosition, setCustomDirection, moveLeft));
-        }
+
 
         //Used if objects need to be added during a run time loop
         public static void AddToListAfterLoop(GameObject gameObject = null)
@@ -234,22 +269,30 @@ namespace Drifter.Class.Factory
         }
 
 
-        public static void CreateItem(Texture2D texture, Item.ItemType itemType = Item.ItemType.Coin)
+        public static void CreateItem(Item.ItemType itemType = Item.ItemType.Coin)
         {
-            int spawnObstacle = Game1.Random.Next(5);
-            if (spawnObstacle <= 4)
-            {
-                int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
-                AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), itemType));
-            }
+            int spawnXPosition = Globals.Random.Next(32, SpawnXAxisRange - 32);
+            AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), itemType));
         }
 
 
 
         public static void CreateCoin()
         {
-                int spawnXPosition = Game1.Random.Next(32, SpawnXAxisRange - 32);
-                AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), Item.ItemType.Coin));
+            if (CoinSpawnTimer.Set)
+            {
+                if (Timer.CheckTimeReached(CoinSpawnTimer))
+                    {
+                        int spawnXPosition = Globals.Random.Next(32, SpawnXAxisRange - 32);
+                        AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), Item.ItemType.Coin));
+                        CoinSpawnTimer.ResetTimer();
+                    }
+            }
+            else
+            {
+                int timeToSpawnCoin = Globals.Random.Next(2, 4);
+                CoinSpawnTimer.SetStartTimeAndStopTime(timeToSpawnCoin * 1000);
+            }
         }
 
     }
