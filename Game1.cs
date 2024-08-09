@@ -203,35 +203,6 @@ namespace Drifter
 
             SpriteDrawer.DrawGameObjects();
 
-            //Draw projectiles
-            foreach (Projectile p in GameObjectSpawner.projectiles)
-            {
-                Globals.SpriteBatch.Draw(
-                p.Texture,
-                p.CurrentPosition,
-                Color.White
-                );
-
-                Globals.SpriteBatch.Draw(
-                ball,
-                p.CurrentPosition,
-                Color.White);
-            };
-
-            foreach (Projectile p in GameObjectSpawner.enemyProjectiles)
-            {
-                Globals.SpriteBatch.Draw(
-                p.Texture,
-                p.CurrentPosition,
-                Color.White
-                );
-
-                Globals.SpriteBatch.Draw(
-                ball,
-                p.CurrentPosition,
-                Color.White);
-            };
-
             //Draw obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)
             {
@@ -305,6 +276,37 @@ namespace Drifter
                 );
            
             }
+
+            //Draw projectiles
+            foreach (Projectile p in GameObjectSpawner.projectiles)
+            {
+                Globals.SpriteBatch.Draw(
+                p.Texture,
+                p.CurrentPosition,
+                Color.White
+                );
+
+                Globals.SpriteBatch.Draw(
+                ball,
+                p.CurrentPosition,
+                Color.White);
+            };
+
+            foreach (Projectile p in GameObjectSpawner.enemyProjectiles)
+            {
+                Globals.SpriteBatch.Draw(
+                p.Texture,
+                p.CurrentPosition,
+                Color.White
+                );
+
+                Globals.SpriteBatch.Draw(
+                ball,
+                p.CurrentPosition,
+                Color.White);
+            };
+
+
 
             if (player.IsAlive)
             {

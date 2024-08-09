@@ -17,10 +17,8 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         private Timer timer;
 
         public Texture2D ShatteredTextureOne { get; private set; }
-        public Texture2D ShatteredTexture2 { get; private set; }
+        public Texture2D ShatteredTextureTwo { get; private set; }
 
-
-       
 
         public ShatteringAsteroid(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.ShatteringAsteroid) : base(texture, startPosition, obstacleType)
         {

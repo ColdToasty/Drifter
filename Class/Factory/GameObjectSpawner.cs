@@ -121,7 +121,6 @@ namespace Drifter.Class.Factory
             AddToList(new Projectile(projectileTexture, startPosition, isMovingNegative, projectileType));
         }
 
-
         public static void CreateEnemyProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.EnemyProjectile)
         {
             AddToList(new Projectile(Globals.GetTexture("enemyProjectile"), startPosition, isMovingNegative, projectileType));
@@ -175,7 +174,7 @@ namespace Drifter.Class.Factory
 
                 case Obstacle.ObstacleType.AngledAsteroid:
                     x = ChooseEdge();
-                    y = Globals.Random.Next(16, 32);
+                    y = Globals.Random.Next(0, 64);
                     break;
                 case Obstacle.ObstacleType.AlienSpaceship:
                     x = ChooseEdge();
