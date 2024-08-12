@@ -72,8 +72,6 @@ namespace Drifter.Class.Tools
                             o.CollidedWithOtherGameObject(p);
                         }
                     }
-
-
                 }
 
                 foreach (Item i in GameObjectSpawner.items)
@@ -148,9 +146,11 @@ namespace Drifter.Class.Tools
         private static void LoadItemTextures()
         {
             textures.Add("coin", Content.Load<Texture2D>("Item/Coin/Coin"));
-            textures.Add("superNova", Content.Load<Texture2D>("Item/Supernova/Supernova"));
+            textures.Add("invincibility", Content.Load<Texture2D>("Item/Invincibility/Invincibility"));
+            textures.Add("infiniteMissiles", Content.Load<Texture2D>("Item/Projectile/InfiniteMissiles"));
             textures.Add("laserItem", Content.Load<Texture2D>("Item/Projectile/Laser"));
             textures.Add("laserBeamItem", Content.Load<Texture2D>("Item/Projectile/LaserBeam"));
+            textures.Add("superNova", Content.Load<Texture2D>("Item/Supernova/Supernova"));
         }
 
         private static void LoadObstacleTextures()

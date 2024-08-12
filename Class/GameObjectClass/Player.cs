@@ -104,9 +104,12 @@ namespace Drifter.Class.GameObjectClass
         {
             if (gameObject == null)
             {
-                System.Diagnostics.Trace.WriteLine("Im dead");
-                base.CollidedWithOtherGameObject();
-                return;
+                if (!this.IsUnhurtable)
+                {
+                    base.CollidedWithOtherGameObject();
+                    isAlive = false;
+                }
+
             }
             
             if (gameObject is Item)
@@ -116,8 +119,14 @@ namespace Drifter.Class.GameObjectClass
             }
             else if(gameObject is Obstacle)
             {
-                DestroyMyself();
-                isAlive = false;
+
+                if (!this.IsUnhurtable)
+                {
+                    DestroyMyself();
+                    isAlive = false;
+                }
+
+                
             }
             
         }
@@ -125,6 +134,7 @@ namespace Drifter.Class.GameObjectClass
         //Applies the item's effect and sets the duration timer
         private void ConsumeItem(Item item)
         {
+
             switch (item.TypeOfItem)
             {
                 case Item.ItemType.Coin:
@@ -153,7 +163,7 @@ namespace Drifter.Class.GameObjectClass
                     break;
 
                 case Item.ItemType.SuperNova:
-                    GameObjectSpawner.DeleteGameObjects();
+                    GameObjectSpawner.DeleteAllEnemies();
                     break;
             }
 

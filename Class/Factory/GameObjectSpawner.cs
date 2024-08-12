@@ -204,17 +204,17 @@ namespace Drifter.Class.Factory
             }
         }
 
-        public static void CreateBlackHole(Texture2D texture, Vector2 spawnPosition)
+        private static void CreateBlackHole(Texture2D texture, Vector2 spawnPosition)
         {
             AddToList(new BlackHole(texture, spawnPosition));
         }
 
-        public static void CreateAsteroid(Texture2D texture, Vector2 spawnPosition)
+        private static void CreateAsteroid(Texture2D texture, Vector2 spawnPosition)
         {
             AddToList(new Obstacle(texture, spawnPosition));
         }
 
-        public static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
+        private static void CreateShatteringAsteroid(Texture2D texture, Vector2 spawnPosition)
         {
             AddToList(new ShatteringAsteroid(texture, spawnPosition));
         }
@@ -224,14 +224,14 @@ namespace Drifter.Class.Factory
             AddToList(new AngledAsteroid(texture, spawnPosition, setCustomDirection, moveLeft));
         }
 
-        public static void CreateSpacePipe(Texture2D pipeBody, Texture2D leftHead, Texture2D righthead)
+        private static void CreateSpacePipe(Texture2D pipeBody, Texture2D leftHead, Texture2D righthead)
         {
             int xSpawn = Globals.Random.Next(pipeBody.Width, Globals.ScreenWidth - (Globals.GapSize + pipeBody.Width));
             AddToList(new SpacePipe(pipeBody, leftHead, righthead, new Vector2(xSpawn, GameObjectStartTop)));
         }
 
 
-        public static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)
+        private static void CreateAlienSpaceship(Texture2D texture, Vector2 spawnPosition)
         {
             AddToList(new AlienSpaceship(texture, spawnPosition));
         }
@@ -268,12 +268,11 @@ namespace Drifter.Class.Factory
         }
 
 
-        public static void CreateItem(Item.ItemType itemType = Item.ItemType.Coin)
+        public static void CreateItem(Item.ItemType itemType)
         {
             int spawnXPosition = Globals.Random.Next(32, SpawnXAxisRange - 32);
             AddToList(new Item(new Vector2(spawnXPosition, GameObjectStartTop), itemType));
         }
-
 
 
         public static void CreateCoin()
@@ -289,7 +288,7 @@ namespace Drifter.Class.Factory
             }
             else
             {
-                int timeToSpawnCoin = Globals.Random.Next(2, 4);
+                int timeToSpawnCoin = Globals.Random.Next(1, 4);
                 CoinSpawnTimer.SetStartTimeAndStopTime(timeToSpawnCoin * 1000);
             }
         }

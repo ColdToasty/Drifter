@@ -36,7 +36,6 @@ namespace Drifter
         private SpriteFont spriteFont;
 
 
-        private int previousTimeInSeconds;
 
 
         public Game1()
@@ -54,8 +53,6 @@ namespace Drifter
             Globals.SetScreenMeasurements(_graphics.PreferredBackBufferHeight, _graphics.PreferredBackBufferWidth);
             GameObjectSpawner.SetSpawnXAxisRange(Globals.ScreenWidth);
             GameObjectSpawner.SetSpawnYAxisRange(Globals.ScreenHeight / 5 );
-
-            previousTimeInSeconds = 0;
 
 
             Score.Reset();
@@ -129,13 +126,7 @@ namespace Drifter
 
             if (player.IsAlive)
             {
-                if ((int)gameTime.TotalGameTime.TotalSeconds - previousTimeInSeconds >= 1)
-                {
-                    Obstacle.ObstacleType ob = SpawnTypeSelector.ChooseObstacleType();
-                    GameObjectSpawner.CreateObstacle(ob);
-                    GameObjectSpawner.CreateObstacle(Obstacle.ObstacleType.Asteroid);
-                    previousTimeInSeconds = (int)gameTime.TotalGameTime.TotalSeconds;
-                }
+                SpawnTypeSelector.CreateObstacleAndItem();
                 Score.IncreaseScore();
                 GameObjectSpawner.CreateCoin();
                 CheckPlayerInput();
@@ -264,13 +255,6 @@ namespace Drifter
             {
                 Globals.SpriteBatch.Draw(
                 i.Texture,
-                i.CurrentPosition,
-                Color.White
-                );
-
-                //draws their collisions shapes
-                Globals.SpriteBatch.Draw(
-                ball,
                 i.CurrentPosition,
                 Color.White
                 );

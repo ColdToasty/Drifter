@@ -43,7 +43,6 @@ namespace Drifter.Class.GameObjectClass.ItemClass
             Position = startPosition;
             TypeOfItem = itemType;
             travelSpeed = 100;
-
             SetTexture();
             ItemDuration = itemTypeDuration[itemType];
             collisionCircle = new CollisionCircle(new Vector2(8, 8), 16);
@@ -60,20 +59,23 @@ namespace Drifter.Class.GameObjectClass.ItemClass
                     break;
 
                 case ItemType.Reflect:
+                    this.ObjectTexture = Globals.GetTexture("laserItem");
                     break;
 
                 case ItemType.Invincibility:
+                    this.ObjectTexture = Globals.GetTexture("invincibility");
                     break;
 
                 case ItemType.InfiniteMissiles:
+                    this.ObjectTexture = Globals.GetTexture("infiniteMissiles");
                     break;
 
                 case ItemType.Laser:
-                    this.ObjectTexture = Globals.GetTexture("laser");
+                    this.ObjectTexture = Globals.GetTexture("laserItem");
                     break;
 
                 case ItemType.LaserBeam:
-                    this.ObjectTexture = Globals.GetTexture("laserBeam");
+                    this.ObjectTexture = Globals.GetTexture("laserBeamItem");
                     break;
 
                 case ItemType.SuperNova:
