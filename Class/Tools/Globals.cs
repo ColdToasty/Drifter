@@ -32,75 +32,81 @@ namespace Drifter.Class.Tools
         public static void Update(GameTime gt, Player player = null)
         {
             GameTime = gt;
-            if (player.IsAlive)
+
+            if(player is not null)
             {
-                //checks player projectile collides with obstacles
-                foreach (Obstacle o in GameObjectSpawner.obstacles)
+                if (player.IsAlive)
                 {
-                    if (o is SpacePipe)
+                    //checks player projectile collides with obstacles
+                    foreach (Obstacle o in GameObjectSpawner.obstacles)
                     {
-                        SpacePipe sp = (SpacePipe)o;
-                        if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle) || sp.rightPipeCollisionSquare.Intersects(player.collisionCircle))
+                        if (o is SpacePipe)
                         {
-                            player.CollidedWithOtherGameObject(sp);
+                            SpacePipe sp = (SpacePipe)o;
+                            if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle) || sp.rightPipeCollisionSquare.Intersects(player.collisionCircle))
+                            {
+                                player.CollidedWithOtherGameObject(sp);
+                            }
+
+                        }
+                        else if (o is BlackHole)
+                        {
+                            BlackHole blackHole = (BlackHole)o;
+                            if (blackHole.pullPlayerCircle.Intersects(player.collisionCircle))
+                            {
+                                blackHole.CollidedWithOtherGameObject(player);
+                            }
+                            if (blackHole.collisionCircle.Intersects(player.collisionCircle))
+                            {
+                                player.CollidedWithOtherGameObject(blackHole);
+                            }
+                        }
+                        else if (player.collisionCircle.Intersects(o.collisionCircle))
+                        {
+                            o.CollidedWithOtherGameObject();
+                            player.CollidedWithOtherGameObject(o);
+                        }
+
+                        foreach (Projectile p in GameObjectSpawner.projectiles)
+                        {
+                            if (o.collisionCircle.Intersects(p.collisionCircle))
+                            {
+                                p.CollidedWithOtherGameObject();
+                                o.CollidedWithOtherGameObject(p);
+                            }
                         }
 
                     }
-                    else if (o is BlackHole)
-                    {
-                        BlackHole blackHole = (BlackHole)o;
-                        if (blackHole.pullPlayerCircle.Intersects(player.collisionCircle))
-                        {
-                            blackHole.CollidedWithOtherGameObject(player);
-                        }
-                        if (blackHole.collisionCircle.Intersects(player.collisionCircle))
-                        {
-                            player.CollidedWithOtherGameObject(blackHole);
-                        }
-                    }
-                    else if (player.collisionCircle.Intersects(o.collisionCircle))
-                    {
-                        o.CollidedWithOtherGameObject();
-                        player.CollidedWithOtherGameObject(o);
-                    }
 
-                    foreach (Projectile p in GameObjectSpawner.projectiles)
+                    foreach (Item i in GameObjectSpawner.items)
                     {
-                        if (o.collisionCircle.Intersects(p.collisionCircle))
+                        if (i.collisionCircle.Intersects(player.collisionCircle))
                         {
-                            p.CollidedWithOtherGameObject();
-                            o.CollidedWithOtherGameObject(p);
-                        }
-                    }
-                }
-
-                foreach (Item i in GameObjectSpawner.items)
-                {
-                    if (i.collisionCircle.Intersects(player.collisionCircle))
-                    {
-                        player.CollidedWithOtherGameObject(i);
-                        i.CollidedWithOtherGameObject();
-                    }
-                }
-
-                foreach (Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
-                {
-                    foreach (Projectile p in GameObjectSpawner.projectiles)
-                    {
-                        if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
-                        {
-                            enemyProjectile.CollidedWithOtherGameObject();
-                            p.CollidedWithOtherGameObject(enemyProjectile);
+                            player.CollidedWithOtherGameObject(i);
+                            i.CollidedWithOtherGameObject();
                         }
                     }
 
-                    if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
+                    foreach (Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
                     {
-                        enemyProjectile.CollidedWithOtherGameObject(player);
-                        player.CollidedWithOtherGameObject(enemyProjectile);
+                        foreach (Projectile p in GameObjectSpawner.projectiles)
+                        {
+                            if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
+                            {
+                                enemyProjectile.CollidedWithOtherGameObject();
+                                p.CollidedWithOtherGameObject(enemyProjectile);
+                            }
+                        }
+
+                        if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
+                        {
+                            enemyProjectile.CollidedWithOtherGameObject(player);
+                            player.CollidedWithOtherGameObject(enemyProjectile);
+                        }
                     }
                 }
             }
+           
               
         }
 
@@ -133,7 +139,7 @@ namespace Drifter.Class.Tools
         private static void LoadPlayerTextures()
         {
             textures.Add("player", Content.Load<Texture2D>("Player/DefaultPlayer"));
-            GapSize = textures["player"].Width * 3;
+            GapSize = 32 * 3;
         }
 
         private static void LoadProjectileTextures()
@@ -141,6 +147,7 @@ namespace Drifter.Class.Tools
             textures.Add("projectileMissile", Content.Load<Texture2D>("Projectile/Missile"));
             textures.Add("enemyProjectile", Content.Load<Texture2D>("Projectile/EnemyProjectile"));
             textures.Add("laser", Content.Load<Texture2D>("Projectile/Laser"));
+            textures.Add("laserBeam", Content.Load<Texture2D>("Projectile/Laser"));
         }
 
         private static void LoadItemTextures()

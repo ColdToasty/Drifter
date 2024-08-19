@@ -37,6 +37,7 @@ namespace Drifter.Class.GameObjectClass
         private int projectileDamage { get; init; }
         public int ProjectileDamge { get { return projectileDamage; } }
 
+
         private static readonly Dictionary<ProjectileType, int> ProjectileDamageValues = new Dictionary<ProjectileType, int>()
         {
             { ProjectileType.Missle, 1},
@@ -47,17 +48,20 @@ namespace Drifter.Class.GameObjectClass
 
         public Projectile(Texture2D texture, Vector2 startPosition, bool isMovingNegative, ProjectileType projectileType = ProjectileType.Missle)
         {
+            this.animationPlayer = new AnimationPlayer(texture, 1, 4);
+
             SetProjectileTravelSpeed(0);
 
             this.projectileType = projectileType;
             ObjectTexture = texture;
 
             this.Position = startPosition;
-            this.Position.X += texture.Width / 2;
+            this.Position.X += texture.Width / 8;
             this.IsMovingNegative = isMovingNegative;
             this.projectileDamage = ProjectileDamageValues[this.projectileType];
 
             SetUpCollisionCircle();
+            this.animationPlayer.SetAnimationFramesRowLocations("move", 0);
         }
 
         private void SetUpCollisionCircle()
@@ -71,6 +75,7 @@ namespace Drifter.Class.GameObjectClass
                 this.collisionCircle = new CollisionCircle(this.Position + playerProjectileCollisionCirclePlacement, playerProjectileCollisionCircleRadius);
             }
         }
+
 
 
         public void SetProjectileTravelSpeed(int scoreValue)
@@ -108,6 +113,12 @@ namespace Drifter.Class.GameObjectClass
             base.CollidedWithOtherGameObject();
         }
 
+        public override void PlayAnimation()
+        {
+            this.animationPlayer.Play("move");
+            CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+        }
+
 
         //moving negative means going up
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
@@ -137,6 +148,5 @@ namespace Drifter.Class.GameObjectClass
                 this.collisionCircle.Centre = this.Position + enemyProjectileCollisionCirclePlacement;
             }
         }
-
     }
 }

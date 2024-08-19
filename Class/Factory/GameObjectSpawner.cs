@@ -116,17 +116,31 @@ namespace Drifter.Class.Factory
         }
 
 
-        public static void CreateProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.Missle)
+        public static void CreateProjectile(Projectile.ProjectileType projectileType, Vector2 startPosition, bool isMovingNegative)
         {
+            Texture2D projectileTexture;
+            switch (projectileType)
+            {
+                case Projectile.ProjectileType.Missle:
+                    projectileTexture = Globals.GetTexture("projectileMissile");
+                    break;
+                case Projectile.ProjectileType.Laser:
+                    projectileTexture = Globals.GetTexture("laser");
+                    break;
+                case Projectile.ProjectileType.LaserBeam:
+                    projectileTexture = Globals.GetTexture("laserBeam");
+                    break;
+                default:
+                    projectileTexture = Globals.GetTexture("projectileMissile");
+                    break;
+            }
             AddToList(new Projectile(projectileTexture, startPosition, isMovingNegative, projectileType));
         }
 
-        public static void CreateEnemyProjectile(Texture2D projectileTexture, Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.EnemyProjectile)
+        public static void CreateEnemyProjectile(Vector2 startPosition, bool isMovingNegative, Projectile.ProjectileType projectileType = Projectile.ProjectileType.EnemyProjectile)
         {
             AddToList(new Projectile(Globals.GetTexture("enemyProjectile"), startPosition, isMovingNegative, projectileType));
         }
-
-
 
 
         //used to create an obstacle based on probability

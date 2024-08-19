@@ -147,6 +147,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             }
         }
 
+        public override void PlayAnimation()
+        {
+            switch (obstacleType)
+            {
 
+            }
+        }
     }
 }

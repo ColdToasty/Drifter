@@ -104,8 +104,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             leftPipeCollisionSquare.UpdateRectangle(Position);
             rightPipeCollisionSquare.UpdateRectangle(Position);
 
-
-            //System.Diagnostics.Trace.WriteLine(rightPipeCollisionSquare.rectangle.Width);
             DidExitScreen(EndOfScreenPosition);
         }
 

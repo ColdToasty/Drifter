@@ -74,10 +74,6 @@ namespace Drifter.Class.GameObjectClass.ItemClass
                     this.ObjectTexture = Globals.GetTexture("laserItem");
                     break;
 
-                case ItemType.LaserBeam:
-                    this.ObjectTexture = Globals.GetTexture("laserBeamItem");
-                    break;
-
                 case ItemType.SuperNova:
                     this.ObjectTexture = Globals.GetTexture("superNova");
                     break;
@@ -92,6 +88,8 @@ namespace Drifter.Class.GameObjectClass.ItemClass
             base.Run(isMovingNegative, EndOfScreenPosition);
         }
 
-
+        public override void PlayAnimation()
+        {
+        }
     }
 }

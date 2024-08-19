@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Drifter.Class;
 
 namespace Drifter.Class.Tools
 
@@ -24,12 +26,16 @@ namespace Drifter.Class.Tools
 
         private bool set;
 
-        public bool Set { get { return set; } } 
+        public bool Set { get { return set; } }
+
+        private double interval;
 
         public Timer()
         {
             set = false;
         }
+
+
 
         //Checks if timer time has reached or passed
         public static bool CheckTimeReached(Timer timer)
@@ -56,7 +62,15 @@ namespace Drifter.Class.Tools
         //Start the Timer
         public void SetStartTime()
         {
-            this.startTime = Globals.GameTime.TotalGameTime.TotalMilliseconds;
+            if(Globals.GameTime is null)
+            {
+                this.startTime = 0;
+            }
+            else
+            {
+                this.startTime = Globals.GameTime.TotalGameTime.TotalMilliseconds;
+            }
+
             set = true;
         }
 
@@ -70,9 +84,15 @@ namespace Drifter.Class.Tools
         public void SetStartTimeAndStopTime(int milliseconds)
         {
             SetStartTime();
-            this.endTime = this.startTime + milliseconds;;
+            this.endTime = this.startTime + milliseconds;
+            this.interval = milliseconds;
         }
         
+        public void UpdateTimers()
+        {
+            this.startTime = Globals.GameTime.TotalGameTime.TotalMilliseconds;
+            this.endTime = Globals.GameTime.TotalGameTime.TotalMilliseconds + this.interval;
+        }
 
     }
 }

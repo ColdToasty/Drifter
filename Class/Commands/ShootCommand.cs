@@ -18,11 +18,6 @@ namespace Drifter.Class.Commands
 
         private static Timer shootTimer = new Timer();
         private static bool canShoot = false;
-        private Texture2D projectileMissile;
-        public ShootCommand(Texture2D projectileMissile)
-        {
-            this.projectileMissile = projectileMissile;
-        }
 
      public override void Execute<T>(T gameObject)
         {
@@ -36,15 +31,15 @@ namespace Drifter.Class.Commands
             }
         else
             {
-                ShootProjectile(((gameObject as GameObject).CurrentPosition));
+                ShootProjectile(((gameObject as Player)));
                 shootTimer.SetStartTimeAndStopTime(500);
                 canShoot = false;
             }
         }
     
-    private void ShootProjectile(Vector2 playerPosition)
+    private void ShootProjectile(Player player)
     {
-        GameObjectSpawner.CreateProjectile(projectileMissile, playerPosition + new Vector2(0, 16), true);
+        GameObjectSpawner.CreateProjectile(player.ProjectileType, player.CurrentPosition + new Vector2(0, 64), true);
     }
 
     }

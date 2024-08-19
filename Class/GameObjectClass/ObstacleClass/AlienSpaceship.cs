@@ -107,7 +107,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             {
                 if(moveToMake == Move.Move)
                 {
-                    GameObjectSpawner.CreateEnemyProjectile(this.ObjectTexture, CurrentPosition, false);
+                    GameObjectSpawner.CreateEnemyProjectile(CurrentPosition, false);
                     shootTimer.SetStartTimeAndStopTime(4000);
                 }
             }

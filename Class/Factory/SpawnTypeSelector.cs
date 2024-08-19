@@ -245,12 +245,6 @@ namespace Drifter.Class.Factory
             {
                 Item.ItemType itemType = SpawnTypeSelector.ChooseItemType();
                 GameObjectSpawner.CreateItem(itemType);
-                GameObjectSpawner.CreateItem(Item.ItemType.SuperNova);
-                GameObjectSpawner.CreateItem(Item.ItemType.Coin);
-                GameObjectSpawner.CreateItem(Item.ItemType.InfiniteMissiles);
-                GameObjectSpawner.CreateItem(Item.ItemType.LaserBeam);
-                GameObjectSpawner.CreateItem(Item.ItemType.Laser);
-                GameObjectSpawner.CreateItem(Item.ItemType.Invincibility);
                 previousTimeInSecondsForItemSpawn = (int)Globals.GameTime.TotalGameTime.TotalSeconds;
             }
         }

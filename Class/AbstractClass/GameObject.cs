@@ -26,6 +26,10 @@ namespace Drifter.Class.AbstractClass
 
         public bool isMovingLeft = false;
 
+        protected AnimationPlayer animationPlayer;
+
+        public Rectangle CurrentAnimationRectangle { get; protected set; }
+
         protected virtual void UpdateCollisionCircle()
         {
             this.collisionCircle.Centre = this.Position + new Vector2(8, 8);
@@ -71,9 +75,9 @@ namespace Drifter.Class.AbstractClass
                 SetPositionAtEdgeOfScreen(0);
             }
 
-            else if (CurrentPosition.X + Texture.Width / 2 > Globals.ScreenWidth - Texture.Width / 2)
+            else if (CurrentPosition.X + 16 > Globals.ScreenWidth - 16)
             {
-                SetPositionAtEdgeOfScreen(Globals.ScreenWidth - Texture.Width);
+                SetPositionAtEdgeOfScreen(Globals.ScreenWidth - 32);
             }
         }
 
@@ -81,6 +85,13 @@ namespace Drifter.Class.AbstractClass
         public void SetPositionAtEdgeOfScreen(float edgePosition)
         {
             this.Position.X = edgePosition;
+        }
+
+        public abstract void PlayAnimation();
+
+        public void PlayDeathAnimation()
+        {
+
         }
     }
 }
