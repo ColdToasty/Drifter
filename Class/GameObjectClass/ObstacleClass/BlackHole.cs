@@ -2,6 +2,7 @@
 using Drifter.Class.Tools;
 using Drifter.Class.Tools.CollisionShapes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public CollisionCircle pullPlayerCircle;
         private bool isOnLeft;
 
-        private int blackHolePullRange = (Globals.ScreenWidth / 5) * 2; 
+        private int blackHolePullRange = (Globals.ScreenWidth / 5) * 2;
+
         public BlackHole(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Blackhole) : base(texture, startPosition, obstacleType)
         {
             this.ObjectTexture = texture;
@@ -33,10 +35,14 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
             this.collisionCircle = new CollisionCircle(this.Position + new Vector2(this.ObjectTexture.Width / 2, this.ObjectTexture.Height / 2), 32);
             this.pullPlayerCircle = new CollisionCircle(this.Position + new Vector2(this.ObjectTexture.Width, this.ObjectTexture.Height), blackHolePullRange);
+            this.soundEffectInstance = Globals.GetSoundEffect("blackHole1").CreateInstance();
+            this.soundEffectInstance.IsLooped = true;
+            this.soundEffectInstance.Play();
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
+
             base.Run(isMovingNegative, EndOfScreenPosition);
             UpdateCollisionCircle();
 

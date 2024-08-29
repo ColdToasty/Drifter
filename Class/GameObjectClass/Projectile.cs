@@ -10,6 +10,10 @@ using Drifter.Class.Tools;
 using Drifter.Class.AbstractClass;
 using Drifter.Class.Factory;
 using Drifter.Class.Tools.CollisionShapes;
+using System.Numerics;
+using Microsoft.Xna.Framework.Input;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+
 
 namespace Drifter.Class.GameObjectClass
 {
@@ -123,6 +127,7 @@ namespace Drifter.Class.GameObjectClass
         //moving negative means going up
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
+
             if (isMovingNegative)
             {
                 this.Position.Y -= this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
@@ -132,6 +137,7 @@ namespace Drifter.Class.GameObjectClass
             {
                 this.Position.Y += this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             }
+
             UpdateCollisionCircle();
         }
 

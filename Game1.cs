@@ -11,6 +11,9 @@ using Drifter.Class.AbstractClass;
 using Drifter.Class.Commands;
 using Drifter.Class.GameObjectClass.ObstacleClass;
 using Drifter.Class.GameObjectClass.ItemClass;
+using Microsoft.Xna.Framework.Audio;
+using System.Text.Json.Serialization;
+using Drifter.Class.Tools.Background;
 
 
 namespace Drifter
@@ -36,7 +39,7 @@ namespace Drifter
         private SpriteFont spriteFont;
 
 
-
+        private BackgroundManager backgroundManger;
 
         public Game1()
         {
@@ -54,7 +57,7 @@ namespace Drifter
             Globals.SetScreenMeasurements(_graphics.PreferredBackBufferHeight, _graphics.PreferredBackBufferWidth);
             GameObjectSpawner.SetSpawnXAxisRange(Globals.ScreenWidth);
             GameObjectSpawner.SetSpawnYAxisRange(Globals.ScreenHeight / 5 );
-
+            
 
             Score.Reset();
             SpawnTypeSelector.Initialise();
@@ -88,6 +91,8 @@ namespace Drifter
 
             player = new Player(playerTexture, playerStartPosition);
 
+            backgroundManger = new BackgroundManager(Globals.GetTexture("background"), Globals.ScreenWidth, Globals.ScreenHeight);
+
         }
 
         private void RunObjects()
@@ -115,12 +120,13 @@ namespace Drifter
                 GameObjectSpawner.enemyProjectiles[i].Run(false, Globals.ScreenHeight);
                 GameObjectSpawner.enemyProjectiles[i].PlayAnimation();
             }
+
+            backgroundManger.Run();
         }
 
 
         protected override void Update(GameTime gameTime)
         {
-            Globals.Update(gameTime, player);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
@@ -128,18 +134,20 @@ namespace Drifter
 
             if (player.IsAlive)
             {
+                Globals.Update(gameTime, player);
                 SpawnTypeSelector.CreateObstacleAndItem();
                 Score.IncreaseScore();
                 GameObjectSpawner.CreateCoin();
-                CheckPlayerInput();
                 RunObjects();
                 player.PlayAnimation();
+                CheckPlayerInput();
             }
 
             GameObjectSpawner.AddToListAfterLoop();
             GameObjectSpawner.DeleteGameObjects();
 
             base.Update(gameTime);
+
         }
 
 
@@ -165,6 +173,23 @@ namespace Drifter
                 InputHandler.Command = stopDriftCommand;
             }
 
+
+            if (InputHandler.Command != null)
+            {
+                InputHandler.Command.Execute(player);
+            }
+
+            InputHandler.Command = null;
+
+
+            if (player.isDrifting)
+            {
+                player.Drift();
+            }
+
+
+
+
             if (!player.InfiniteProjectile)
             {
                 if (kstate.IsKeyDown(Keys.Space))
@@ -175,22 +200,9 @@ namespace Drifter
             else
             {
                 shootCommand.Execute(player);
+
             }
 
-
-
-            if (InputHandler.Command != null)
-            {
-                InputHandler.Command.Execute(player);
-            }
-
-            InputHandler.Command = null;
-
-            if (player.isDrifting)
-            {
-                player.Run(player.isMovingLeft, Globals.ScreenHeight);
-            }
-            
 
         }
 
@@ -203,6 +215,21 @@ namespace Drifter
 
 
             SpriteDrawer.DrawGameObjects();
+
+
+
+            Globals.SpriteBatch.Draw(
+            backgroundManger.backgroundTexture,
+            backgroundManger.BackgroundTextureOnePosition,
+            Color.White
+            );
+
+            Globals.SpriteBatch.Draw(
+            backgroundManger.backgroundTexture,
+            backgroundManger.BackgroundTextureTwoPosition,
+            Color.White
+            );
+
 
             //Draw obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)

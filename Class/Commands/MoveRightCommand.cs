@@ -23,6 +23,7 @@ namespace Drifter.Class.Commands
             {
                 Player player = (GameObject as Player);
                 player.isDrifting = true;
+                //Set sound effect
             }
             else if (gameObject is AlienSpaceship)
             {

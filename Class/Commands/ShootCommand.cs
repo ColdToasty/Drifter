@@ -40,6 +40,7 @@ namespace Drifter.Class.Commands
     private void ShootProjectile(Player player)
     {
         GameObjectSpawner.CreateProjectile(player.ProjectileType, player.CurrentPosition + new Vector2(0, 64), true);
+        Globals.GetSoundEffect("playerShoot")?.Play();
     }
 
     }

@@ -2,6 +2,7 @@
 using Drifter.Class.Tools;
 using Drifter.Class.Tools.CollisionShapes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -37,6 +38,9 @@ namespace Drifter.Class.AbstractClass
 
         public Vector2 CurrentPosition { get { return Position; } }
 
+
+        protected SoundEffectInstance soundEffectInstance;
+
         //IsMovingNegative only used for player
         public virtual void Run(bool IsMovingNegative, float EndOfScreenPosition)
         {
@@ -52,6 +56,10 @@ namespace Drifter.Class.AbstractClass
         }
 
 
+        public virtual void SetSoundEffectInstance(string soundEffectName)
+        {
+            this.soundEffectInstance = Globals.GetSoundEffect(soundEffectName).CreateInstance();
+        }
 
         protected virtual void DidExitScreen(float EndOfScreenPosition)
         {
@@ -63,6 +71,12 @@ namespace Drifter.Class.AbstractClass
 
         protected void DestroyMyself()
         {
+
+
+            if (soundEffectInstance is not null)
+            {
+                soundEffectInstance.IsLooped = false;
+            }
             GameObjectSpawner.AddToDeleteList(this);
         }
 

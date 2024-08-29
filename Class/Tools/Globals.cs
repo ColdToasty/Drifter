@@ -10,6 +10,7 @@ using Drifter.Class.GameObjectClass;
 using Drifter.Class.GameObjectClass.ItemClass;
 using Drifter.Class.GameObjectClass.ObstacleClass;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -29,92 +30,30 @@ namespace Drifter.Class.Tools
         public static int GapSize { get; set; }
 
         public static Random Random = new Random();
-        public static void Update(GameTime gt, Player player = null)
-        {
-            GameTime = gt;
 
-            if(player is not null)
-            {
-                if (player.IsAlive)
-                {
-                    //checks player projectile collides with obstacles
-                    foreach (Obstacle o in GameObjectSpawner.obstacles)
-                    {
-                        if (o is SpacePipe)
-                        {
-                            SpacePipe sp = (SpacePipe)o;
-                            if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle) || sp.rightPipeCollisionSquare.Intersects(player.collisionCircle))
-                            {
-                                player.CollidedWithOtherGameObject(sp);
-                            }
-
-                        }
-                        else if (o is BlackHole)
-                        {
-                            BlackHole blackHole = (BlackHole)o;
-                            if (blackHole.pullPlayerCircle.Intersects(player.collisionCircle))
-                            {
-                                blackHole.CollidedWithOtherGameObject(player);
-                            }
-                            if (blackHole.collisionCircle.Intersects(player.collisionCircle))
-                            {
-                                player.CollidedWithOtherGameObject(blackHole);
-                            }
-                        }
-                        else if (player.collisionCircle.Intersects(o.collisionCircle))
-                        {
-                            o.CollidedWithOtherGameObject();
-                            player.CollidedWithOtherGameObject(o);
-                        }
-
-                        foreach (Projectile p in GameObjectSpawner.projectiles)
-                        {
-                            if (o.collisionCircle.Intersects(p.collisionCircle))
-                            {
-                                p.CollidedWithOtherGameObject();
-                                o.CollidedWithOtherGameObject(p);
-                            }
-                        }
-
-                    }
-
-                    foreach (Item i in GameObjectSpawner.items)
-                    {
-                        if (i.collisionCircle.Intersects(player.collisionCircle))
-                        {
-                            player.CollidedWithOtherGameObject(i);
-                            i.CollidedWithOtherGameObject();
-                        }
-                    }
-
-                    foreach (Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
-                    {
-                        foreach (Projectile p in GameObjectSpawner.projectiles)
-                        {
-                            if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
-                            {
-                                enemyProjectile.CollidedWithOtherGameObject();
-                                p.CollidedWithOtherGameObject(enemyProjectile);
-                            }
-                        }
-
-                        if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
-                        {
-                            enemyProjectile.CollidedWithOtherGameObject(player);
-                            player.CollidedWithOtherGameObject(enemyProjectile);
-                        }
-                    }
-                }
-            }
-           
-              
-        }
 
         private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
-        public static Texture2D? GetTexture(string textureName)
+        public static Texture2D GetTexture(string textureName)
         {
-            return textures?[textureName];
+            if (textures.ContainsKey(textureName))
+            {
+                return textures[textureName];
+            }
+            return null;
+        }
+
+        private static Dictionary<string, SoundEffect> soundEffects = new Dictionary<string, SoundEffect>();
+
+        public static SoundEffect GetSoundEffect(string soundEffectName)
+        {
+            if (soundEffects.ContainsKey(soundEffectName))
+            {
+                return soundEffects[soundEffectName];
+            }
+
+            return null;
+            
         }
 
         public static Texture2D CurrentPlayerTexture { get; private set; }
@@ -133,7 +72,10 @@ namespace Drifter.Class.Tools
             LoadItemTextures();
             LoadObstacleTextures();
             LoadProjectileTextures();
-            SetTexturesForGameObjects();
+            LoadBackgroundTextures();
+            LoadSoundEffects();
+
+            //SetTexturesForGameObjects();
         }
 
         private static void LoadPlayerTextures()
@@ -174,8 +116,124 @@ namespace Drifter.Class.Tools
         }
 
 
+        private static void LoadBackgroundTextures()
+        {
+            textures.Add("background", Content.Load<Texture2D>("Background/Background1"));
+        }
+
+        private static void LoadSoundEffects()
+        {
+            soundEffects.Add("coin1", Content.Load<SoundEffect>("SoundEffect/Item/PickUpCoin"));
+            soundEffects.Add("coin2", Content.Load<SoundEffect>("SoundEffect/Item/PickUpCoin2"));
+
+            soundEffects.Add("powerUp1", Content.Load<SoundEffect>("SoundEffect/Item/PowerUp1"));
+            soundEffects.Add("powerUp2", Content.Load<SoundEffect>("SoundEffect/Item/PowerUp2"));
+
+            soundEffects.Add("explosion1", Content.Load<SoundEffect>("SoundEffect/Explosion/Explosion1"));
+
+            soundEffects.Add("enemyShoot", Content.Load<SoundEffect>("SoundEffect/Shoot/EnemyShoot"));
+            soundEffects.Add("playerShoot", Content.Load<SoundEffect>("SoundEffect/Shoot/PlayerShoot"));
+
+            soundEffects.Add("blackHole1", Content.Load<SoundEffect>("SoundEffect/Obstacle/BlackHole/BlackHole1"));
+        }
+
+
+
         private static void SetTexturesForGameObjects()
         {
+        }
+
+
+        private static void PlayExplosion()
+        {
+            GetSoundEffect("explosion1")?.Play();
+        }
+
+        public static void Update(GameTime gt, Player player = null)
+        {
+            GameTime = gt;
+
+            if (player is not null)
+            {
+                if (player.IsAlive)
+                {
+                    //checks player projectile collides with obstacles
+                    foreach (Obstacle o in GameObjectSpawner.obstacles)
+                    {
+                        if (o is SpacePipe)
+                        {
+                            SpacePipe sp = (SpacePipe)o;
+                            if (sp.leftPipeCollisionSquare.Intersects(player.collisionCircle) || sp.rightPipeCollisionSquare.Intersects(player.collisionCircle))
+                            {
+                                player.CollidedWithOtherGameObject(sp);
+                                PlayExplosion();
+                            }
+
+                        }
+                        else if (o is BlackHole)
+                        {
+                            BlackHole blackHole = (BlackHole)o;
+                            if (blackHole.pullPlayerCircle.Intersects(player.collisionCircle))
+                            {
+                                blackHole.CollidedWithOtherGameObject(player);
+                            }
+                            if (blackHole.collisionCircle.Intersects(player.collisionCircle))
+                            {
+                                player.CollidedWithOtherGameObject(blackHole);
+                                PlayExplosion();
+                            }
+                        }
+                        else if (player.collisionCircle.Intersects(o.collisionCircle))
+                        {
+                            o.CollidedWithOtherGameObject();
+                            player.CollidedWithOtherGameObject(o);
+                            PlayExplosion();
+                        }
+
+                        foreach (Projectile p in GameObjectSpawner.projectiles)
+                        {
+                            if (o.collisionCircle.Intersects(p.collisionCircle))
+                            {
+                                p.CollidedWithOtherGameObject();
+                                o.CollidedWithOtherGameObject(p);
+                                PlayExplosion();
+                            }
+                        }
+
+                    }
+
+                    foreach (Item i in GameObjectSpawner.items)
+                    {
+                        if (i.collisionCircle.Intersects(player.collisionCircle))
+                        {
+                            player.CollidedWithOtherGameObject(i);
+                            i.CollidedWithOtherGameObject();
+                        }
+                    }
+
+                    foreach (Projectile enemyProjectile in GameObjectSpawner.enemyProjectiles)
+                    {
+                        foreach (Projectile p in GameObjectSpawner.projectiles)
+                        {
+                            if (enemyProjectile.collisionCircle.Intersects(p.collisionCircle))
+                            {
+                                enemyProjectile.CollidedWithOtherGameObject();
+                                p.CollidedWithOtherGameObject(enemyProjectile);
+                                PlayExplosion();
+                            }
+                        }
+
+                        if (enemyProjectile.collisionCircle.Intersects(player.collisionCircle))
+                        {
+                            enemyProjectile.CollidedWithOtherGameObject(player);
+                            player.CollidedWithOtherGameObject(enemyProjectile);
+                            PlayExplosion();
+                        }
+                    }
+                }
+            }
+
+
         }
 
 

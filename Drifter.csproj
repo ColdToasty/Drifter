@@ -27,10 +27,16 @@
     <Folder Include="Assets\Item\" />
     <Folder Include="Assets\Obstacle\" />
     <Folder Include="Assets\Player\" />
+    <Folder Include="Assets\SoundEffect\Explosion\" />
+    <Folder Include="Assets\SoundEffect\Shoot\" />
     <Folder Include="Content\Font\" />
     <Folder Include="Content\Item\Coin\" />
     <Folder Include="Content\Obstacle\SpacePipe\" />
     <Folder Include="Content\Player\" />
+    <Folder Include="Content\SoundEffect\Explosion\" />
+    <Folder Include="Content\SoundEffect\Item\" />
+    <Folder Include="Content\SoundEffect\Obstacle\BlackHole\" />
+    <Folder Include="Content\SoundEffect\Shoot\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

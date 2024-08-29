@@ -12,7 +12,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 {
     internal class ShatteringAsteroid : Obstacle
     {
-
+        private bool destroyWithoutSpawningAsteroids;
         private bool spawnAsteroids;
         private Timer timer;
 
@@ -24,12 +24,23 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         {
             spawnAsteroids = false;
             timer = new Timer();
+            destroyWithoutSpawningAsteroids = false;
         }
 
 
         public override void CollidedWithOtherGameObject(GameObject gameObject = null)
         {
             spawnAsteroids = true;
+
+            if(gameObject is Projectile)
+            {
+                Projectile p = (Projectile)gameObject;
+                if(p.TypeOfProjectile is Projectile.ProjectileType.Laser)
+                {
+                    destroyWithoutSpawningAsteroids = true;
+                    spawnAsteroids = false;
+                }
+            }
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
@@ -51,6 +62,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 {
                     timer.SetStartTimeAndStopTime(10);
                 }
+            }
+            else if (destroyWithoutSpawningAsteroids)
+            {
+                DestroyMyself();
             }
         }
 

@@ -109,6 +109,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 {
                     GameObjectSpawner.CreateEnemyProjectile(CurrentPosition, false);
                     shootTimer.SetStartTimeAndStopTime(4000);
+                    Globals.GetSoundEffect("enemyShoot").Play();
                 }
             }
             else

@@ -171,6 +171,10 @@ namespace Drifter.Class.Factory
                 case Obstacle.ObstacleType.SpacePipe:
                     CreateSpacePipe(Globals.GetTexture("pipeBody"), Globals.GetTexture("pipeHeadLeft"), Globals.GetTexture("pipeHeadRight"));
                     break;
+
+                case Obstacle.ObstacleType.SpaceWorm:
+                    CreateSpaceWorm(Globals.GetTexture("asteroid"), PickStartingPoint(obstacleType));
+                    break;
             }
         }
 
@@ -182,6 +186,7 @@ namespace Drifter.Class.Factory
             {
                 case Obstacle.ObstacleType.Asteroid:
                 case Obstacle.ObstacleType.ShatteringAsteroid:
+                case Obstacle.ObstacleType.SpaceWorm:
                     x = Globals.Random.Next(32, SpawnXAxisRange-32);
                     y = GameObjectStartTop;
                     break;
@@ -250,6 +255,10 @@ namespace Drifter.Class.Factory
             AddToList(new AlienSpaceship(texture, spawnPosition));
         }
 
+        private static void CreateSpaceWorm(Texture2D texture, Vector2 spawnPosition)
+        {
+            AddToList(new SpaceWorm(texture, spawnPosition));
+        }
 
 
         //Used if objects need to be added during a run time loop

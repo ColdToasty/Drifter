@@ -18,6 +18,9 @@ namespace Drifter.Class.GameObjectClass
 {
     internal class Player : GameObject
     {
+        //set to true for no collision
+        private bool testing = false;
+
 
         private Projectile.ProjectileType projectileType;
         public Projectile.ProjectileType ProjectileType { get { return projectileType; } }
@@ -41,6 +44,8 @@ namespace Drifter.Class.GameObjectClass
         private Item.ItemType? itemTypeActive;
 
         private int driftFrameStart = 2;
+
+        private Vector2 collisionCirclePosition = new Vector2(16, 16);
         public Player(Texture2D texture, Vector2 startingPosition) {
 
             this.startingPosition = startingPosition;
@@ -55,7 +60,7 @@ namespace Drifter.Class.GameObjectClass
             this.infiniteProjectile = false;
             this.Position = startingPosition;
             projectileType = Projectile.ProjectileType.Missle;
-            this.collisionCircle = new CollisionCircle(this.Position + new Vector2(16, 16), 8);
+            this.collisionCircle = new CollisionCircle(this.Position + collisionCirclePosition, 8);
             this.isMovingLeft = false;
             this.isDrifting = false;
             this.isAlive = true;
@@ -67,7 +72,6 @@ namespace Drifter.Class.GameObjectClass
             this.animationPlayer.SetAnimationFramesRowLocations("move", 0);
             this.animationPlayer.SetAnimationFramesRowLocations("moveRight", 1);
             this.animationPlayer.SetAnimationFramesRowLocations("moveLeft", 2);
-            ConsumeItem(new Item(Vector2.Zero, Item.ItemType.LaserBeam));
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
@@ -90,7 +94,7 @@ namespace Drifter.Class.GameObjectClass
             }
 
             this.CheckObjectAtEdge();
-            this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
+            this.collisionCircle.Centre = this.Position + collisionCirclePosition;
         }
 
 
@@ -131,38 +135,41 @@ namespace Drifter.Class.GameObjectClass
                     this.Position.X += this.travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
                 }
                 this.CheckObjectAtEdge();
-                this.collisionCircle.Centre = this.Position + new Vector2(16, 16);
+                this.collisionCircle.Centre = this.Position + collisionCirclePosition;
             }
         }
 
 
         public override void CollidedWithOtherGameObject(GameObject gameObject = null)
         {
-            if (gameObject == null)
+            if (!testing)
             {
-                if (!this.IsUnhurtable)
+                if (gameObject == null)
                 {
-                    base.CollidedWithOtherGameObject();
-                    isAlive = false;
+                    if (!this.IsUnhurtable)
+                    {
+                        base.CollidedWithOtherGameObject();
+                        isAlive = false;
+                    }
+
                 }
 
-            }
-            
-            if (gameObject is Item)
-            {
-                Item item = (Item)gameObject;
-                ConsumeItem(item);
-            }
-            else if(gameObject is Obstacle)
-            {
-
-                if (!this.IsUnhurtable)
+                if (gameObject is Item)
                 {
-                    DestroyMyself();
-                    isAlive = false;
+                    Item item = (Item)gameObject;
+                    ConsumeItem(item);
                 }
+                else if (gameObject is Obstacle)
+                {
 
-                
+                    if (!this.IsUnhurtable)
+                    {
+                        DestroyMyself();
+                        isAlive = false;
+                    }
+
+
+                }
             }
             
         }
@@ -175,32 +182,46 @@ namespace Drifter.Class.GameObjectClass
             {
                 case Item.ItemType.Coin:
                     Score.IncreaseScore(1000);
+                    int coinChoice = Globals.Random.Next(2);
+                    if(coinChoice == 0)
+                    {
+                        PlaySoundEffect("coin1");
+                    }
+                    else
+                    {
+                        PlaySoundEffect("coin2");
+                    }
                     break;
 
                 case Item.ItemType.Invincibility:
                     this.IsUnhurtable = true;
                     infiniteProjectile = false;
+                    PlaySoundEffect("powerUp1");
                     break;
 
                 case Item.ItemType.Reflect:
                     this.IsUnhurtable = true;
                     infiniteProjectile = false;
+                    PlaySoundEffect("powerUp1");
                     break;
 
                 case Item.ItemType.InfiniteMissiles:
                     infiniteProjectile = true;
                     this.IsUnhurtable = false;
+                    PlaySoundEffect("powerUp2");
                     break;
 
                 case Item.ItemType.Laser:
                     this.projectileType = Projectile.ProjectileType.Laser;
                     this.IsUnhurtable = false;
+                    PlaySoundEffect("powerUp2");
                     break;
 
                 case Item.ItemType.LaserBeam:
                     this.projectileType = Projectile.ProjectileType.LaserBeam;
                     infiniteProjectile = true;
                     this.IsUnhurtable = false;
+                    PlaySoundEffect("powerUp2");
                     break;
 
                 case Item.ItemType.SuperNova:
@@ -214,6 +235,12 @@ namespace Drifter.Class.GameObjectClass
                 System.Diagnostics.Trace.WriteLine(item.ItemDuration);
             }
 
+        }
+
+
+        private void PlaySoundEffect(string soundEffectName)
+        {
+            Globals.GetSoundEffect(soundEffectName)?.Play();
         }
 
         //reset itemTypeActive and timer
