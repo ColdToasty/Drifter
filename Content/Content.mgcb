@@ -254,17 +254,17 @@
 /processorParam:Quality=Best
 /build:SoundEffect/Explosion/Explosion1.wav
 
+#begin SoundEffect/Explosion/PlayerExplosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffect/Explosion/PlayerExplosion.wav
+
 #begin SoundEffect/Item/PickUpCoin.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SoundEffect/Item/PickUpCoin.wav
-
-#begin SoundEffect/Item/PickUpCoin2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundEffect/Item/PickUpCoin2.wav
 
 #begin SoundEffect/Item/PowerUp1.wav
 /importer:WavImporter

@@ -22,7 +22,6 @@ namespace Drifter.Class.Factory
         public static int SpawnXAxisRange { get; private set; }
         public static int SpawnYAxisRange { get; private set; }
 
-
         public static List<Projectile> projectiles = new List<Projectile>();
         public static List<Obstacle> obstacles = new List<Obstacle>();
         public static List<Item> items = new List<Item>();
@@ -74,7 +73,7 @@ namespace Drifter.Class.Factory
 
 
         
-        private static int GameObjectStartTop = -80;
+        public static int GameObjectStartTop { get; } = -80;
 
         private static Timer CoinSpawnTimer = new Timer();
 

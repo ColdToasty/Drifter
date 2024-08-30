@@ -123,13 +123,13 @@ namespace Drifter.Class.Tools
 
         private static void LoadSoundEffects()
         {
-            soundEffects.Add("coin1", Content.Load<SoundEffect>("SoundEffect/Item/PickUpCoin"));
-            soundEffects.Add("coin2", Content.Load<SoundEffect>("SoundEffect/Item/PickUpCoin2"));
+            soundEffects.Add("coin", Content.Load<SoundEffect>("SoundEffect/Item/PickUpCoin"));
 
             soundEffects.Add("powerUp1", Content.Load<SoundEffect>("SoundEffect/Item/PowerUp1"));
             soundEffects.Add("powerUp2", Content.Load<SoundEffect>("SoundEffect/Item/PowerUp2"));
 
             soundEffects.Add("explosion1", Content.Load<SoundEffect>("SoundEffect/Explosion/Explosion1"));
+            soundEffects.Add("playerExplosion", Content.Load<SoundEffect>("SoundEffect/Explosion/PlayerExplosion"));
 
             soundEffects.Add("enemyShoot", Content.Load<SoundEffect>("SoundEffect/Shoot/EnemyShoot"));
             soundEffects.Add("playerShoot", Content.Load<SoundEffect>("SoundEffect/Shoot/PlayerShoot"));
@@ -137,12 +137,10 @@ namespace Drifter.Class.Tools
             soundEffects.Add("blackHole1", Content.Load<SoundEffect>("SoundEffect/Obstacle/BlackHole/BlackHole1"));
         }
 
-
-
         private static void SetTexturesForGameObjects()
         {
-        }
 
+        }
 
         private static void PlayExplosion()
         {

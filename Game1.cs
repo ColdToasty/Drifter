@@ -213,23 +213,35 @@ namespace Drifter
         {
             GraphicsDevice.Clear(Color.Black);
 
-
             SpriteDrawer.DrawGameObjects();
 
-
-
             Globals.SpriteBatch.Draw(
-            backgroundManger.backgroundTexture,
+            backgroundManger.BackgroundTexture,
             backgroundManger.BackgroundTextureOnePosition,
             Color.White
             );
 
             Globals.SpriteBatch.Draw(
-            backgroundManger.backgroundTexture,
+            backgroundManger.BackgroundTexture,
             backgroundManger.BackgroundTextureTwoPosition,
             Color.White
             );
 
+
+            if (backgroundManger.PlanetSpawned)
+            {
+                Globals.SpriteBatch.Draw(
+                backgroundManger.BackgroundPlanet,
+                backgroundManger.BackgroundPlanetPosition,
+                null,
+                Color.White,
+                0.0f,
+                Vector2.Zero,
+                new Vector2(3,3),
+                SpriteEffects.None,
+                0.0f
+                ) ;
+            }
 
             //Draw obstacles
             foreach (Obstacle o in GameObjectSpawner.obstacles)
@@ -248,7 +260,6 @@ namespace Drifter
                     new Vector2(sp.RightHeadPosition, sp.CurrentPosition.Y),
                     Color.White
                     );
-
 
                     foreach (int value in sp.GetXPositions())
                     {

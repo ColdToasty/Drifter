@@ -21,12 +21,10 @@ namespace Drifter.Class.GameObjectClass
         //set to true for no collision
         private bool testing = false;
 
-
         private Projectile.ProjectileType projectileType;
         public Projectile.ProjectileType ProjectileType { get { return projectileType; } }
 
         private bool infiniteProjectile { get; set; }
-
 
         public bool InfiniteProjectile { get { return infiniteProjectile; } }
 
@@ -43,7 +41,6 @@ namespace Drifter.Class.GameObjectClass
 
         private Item.ItemType? itemTypeActive;
 
-        private int driftFrameStart = 2;
 
         private Vector2 collisionCirclePosition = new Vector2(16, 16);
         public Player(Texture2D texture, Vector2 startingPosition) {
@@ -76,7 +73,6 @@ namespace Drifter.Class.GameObjectClass
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
-
             if (Timer.CheckTimeReached(itemDurationTimer))
             {
                 ExpireItem();
@@ -97,10 +93,8 @@ namespace Drifter.Class.GameObjectClass
             this.collisionCircle.Centre = this.Position + collisionCirclePosition;
         }
 
-
         public override void PlayAnimation()
         {
-
             string animationToPlay;
 
             if (isDrifting)
@@ -114,7 +108,8 @@ namespace Drifter.Class.GameObjectClass
                     animationToPlay = "moveRight";
                 }
             }
-            else{
+            else
+            {
                 animationToPlay = "move";
             }
 
@@ -139,7 +134,6 @@ namespace Drifter.Class.GameObjectClass
             }
         }
 
-
         public override void CollidedWithOtherGameObject(GameObject gameObject = null)
         {
             if (!testing)
@@ -151,7 +145,6 @@ namespace Drifter.Class.GameObjectClass
                         base.CollidedWithOtherGameObject();
                         isAlive = false;
                     }
-
                 }
 
                 if (gameObject is Item)
@@ -159,38 +152,28 @@ namespace Drifter.Class.GameObjectClass
                     Item item = (Item)gameObject;
                     ConsumeItem(item);
                 }
+
                 else if (gameObject is Obstacle)
                 {
 
                     if (!this.IsUnhurtable)
                     {
+                        PlaySoundEffect("playerExplosion");
                         DestroyMyself();
                         isAlive = false;
                     }
-
-
                 }
             }
-            
         }
 
         //Applies the item's effect and sets the duration timer
         private void ConsumeItem(Item item)
         {
-
             switch (item.TypeOfItem)
             {
                 case Item.ItemType.Coin:
                     Score.IncreaseScore(1000);
-                    int coinChoice = Globals.Random.Next(2);
-                    if(coinChoice == 0)
-                    {
-                        PlaySoundEffect("coin1");
-                    }
-                    else
-                    {
-                        PlaySoundEffect("coin2");
-                    }
+                    PlaySoundEffect("coin");
                     break;
 
                 case Item.ItemType.Invincibility:
@@ -228,11 +211,11 @@ namespace Drifter.Class.GameObjectClass
                     GameObjectSpawner.DeleteAllEnemies();
                     break;
             }
+
             if((item.TypeOfItem != Item.ItemType.SuperNova && item.TypeOfItem != Item.ItemType.Coin))
             {
                 itemTypeActive = item.TypeOfItem;
                 itemDurationTimer.SetStartTimeAndStopTime(item.ItemDuration);
-                System.Diagnostics.Trace.WriteLine(item.ItemDuration);
             }
 
         }
@@ -246,7 +229,7 @@ namespace Drifter.Class.GameObjectClass
         //reset itemTypeActive and timer
         private void ExpireItem()
         {
-            System.Diagnostics.Trace.WriteLine(itemTypeActive);
+
             switch (itemTypeActive)
             {
                 case Item.ItemType.Invincibility:
@@ -261,9 +244,8 @@ namespace Drifter.Class.GameObjectClass
                     projectileType = ProjectileType.Missle;
                     infiniteProjectile = false;
                     break;
-
-
             }
+
             itemTypeActive = null;
             itemDurationTimer.ResetTimer();
         }

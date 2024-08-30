@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Drifter.Class.Factory;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,50 +11,113 @@ namespace Drifter.Class.Tools.Background
 {
     internal class BackgroundManager
     {
-        public Texture2D backgroundTexture { get; init; }
+        public Texture2D BackgroundTexture { get; init; }
+        public Texture2D BackgroundPlanet { get; private set;}
 
         //used to rectangle size
         private int screenWidth;
         private int screenHeight;
 
-
         public Vector2 BackgroundTextureOnePosition { get { return backgroundTextureOnePosition; } }
         public Vector2 BackgroundTextureTwoPosition { get { return backgroundTextureTwoPosition; } }
 
+        public Vector2 BackgroundPlanetPosition { get { return backgroundPlanetPosition; } }
 
-        private Vector2 backgroundTextureOnePosition, backgroundTextureTwoPosition;
+
+        private Vector2 backgroundTextureOnePosition, backgroundTextureTwoPosition, backgroundPlanetPosition;
         public enum RectangleToUse { RectangleOne, Both }
 
         public RectangleToUse rectangleToUse { get; private set; }
 
-
-        private int travelSpeed = 50;
-
+        private int backgroundTravelSpeed = 50;
+        private int backgroundPlanetTravelSpeed = 30;
         private int chooseXPositionOfTexture;
+
+
+        public bool PlanetSpawned { get; private set; }
+
 
         public BackgroundManager(Texture2D texture, int screenWidth, int screenHeight)
         {
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
 
-            backgroundTexture = texture;
+            BackgroundTexture = texture;
 
+            backgroundTextureOnePosition = new Vector2(chooseXPositionOfTexture, 0 - BackgroundTexture.Height + screenHeight);
+            backgroundTextureTwoPosition = new Vector2(chooseXPositionOfTexture, backgroundTextureOnePosition.Y - BackgroundTexture.Height);
 
-            backgroundTextureOnePosition = new Vector2(chooseXPositionOfTexture, 0 - backgroundTexture.Height + screenHeight);
-            backgroundTextureTwoPosition = new Vector2(chooseXPositionOfTexture, backgroundTextureOnePosition.Y - backgroundTexture.Height);
-
+            PlanetSpawned = false;
         }
 
         private void SetTexturePosition(ref Vector2 texturePosition, ref Vector2 otherTexturePosition)
         {
-            texturePosition.Y = otherTexturePosition.Y - backgroundTexture.Height;
+            texturePosition.Y = otherTexturePosition.Y - BackgroundTexture.Height;
             texturePosition.X = chooseXPositionOfTexture;
+        }
+
+        private void ResetBackgroundPlanetPosition()
+        {
+            backgroundPlanetPosition = new Vector2(Globals.Random.Next(-20, screenWidth-5), GameObjectSpawner.GameObjectStartTop);
+        }
+
+        private void SelectPlanetTexture()
+        {
+            int planetValue = Globals.Random.Next(101);
+
+            //nice earth like planet
+            if(planetValue < 10)
+            {
+                BackgroundPlanet = Globals.GetTexture("asteroid");
+            }
+            // green like planet
+            else if(planetValue < 20)
+            {
+                BackgroundPlanet = Globals.GetTexture("asteroid");
+            }
+            //ice planet
+            else if (planetValue < 40)
+            {
+                BackgroundPlanet = Globals.GetTexture("asteroid");
+            }
+            //saturn like planet
+            else if(planetValue < 60)
+            {
+                BackgroundPlanet = Globals.GetTexture("asteroid");
+            }
+            //sun
+            else
+            {
+                BackgroundPlanet = Globals.GetTexture("asteroid");
+            }
+
+
         }
 
         public void Run()
         {
-            backgroundTextureTwoPosition.Y += travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
-            backgroundTextureOnePosition.Y += travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
+            if (PlanetSpawned)
+            {
+                backgroundPlanetPosition.Y += backgroundPlanetTravelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            if(backgroundPlanetPosition.Y > Globals.ScreenHeight)
+            {
+                ResetBackgroundPlanetPosition();
+                PlanetSpawned = false;
+            }
+
+            //add timer
+            if (Globals.Random.Next(101) <= 10 && !PlanetSpawned)
+            {
+                SelectPlanetTexture();
+                ResetBackgroundPlanetPosition();
+                PlanetSpawned = true;
+            }
+
+
+            backgroundTextureTwoPosition.Y += backgroundTravelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
+            backgroundTextureOnePosition.Y += backgroundTravelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
 
             if (backgroundTextureOnePosition.Y > screenHeight)
             {
