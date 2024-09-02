@@ -119,6 +119,11 @@ namespace Drifter.Class.Tools
         private static void LoadBackgroundTextures()
         {
             textures.Add("background", Content.Load<Texture2D>("Background/Background1"));
+
+            textures.Add("planet1", Content.Load<Texture2D>("Background/PointOfInterest/Planet1"));
+            textures.Add("planet2", Content.Load<Texture2D>("Background/PointOfInterest/Planet2"));
+            textures.Add("planet3", Content.Load<Texture2D>("Background/PointOfInterest/Planet3"));
+            textures.Add("planet4", Content.Load<Texture2D>("Background/PointOfInterest/Planet4"));
         }
 
         private static void LoadSoundEffects()

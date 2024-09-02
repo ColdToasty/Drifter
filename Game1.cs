@@ -233,13 +233,7 @@ namespace Drifter
                 Globals.SpriteBatch.Draw(
                 backgroundManger.BackgroundPlanet,
                 backgroundManger.BackgroundPlanetPosition,
-                null,
-                Color.White,
-                0.0f,
-                Vector2.Zero,
-                new Vector2(3,3),
-                SpriteEffects.None,
-                0.0f
+                Color.White
                 ) ;
             }
 

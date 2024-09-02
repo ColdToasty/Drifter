@@ -68,28 +68,25 @@ namespace Drifter.Class.Tools.Background
             //nice earth like planet
             if(planetValue < 10)
             {
-                BackgroundPlanet = Globals.GetTexture("asteroid");
+                BackgroundPlanet = Globals.GetTexture("planet1");
             }
             // green like planet
             else if(planetValue < 20)
             {
-                BackgroundPlanet = Globals.GetTexture("asteroid");
+                BackgroundPlanet = Globals.GetTexture("planet2");
             }
             //ice planet
             else if (planetValue < 40)
             {
-                BackgroundPlanet = Globals.GetTexture("asteroid");
+                BackgroundPlanet = Globals.GetTexture("planet3");
             }
             //saturn like planet
-            else if(planetValue < 60)
+            else //if(planetValue < 60)
             {
-                BackgroundPlanet = Globals.GetTexture("asteroid");
+                BackgroundPlanet = Globals.GetTexture("planet4");
             }
             //sun
-            else
-            {
-                BackgroundPlanet = Globals.GetTexture("asteroid");
-            }
+     
 
 
         }
