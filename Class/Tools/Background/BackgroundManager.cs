@@ -33,6 +33,7 @@ namespace Drifter.Class.Tools.Background
         private int backgroundPlanetTravelSpeed = 30;
         private int chooseXPositionOfTexture;
 
+        private Timer timer; 
 
         public bool PlanetSpawned { get; private set; }
 
@@ -46,8 +47,9 @@ namespace Drifter.Class.Tools.Background
 
             backgroundTextureOnePosition = new Vector2(chooseXPositionOfTexture, 0 - BackgroundTexture.Height + screenHeight);
             backgroundTextureTwoPosition = new Vector2(chooseXPositionOfTexture, backgroundTextureOnePosition.Y - BackgroundTexture.Height);
-
+            timer = new Timer();
             PlanetSpawned = false;
+            timer.SetStartTimeAndStopTime(3000);
         }
 
         private void SetTexturePosition(ref Vector2 texturePosition, ref Vector2 otherTexturePosition)
@@ -59,6 +61,8 @@ namespace Drifter.Class.Tools.Background
         private void ResetBackgroundPlanetPosition()
         {
             backgroundPlanetPosition = new Vector2(Globals.Random.Next(-20, screenWidth-5), GameObjectSpawner.GameObjectStartTop);
+            timer.ResetTimer();
+            timer.SetStartTimeAndStopTime(3000);
         }
 
         private void SelectPlanetTexture()
@@ -103,14 +107,21 @@ namespace Drifter.Class.Tools.Background
                 ResetBackgroundPlanetPosition();
                 PlanetSpawned = false;
             }
-
-            //add timer
-            if (Globals.Random.Next(101) <= 10 && !PlanetSpawned)
+            if (timer.Set)
             {
-                SelectPlanetTexture();
-                ResetBackgroundPlanetPosition();
-                PlanetSpawned = true;
+                if (Timer.CheckTimeReached(timer))
+                {
+                    //add timer
+                    if (Globals.Random.Next(101) <= 10 && !PlanetSpawned)
+                    {
+                        SelectPlanetTexture();
+                        ResetBackgroundPlanetPosition();
+                        PlanetSpawned = true;
+                    }
+
+                }
             }
+
 
 
             backgroundTextureTwoPosition.Y += backgroundTravelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;

@@ -42,7 +42,6 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             //this.XStart = startPosition.X;
             ObjectTexture = texture;
             this.obstacleType = obstacleType;
-            travelSpeed = 100;
 
             IncreaseScoreValue = 100;
             collisionCircle = new CollisionCircle(Position + new Vector2(8, 8), 16);
@@ -50,6 +49,23 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             SetHealth();
             SetTravelSpeed();
             SetScoreIncreaseValue();
+
+            if (this.obstacleType == ObstacleType.Asteroid)
+            {
+                int setAsteroidSpeed = Globals.Random.Next(3);
+                if(setAsteroidSpeed == 0)
+                {
+                    return;
+                }
+                else if(setAsteroidSpeed == 1)
+                {
+                    this.travelSpeed = 125;
+                }
+                else
+                {
+                    this.travelSpeed = 150;
+                }
+            }
         }
 
         //Use when >1 texture
@@ -58,6 +74,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             SetHealth();
             SetTravelSpeed();
             SetScoreIncreaseValue();
+
             this.Position = startPosition;
             this.obstacleType = obstacleType;
         }
@@ -152,6 +169,14 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             switch (obstacleType)
             {
 
+            }
+        }
+
+        public void StopSoundEffects()
+        {
+            if(soundEffectInstance is not null)
+            {
+                soundEffectInstance.Dispose();
             }
         }
     }

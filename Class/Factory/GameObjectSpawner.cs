@@ -67,6 +67,10 @@ namespace Drifter.Class.Factory
 
         public static void DeleteAllEnemies()
         {
+            foreach(Obstacle o in obstacles)
+            {
+                o.StopSoundEffects();
+            }
             obstacles.Clear();
             enemyProjectiles.Clear();
         }
