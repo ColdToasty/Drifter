@@ -38,6 +38,8 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.soundEffectInstance = Globals.GetSoundEffect("blackHole1").CreateInstance();
             this.soundEffectInstance.IsLooped = true;
             this.soundEffectInstance.Play();
+
+
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)

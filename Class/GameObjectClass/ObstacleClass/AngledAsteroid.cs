@@ -13,6 +13,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
     {
         public AngledAsteroid(Texture2D texture, Vector2 startPosition, bool setCustomDirection = false, bool moveLeft = false, Obstacle.ObstacleType obstacleType = ObstacleType.AngledAsteroid) : base(texture, startPosition, obstacleType)
         {
+            this.animationPlayer = new AnimationPlayer(texture, 1, 5);
+            this.CurrentAnimationRectangle = this.animationPlayer.CurrentRectangleLocation;
+            this.animationPlayer.SetAnimationFramesRowLocations("death", 0);
+            this.animationPlayer.SetFrameThreshHold(100);
             //if dont want to manually set it to move left / right
             //other wise determine move direction basted on startPosition
             if (!setCustomDirection)

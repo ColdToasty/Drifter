@@ -106,6 +106,8 @@ namespace Drifter.Class.Tools
         {
             textures.Add("ball", Content.Load<Texture2D>("CollisionShape/ball"));
             textures.Add("asteroid", Content.Load<Texture2D>("Obstacle/Asteroid/Asteroid"));
+            textures.Add("shatteredAsteroidLeft", Content.Load<Texture2D>("Obstacle/Asteroid/ShatteredAsteroidLeft"));
+            textures.Add("shatteredAsteroidRight", Content.Load<Texture2D>("Obstacle/Asteroid/ShatteredAsteroidRight"));
 
             //SpacePipe Texture
             textures.Add("pipeBody", Content.Load<Texture2D>("Obstacle/SpacePipe/SpacePipeBody"));
@@ -188,15 +190,19 @@ namespace Drifter.Class.Tools
                         }
                         else if (player.collisionCircle.Intersects(o.collisionCircle))
                         {
-                            o.CollidedWithOtherGameObject();
-                            player.CollidedWithOtherGameObject(o);
-                            PlayExplosion();
+                            if (!o.collisionCircle.isDisabled)
+                            {
+                                o.CollidedWithOtherGameObject();
+                                player.CollidedWithOtherGameObject(o);
+                                PlayExplosion();
+                            }
                         }
 
                         foreach (Projectile p in GameObjectSpawner.projectiles)
                         {
                             if (o.collisionCircle.Intersects(p.collisionCircle))
                             {
+
                                 p.CollidedWithOtherGameObject();
                                 o.CollidedWithOtherGameObject(p);
                                 PlayExplosion();

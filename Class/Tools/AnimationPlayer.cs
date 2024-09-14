@@ -25,8 +25,8 @@ namespace Drifter.Class.Tools
         private Texture2D texture { get; init; }
         public Texture2D Texture2D { get { return texture; } }
 
-        private int framesPerRow;
-        private int framesPerColumn;
+        private int columns;
+        private int rows;
 
         private int frameWidth;
         private int frameHeight;
@@ -34,19 +34,21 @@ namespace Drifter.Class.Tools
         private Dictionary<string, int> spriteAnimationRowLocation = new Dictionary<string, int>();
 
         private bool initialised = false;
-
+        private bool animationFinished = false;
+        public bool AnimationFinished { get {return animationFinished; } }
         private int startOfFrameLoop, endOfFrameLoop;
 
-        public AnimationPlayer(Texture2D texture, int framesPerColumn, int framesPerRow)
+        public AnimationPlayer(Texture2D texture, int rows, int columns)
         {
             this.texture = texture;
             this.timer = new Timer();
             //startX startY, width, height
-            this.framesPerRow = framesPerRow;
-            this.framesPerColumn = framesPerColumn;
+            this.columns = columns;
+            this.rows = rows;
 
-            this.frameWidth = texture.Width / framesPerRow;
-            this.frameHeight = texture.Height / framesPerColumn;
+            this.frameWidth = texture.Width / this.columns;
+            this.frameHeight = texture.Height / this.rows;
+            CurrentRectangleLocation = new Rectangle(0, 0, frameWidth, frameHeight);
             timer.SetStartTimeAndStopTime(frameThreshold);
         }
 
@@ -58,13 +60,18 @@ namespace Drifter.Class.Tools
             spriteAnimationRowLocation.Add(frameAnimationName, row);
         }
 
+        public void SetAnimationFinished()
+        {
+            animationFinished = false;
+        }
+
         public void UpdateFrameIndex(bool loop)
         {
             if (Timer.CheckTimeReached(timer))
             {
                 if (loop)
                 {
-                    if (currentFrameIndex == framesPerRow - 1 || currentFrameIndex == -1)
+                    if (currentFrameIndex == columns - 1 || currentFrameIndex == -1)
                     {
                         currentFrameIndex = 0;
                     }
@@ -75,13 +82,21 @@ namespace Drifter.Class.Tools
                 }
                 else
                 {
-                    if (currentFrameIndex == framesPerRow - 1)
+                    if (currentFrameIndex == columns - 1)
                     {
+                        animationFinished = true;
                         return;
                     }
                     else
                     {
-                        currentFrameIndex++;
+                        if (currentFrameIndex == -1)
+                        {
+                            currentFrameIndex = 0;
+                        }
+                        else
+                        {
+                            currentFrameIndex++;
+                        }
                     }
                 }
                 timer.UpdateTimers();
@@ -103,6 +118,11 @@ namespace Drifter.Class.Tools
         public void SetFrameThreshHold(int newTimeInMilliseconds)
         {
             timer.SetStartTimeAndStopTime(newTimeInMilliseconds);
+        }
+
+        public void SetRectangle(int xIndex, int yIndex)
+        {
+            CurrentRectangleLocation = new Rectangle(xIndex * frameWidth, yIndex * frameHeight, frameWidth, frameHeight);
         }
 
 

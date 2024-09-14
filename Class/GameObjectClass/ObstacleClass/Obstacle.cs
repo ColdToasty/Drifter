@@ -30,7 +30,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public int Health { get { return health; } }
 
 
-
+        protected bool alive;
 
         //For worm
         //private int moveOnX = 50;
@@ -45,13 +45,19 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
             IncreaseScoreValue = 100;
             collisionCircle = new CollisionCircle(Position + new Vector2(8, 8), 16);
+            alive = true;
 
             SetHealth();
             SetTravelSpeed();
             SetScoreIncreaseValue();
 
+
             if (this.obstacleType == ObstacleType.Asteroid)
             {
+                animationPlayer = new AnimationPlayer(texture, 1, 5);
+                animationPlayer.SetAnimationFramesRowLocations("death",  0);
+                this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+                this.animationPlayer.SetFrameThreshHold(100);
                 int setAsteroidSpeed = Globals.Random.Next(3);
                 if(setAsteroidSpeed == 0)
                 {
@@ -67,6 +73,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 }
             }
         }
+
 
         //Use when >1 texture
         public Obstacle(Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
@@ -131,12 +138,26 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
 
 
+
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
         {
             Position.Y += travelSpeed * (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
             base.Run(isMovingNegative, EndOfScreenPosition);
             collisionCircle.Centre = Position + new Vector2(16, 16);
+
+            if (!alive)
+            {
+                collisionCircle.DisableCircle();
+                animationPlayer.Play("death");
+                CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+
+                if (animationPlayer.AnimationFinished)
+                {
+                    DestroyMyself();
+                }
+            }
         }
+
 
 
         public override void CollidedWithOtherGameObject(GameObject gameObject = null)
@@ -157,20 +178,17 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         private void HitByProjectile(int damageAmount)
         {
             health -= damageAmount;
+            if(obstacleType is ObstacleType.AlienSpaceship)
+            {
+                System.Diagnostics.Trace.WriteLine(health);
+            }
             if (health <= 0)
             {
                 Score.IncreaseScore(IncreaseScoreValue);
-                DestroyMyself();
+                alive = false;
             }
         }
 
-        public override void PlayAnimation()
-        {
-            switch (obstacleType)
-            {
-
-            }
-        }
 
         public void StopSoundEffects()
         {
@@ -178,6 +196,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             {
                 soundEffectInstance.Dispose();
             }
+        }
+
+        public override void PlayAnimation()
+        {
         }
     }
 }

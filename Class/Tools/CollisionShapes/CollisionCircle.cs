@@ -22,7 +22,17 @@ namespace Drifter.Class.Tools.CollisionShapes
         //centre = (half width of object texture and half height of object texture) + position of object
         //radius = half of width of texture
 
-        public bool isDisabled;
+        public bool isDisabled { get; private set;}
+
+        public void DisableCircle()
+        {
+            this.isDisabled = true;
+        }
+
+        public void EnableCircle()
+        {
+            this.isDisabled = false;
+        }
 
         public CollisionCircle(Vector2 centre, float radius = 16)
         {

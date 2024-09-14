@@ -22,9 +22,13 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
         public ShatteringAsteroid(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.ShatteringAsteroid) : base(texture, startPosition, obstacleType)
         {
+            this.animationPlayer = new AnimationPlayer(texture, 1, 5);
             spawnAsteroids = false;
             timer = new Timer();
             destroyWithoutSpawningAsteroids = false;
+            this.CurrentAnimationRectangle = this.animationPlayer.CurrentRectangleLocation;
+            this.animationPlayer.SetAnimationFramesRowLocations("death", 0);
+            this.animationPlayer.SetFrameThreshHold(100);
         }
 
 
@@ -53,8 +57,9 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 {
                     if(Timer.CheckTimeReached(timer))
                     {
-                        GameObjectSpawner.CreateAngledAsteroid(this.Texture, CurrentPosition, true, true);
-                        GameObjectSpawner.CreateAngledAsteroid(this.Texture, CurrentPosition, true, false);
+                        //load shattered textures
+                        GameObjectSpawner.CreateAngledAsteroid(Globals.GetTexture("shatteredAsteroidLeft"), CurrentPosition, true, true);
+                        GameObjectSpawner.CreateAngledAsteroid(Globals.GetTexture("shatteredAsteroidRight"), CurrentPosition, true, false);
                         DestroyMyself();
                     }
                 }

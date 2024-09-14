@@ -267,11 +267,24 @@ namespace Drifter
                 }
                 else
                 {
-                    Globals.SpriteBatch.Draw(
-                    o.Texture,
-                    o.CurrentPosition,
-                    Color.White
-                    );
+                    if (o is not BlackHole)
+                    {
+                        Globals.SpriteBatch.Draw(
+                        o.Texture,
+                        o.CurrentPosition,
+                        o.CurrentAnimationRectangle,
+                        Color.White
+                        );
+                    }
+                    else
+                    {
+                        Globals.SpriteBatch.Draw(
+                        o.Texture,
+                        o.CurrentPosition,
+                        Color.White
+                        );
+                    }
+
 
                 }
 

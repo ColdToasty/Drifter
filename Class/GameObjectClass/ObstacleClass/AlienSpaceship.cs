@@ -9,6 +9,7 @@ using Drifter.Class.Tools;
 using Drifter.Class.Factory;
 using Drifter.Class.Commands;
 using Drifter.Class.AbstractClass;
+using System.Drawing;
 
 namespace Drifter.Class.GameObjectClass.ObstacleClass
 {
@@ -36,6 +37,10 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.shootTimer = new Timer();
             this.deathTimer = new Timer();
             this.moveToMake = Move.Move;
+            this.animationPlayer = new AnimationPlayer(texture, 2, 5);
+            this.animationPlayer.SetAnimationFramesRowLocations("idle", 0);
+            this.animationPlayer.SetAnimationFramesRowLocations("death", 1);
+            this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
         }
 
 
@@ -44,16 +49,36 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         {
             CheckMovementTimer(isMovingNegative);
             CheckShootTimer();
-            if (deathTimer.Set)
+            if (!alive)
             {
-                if(Timer.CheckTimeReached(deathTimer)){
+                animationPlayer.Play("death");
+                this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+                if (animationPlayer.AnimationFinished)
+                {
                     DestroyMyself();
                 }
             }
             else
             {
-                deathTimer.SetStartTimeAndStopTime(30000);
+                if (moveToMake == Move.Stop)
+                {
+                    animationPlayer.Play("idle", true);
+                    this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+                }
+
+                if (deathTimer.Set)
+                {
+                    if (Timer.CheckTimeReached(deathTimer))
+                    {
+                        DestroyMyself();
+                    }
+                }
+                else
+                {
+                    deathTimer.SetStartTimeAndStopTime(30000);
+                }
             }
+
         }
 
         private void CheckMovementTimer(bool isMovingNegative)
@@ -63,6 +88,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 if (Timer.CheckTimeReached(movementTimer))
                 {
                     movementTimer.ResetTimer();
+                    animationPlayer.SetRectangle(0, 0);
                 }
                 else
                 {
@@ -91,6 +117,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 {
                     moveToMake = Move.Stop;
                     movementTimer.SetStartTimeAndStopTime(5000);
+
                 }
                 else
                 {

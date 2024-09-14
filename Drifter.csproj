@@ -31,6 +31,9 @@
     <Folder Include="Assets\SoundEffect\Shoot\" />
     <Folder Include="Content\Font\" />
     <Folder Include="Content\Item\Coin\" />
+    <Folder Include="Content\Obstacle\AlienSpaceship\" />
+    <Folder Include="Content\Obstacle\Asteroid\" />
+    <Folder Include="Content\Obstacle\BlackHole\" />
     <Folder Include="Content\Obstacle\SpacePipe\" />
     <Folder Include="Content\Player\" />
     <Folder Include="Content\SoundEffect\Explosion\" />

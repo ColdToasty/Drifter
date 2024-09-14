@@ -105,7 +105,10 @@ namespace Drifter.Class.AbstractClass
 
         public void PlayDeathAnimation()
         {
-
+            if(animationPlayer is not null)
+            {
+                animationPlayer.Play("death");
+            }
         }
     }
 }
