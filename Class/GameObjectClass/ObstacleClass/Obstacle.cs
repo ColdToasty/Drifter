@@ -30,7 +30,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         public int Health { get { return health; } }
 
 
-        protected bool alive;
+
 
         //For worm
         //private int moveOnX = 50;
@@ -38,6 +38,11 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         //private float XStart;
         public Obstacle(Texture2D texture, Vector2 startPosition, ObstacleType obstacleType = ObstacleType.Asteroid)
         {
+            explosionTexture = Globals.GetTexture("explosion");
+            effectAnimationPlayer = new AnimationPlayer(explosionTexture, 1, 5);
+            effectAnimationPlayer.SetAnimationFramesRowLocations("explosion", 0);
+            this.effectAnimationPlayer.SetFrameThreshHold(100);
+
             Position = startPosition;
             //this.XStart = startPosition.X;
             ObjectTexture = texture;
@@ -45,18 +50,18 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
 
             IncreaseScoreValue = 100;
             collisionCircle = new CollisionCircle(Position + new Vector2(8, 8), 16);
-            alive = true;
+            IsAlive = true;
 
             SetHealth();
             SetTravelSpeed();
             SetScoreIncreaseValue();
-
 
             if (this.obstacleType == ObstacleType.Asteroid)
             {
                 animationPlayer = new AnimationPlayer(texture, 1, 5);
                 animationPlayer.SetAnimationFramesRowLocations("death",  0);
                 this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+                this.CurrentExplosionAnimationRectangle = effectAnimationPlayer.CurrentRectangleLocation;
                 this.animationPlayer.SetFrameThreshHold(100);
                 int setAsteroidSpeed = Globals.Random.Next(3);
                 if(setAsteroidSpeed == 0)
@@ -145,12 +150,13 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             base.Run(isMovingNegative, EndOfScreenPosition);
             collisionCircle.Centre = Position + new Vector2(16, 16);
 
-            if (!alive)
+            if (!IsAlive)
             {
                 collisionCircle.DisableCircle();
                 animationPlayer.Play("death");
-                CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
-
+                effectAnimationPlayer.Play("explosion");
+                this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+                this.CurrentExplosionAnimationRectangle = effectAnimationPlayer.CurrentRectangleLocation;
                 if (animationPlayer.AnimationFinished)
                 {
                     DestroyMyself();
@@ -185,7 +191,7 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             if (health <= 0)
             {
                 Score.IncreaseScore(IncreaseScoreValue);
-                alive = false;
+                IsAlive = false;
             }
         }
 

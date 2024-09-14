@@ -32,9 +32,6 @@ namespace Drifter.Class.GameObjectClass
 
         private Vector2 startingPosition;
 
-        private bool isAlive;
-        public bool IsAlive { get { return isAlive; } }
-
         public bool IsUnhurtable { get; private set; }
 
         private Timer itemDurationTimer;
@@ -60,7 +57,7 @@ namespace Drifter.Class.GameObjectClass
             this.collisionCircle = new CollisionCircle(this.Position + collisionCirclePosition, 8);
             this.isMovingLeft = false;
             this.isDrifting = false;
-            this.isAlive = true;
+            this.IsAlive = true;
             this.IsUnhurtable = false;
 
             //timer in animationPlayer is setting before GameTime has a chance to be set in the update loop
@@ -69,6 +66,10 @@ namespace Drifter.Class.GameObjectClass
             this.animationPlayer.SetAnimationFramesRowLocations("move", 0);
             this.animationPlayer.SetAnimationFramesRowLocations("moveRight", 1);
             this.animationPlayer.SetAnimationFramesRowLocations("moveLeft", 2);
+
+            this.explosionTexture = Globals.GetTexture("explosion");
+            this.effectAnimationPlayer = new AnimationPlayer(this.explosionTexture, 1, 5);
+            this.effectAnimationPlayer.SetAnimationFramesRowLocations("explosion", 0);
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
@@ -143,7 +144,7 @@ namespace Drifter.Class.GameObjectClass
                     if (!this.IsUnhurtable)
                     {
                         base.CollidedWithOtherGameObject();
-                        isAlive = false;
+                        IsAlive = false;
                     }
                 }
 
@@ -160,7 +161,7 @@ namespace Drifter.Class.GameObjectClass
                     {
                         PlaySoundEffect("playerExplosion");
                         DestroyMyself();
-                        isAlive = false;
+                        IsAlive = false;
                     }
                 }
             }

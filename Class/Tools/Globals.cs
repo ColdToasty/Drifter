@@ -74,7 +74,7 @@ namespace Drifter.Class.Tools
             LoadProjectileTextures();
             LoadBackgroundTextures();
             LoadSoundEffects();
-
+            LoadEffects();
             //SetTexturesForGameObjects();
         }
 
@@ -126,6 +126,11 @@ namespace Drifter.Class.Tools
             textures.Add("planet2", Content.Load<Texture2D>("Background/PointOfInterest/Planet2"));
             textures.Add("planet3", Content.Load<Texture2D>("Background/PointOfInterest/Planet3"));
             textures.Add("planet4", Content.Load<Texture2D>("Background/PointOfInterest/Planet4"));
+        }
+
+        private static void LoadEffects()
+        {
+            textures.Add("explosion", Content.Load<Texture2D>("Explosion/explosion"));
         }
 
         private static void LoadSoundEffects()

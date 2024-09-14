@@ -275,6 +275,16 @@ namespace Drifter
                         o.CurrentAnimationRectangle,
                         Color.White
                         );
+
+                        if (!o.IsAlive)
+                        {
+                            Globals.SpriteBatch.Draw(
+                            o.ExplosionTexture,
+                            o.CurrentPosition,
+                            o.CurrentExplosionAnimationRectangle,
+                            Color.White
+                            );
+                        }
                     }
                     else
                     {

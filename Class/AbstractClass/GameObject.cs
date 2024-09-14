@@ -30,6 +30,7 @@ namespace Drifter.Class.AbstractClass
         protected AnimationPlayer animationPlayer;
 
         public Rectangle CurrentAnimationRectangle { get; protected set; }
+        public Rectangle CurrentExplosionAnimationRectangle { get; protected set; }
 
         protected virtual void UpdateCollisionCircle()
         {
@@ -40,6 +41,16 @@ namespace Drifter.Class.AbstractClass
 
 
         protected SoundEffectInstance soundEffectInstance;
+
+        protected AnimationPlayer effectAnimationPlayer;
+
+
+        protected Texture2D explosionTexture { get; set; }
+
+        public Texture2D ExplosionTexture { get { return explosionTexture; } }
+
+
+        public bool IsAlive { get; protected set;}
 
         //IsMovingNegative only used for player
         public virtual void Run(bool IsMovingNegative, float EndOfScreenPosition)
@@ -103,12 +114,5 @@ namespace Drifter.Class.AbstractClass
 
         public abstract void PlayAnimation();
 
-        public void PlayDeathAnimation()
-        {
-            if(animationPlayer is not null)
-            {
-                animationPlayer.Play("death");
-            }
-        }
     }
 }

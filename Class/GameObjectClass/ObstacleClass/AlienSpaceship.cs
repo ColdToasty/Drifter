@@ -49,10 +49,12 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
         {
             CheckMovementTimer(isMovingNegative);
             CheckShootTimer();
-            if (!alive)
+            if (!IsAlive)
             {
                 animationPlayer.Play("death");
+                effectAnimationPlayer.Play("explosion");
                 this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+                this.CurrentExplosionAnimationRectangle = effectAnimationPlayer.CurrentRectangleLocation;
                 if (animationPlayer.AnimationFinished)
                 {
                     DestroyMyself();
