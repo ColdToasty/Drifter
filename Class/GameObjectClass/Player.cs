@@ -40,6 +40,11 @@ namespace Drifter.Class.GameObjectClass
 
 
         private Vector2 collisionCirclePosition = new Vector2(16, 16);
+
+        public Texture2D invincibilityEffectTexture { get; private set;}
+
+        public bool StopDrawing { get; private set; }
+
         public Player(Texture2D texture, Vector2 startingPosition) {
 
             this.startingPosition = startingPosition;
@@ -59,17 +64,53 @@ namespace Drifter.Class.GameObjectClass
             this.isDrifting = false;
             this.IsAlive = true;
             this.IsUnhurtable = false;
-
+            this.StopDrawing = false;
             //timer in animationPlayer is setting before GameTime has a chance to be set in the update loop
             //texture, number of rows, number of columns
-            this.animationPlayer = new AnimationPlayer(this.ObjectTexture, 3, 4);
+            this.animationPlayer = new AnimationPlayer(this.ObjectTexture, 4, 4);
             this.animationPlayer.SetAnimationFramesRowLocations("move", 0);
             this.animationPlayer.SetAnimationFramesRowLocations("moveRight", 1);
             this.animationPlayer.SetAnimationFramesRowLocations("moveLeft", 2);
+            this.animationPlayer.SetAnimationFramesRowLocations("death", 3);
 
+            this.invincibilityEffectTexture = Globals.GetTexture("invincibilityEffect");
             this.explosionTexture = Globals.GetTexture("explosion");
+            SetExplosionAnimation();
+        }
+
+        public void SetExplosionAnimation()
+        {
             this.effectAnimationPlayer = new AnimationPlayer(this.explosionTexture, 1, 5);
             this.effectAnimationPlayer.SetAnimationFramesRowLocations("explosion", 0);
+        }
+
+        private void SetInvincibilityAnimation()
+        {
+            if(invincibilityEffectTexture is not null)
+            {
+                this.effectAnimationPlayer = new AnimationPlayer(this.invincibilityEffectTexture, 1, 5);
+                this.effectAnimationPlayer.SetAnimationFramesRowLocations("invincibility", 0);
+            }
+        }
+
+        public void PlayInvincibilityAnimation()
+        {
+            this.effectAnimationPlayer.Play("invincibility", true);
+            this.CurrentExplosionAnimationRectangle = effectAnimationPlayer.CurrentRectangleLocation;
+        }
+
+        public void PlayDeathAnimation()
+        {
+            effectAnimationPlayer.Play("explosion");
+            animationPlayer.Play("death");
+            CurrentExplosionAnimationRectangle = effectAnimationPlayer.CurrentRectangleLocation;
+            CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+
+
+            if(effectAnimationPlayer.AnimationFinished && animationPlayer.AnimationFinished)
+            {
+                StopDrawing = true;
+            }
         }
 
         public override void Run(bool isMovingNegative, float EndOfScreenPosition)
@@ -92,6 +133,7 @@ namespace Drifter.Class.GameObjectClass
 
             this.CheckObjectAtEdge();
             this.collisionCircle.Centre = this.Position + collisionCirclePosition;
+
         }
 
         public override void PlayAnimation()
@@ -115,6 +157,10 @@ namespace Drifter.Class.GameObjectClass
             }
 
             animationPlayer.Play(animationToPlay, true);
+            if (this.IsUnhurtable)
+            {
+                PlayInvincibilityAnimation();
+            }
             CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
         }
 
@@ -159,9 +205,12 @@ namespace Drifter.Class.GameObjectClass
 
                     if (!this.IsUnhurtable)
                     {
+                        SetExplosionAnimation();
                         PlaySoundEffect("playerExplosion");
                         DestroyMyself();
                         IsAlive = false;
+                        effectAnimationPlayer.SetFrameThreshHold(100);
+                        animationPlayer.SetFrameThreshHold(100);
                     }
                 }
             }
@@ -181,6 +230,8 @@ namespace Drifter.Class.GameObjectClass
                     this.IsUnhurtable = true;
                     infiniteProjectile = false;
                     PlaySoundEffect("powerUp1");
+                    SetInvincibilityAnimation();
+
                     break;
 
                 case Item.ItemType.Reflect:
@@ -236,6 +287,7 @@ namespace Drifter.Class.GameObjectClass
                 case Item.ItemType.Invincibility:
                 case Item.ItemType.Reflect:
                     this.IsUnhurtable = false;
+                    SetExplosionAnimation();
                     break;
 
 

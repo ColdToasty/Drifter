@@ -26,5 +26,11 @@ namespace Drifter.Class.Tools
             score = 0;
         }
 
+
+        public static void RecordScore()
+        {
+
+        }
+
     }   
 }

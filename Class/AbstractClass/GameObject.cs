@@ -82,8 +82,6 @@ namespace Drifter.Class.AbstractClass
 
         protected void DestroyMyself()
         {
-
-
             if (soundEffectInstance is not null)
             {
                 soundEffectInstance.IsLooped = false;

@@ -81,6 +81,7 @@ namespace Drifter.Class.Tools
         private static void LoadPlayerTextures()
         {
             textures.Add("player", Content.Load<Texture2D>("Player/DefaultPlayer"));
+            textures.Add("invincibilityEffect", Content.Load<Texture2D>("Player/PlayerEffect/Invincibility"));
             GapSize = 32 * 3;
         }
 

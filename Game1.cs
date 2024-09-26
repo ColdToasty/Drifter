@@ -31,7 +31,7 @@ namespace Drifter
         private ShootCommand shootCommand;
 
 
-        private Texture2D playerTexture, projectileMissile, projectileLaser, obstacleAsteroid, ball, coin;
+
 
         private Vector2 playerStartPosition, textMiddlePoint;
 
@@ -78,18 +78,11 @@ namespace Drifter
             Globals.Content = Content;
             Globals.GraphicsDevice = GraphicsDevice;
             Globals.LoadContent();
-            ball = Globals.GetTexture("ball");
-
-            projectileMissile = Globals.GetTexture("projectileMissile");
-            playerTexture = Globals.GetTexture("player");
-            obstacleAsteroid = Globals.GetTexture("asteroid");
-            coin = Globals.GetTexture("coin");
-
 
             spriteFont = Content.Load<SpriteFont>("Font/MainFont");
             textMiddlePoint = spriteFont.MeasureString(Score.ScoreValue.ToString("D10")) / 2;
 
-            player = new Player(playerTexture, playerStartPosition);
+            player = new Player(Globals.GetTexture("player"), playerStartPosition);
 
             backgroundManger = new BackgroundManager(Globals.GetTexture("background"), Globals.ScreenWidth, Globals.ScreenHeight);
 
@@ -140,9 +133,14 @@ namespace Drifter
                 GameObjectSpawner.CreateCoin();
                 RunObjects();
                 player.PlayAnimation();
-                CheckPlayerInput();
+            }
+            else
+            {
+                Score.RecordScore();
+                player.PlayDeathAnimation();
             }
 
+            CheckPlayerInput();
             GameObjectSpawner.AddToListAfterLoop();
             GameObjectSpawner.DeleteGameObjects();
 
@@ -156,52 +154,56 @@ namespace Drifter
         {
             var kstate = Keyboard.GetState();
 
-            if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
+            if (player.IsAlive)
             {
-                InputHandler.Command = moveLeftCommand;
-            }
+                if (kstate.IsKeyDown(Keys.Left) || kstate.IsKeyDown(Keys.A))
+                {
+                    InputHandler.Command = moveLeftCommand;
+                }
 
-            if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
-            {
+                if (kstate.IsKeyDown(Keys.Right) || kstate.IsKeyDown(Keys.D))
+                {
 
-                InputHandler.Command = moveRightCommand;
-            }
-
-
-            if (kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
-            {
-                InputHandler.Command = stopDriftCommand;
-            }
+                    InputHandler.Command = moveRightCommand;
+                }
 
 
-            if (InputHandler.Command != null)
-            {
-                InputHandler.Command.Execute(player);
-            }
-
-            InputHandler.Command = null;
+                if (kstate.IsKeyDown(Keys.Down) || kstate.IsKeyDown(Keys.S))
+                {
+                    InputHandler.Command = stopDriftCommand;
+                }
 
 
-            if (player.isDrifting)
-            {
-                player.Drift();
-            }
+                if (InputHandler.Command != null)
+                {
+                    InputHandler.Command.Execute(player);
+                }
+
+                InputHandler.Command = null;
+
+
+                if (player.isDrifting)
+                {
+                    player.Drift();
+                }
 
 
 
 
-            if (!player.InfiniteProjectile)
-            {
-                if (kstate.IsKeyDown(Keys.Space))
+                if (!player.InfiniteProjectile)
+                {
+                    if (kstate.IsKeyDown(Keys.Space))
+                    {
+                        shootCommand.Execute(player);
+                    }
+                }
+                else
                 {
                     shootCommand.Execute(player);
+
                 }
             }
-            else
-            {
-                shootCommand.Execute(player);
 
-            }
 
 
         }
@@ -342,19 +344,58 @@ namespace Drifter
             if (player.IsAlive)
             {
                 Globals.SpriteBatch.Draw(
-                playerTexture,
+                player.Texture,
                 player.CurrentPosition,
                 player.CurrentAnimationRectangle,
                 Color.White
                 );
 
+                if(player.IsUnhurtable)
+                {
+                    Globals.SpriteBatch.Draw(
+                    player.invincibilityEffectTexture,
+                    player.CurrentPosition,
+                    player.CurrentExplosionAnimationRectangle,
+                    Color.White
+                    );
+                }
+            }
+            else
+            {
+                if (!player.StopDrawing)
+                {
+                    Globals.SpriteBatch.Draw(
+                    player.Texture,
+                    player.CurrentPosition,
+                    player.CurrentAnimationRectangle,
+                    Color.White
+                    );
+
+                    Globals.SpriteBatch.Draw(
+                    player.ExplosionTexture,
+                    player.CurrentPosition,
+                    player.CurrentExplosionAnimationRectangle,
+                    Color.White
+                    );
+                }
+
             }
 
 
-
             //Draw score
-            Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 4 - _graphics.PreferredBackBufferHeight / 6);
-            Globals.SpriteBatch.DrawString(spriteFont, Score.ScoreValue.ToString("D12"), position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+            if (player.IsAlive)
+            {
+                Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 4 - _graphics.PreferredBackBufferHeight / 6);
+                Globals.SpriteBatch.DrawString(spriteFont, Score.ScoreValue.ToString("D12"), position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+            }
+            else
+            {
+                string finalScoreText = "Final Score: " + Score.ScoreValue.ToString("D12");
+                textMiddlePoint = spriteFont.MeasureString( finalScoreText ) / 2;
+                Vector2 position = new Vector2((_graphics.PreferredBackBufferWidth / 2), _graphics.PreferredBackBufferHeight / 2);
+                Globals.SpriteBatch.DrawString(spriteFont, finalScoreText, position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+            }
+
 
 
 

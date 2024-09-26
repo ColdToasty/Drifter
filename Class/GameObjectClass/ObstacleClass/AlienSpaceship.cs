@@ -41,6 +41,8 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
             this.animationPlayer.SetAnimationFramesRowLocations("idle", 0);
             this.animationPlayer.SetAnimationFramesRowLocations("death", 1);
             this.CurrentAnimationRectangle = animationPlayer.CurrentRectangleLocation;
+            this.animationPlayer.SetFrameThreshHold(100);
+            this.effectAnimationPlayer.SetFrameThreshHold(100);
         }
 
 
@@ -159,9 +161,9 @@ namespace Drifter.Class.GameObjectClass.ObstacleClass
                 isMovingLeft = false;
             }
 
-            else if (CurrentPosition.X + Texture.Width / 2 > Globals.ScreenWidth - Texture.Width / 2)
+            else if (CurrentPosition.X + Texture.Width / 10 > Globals.ScreenWidth - Texture.Width / 10)
             {
-                SetPositionAtEdgeOfScreen(Globals.ScreenWidth - Texture.Width);
+                SetPositionAtEdgeOfScreen(Globals.ScreenWidth - Texture.Width / 5);
                 isMovingLeft = true;
             }
         }

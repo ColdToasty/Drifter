@@ -36,6 +36,7 @@
     <Folder Include="Content\Obstacle\BlackHole\" />
     <Folder Include="Content\Obstacle\SpacePipe\" />
     <Folder Include="Content\Player\" />
+    <Folder Include="Content\Player\PlayerEffect\" />
     <Folder Include="Content\SoundEffect\Explosion\" />
     <Folder Include="Content\SoundEffect\Item\" />
     <Folder Include="Content\SoundEffect\Obstacle\BlackHole\" />
